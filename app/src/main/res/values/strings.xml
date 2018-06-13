@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Arcab</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="next">Next</string>
+    <string name="mobile_number_explanation">Your mobile number is only used for authentication and will not be shared with anyone.</string>
+    <string name="mobile_number_hint">Mobile number</string>
 </resources>
