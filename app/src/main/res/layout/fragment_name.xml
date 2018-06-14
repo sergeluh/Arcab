@@ -31,44 +31,52 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="@dimen/margin_top"
-                android:text="Your Number?"
+                android:text="What's Your Name?"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/phoneEditText"
+                android:id="@+id/firstNameEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:inputType="phone"
+                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/textView7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/mobile_number_hint"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/phoneEditText"
+                android:text="First name"
+                android:textAllCaps="true"
                 android:textStyle="bold"
-                android:textAllCaps="true"/>
+                app:layout_constraintStart_toStartOf="@+id/firstNameEditText"
+                app:layout_constraintTop_toBottomOf="@+id/firstNameEditText" />
 
-            <TextView
-                android:id="@+id/textView5"
+            <EditText
+                android:id="@+id/editText3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="32dp"
-                android:text="@string/mobile_number_explanation"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView4"
-                app:layout_constraintVertical_bias="1"/>
+                app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last name"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/editText3"
+                app:layout_constraintTop_toBottomOf="@+id/editText3" />
 
         </android.support.constraint.ConstraintLayout>
 

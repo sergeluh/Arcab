@@ -4,5 +4,6 @@
     <dimen name="header_text_height">30sp</dimen>
     <dimen name="margin_top">50dp</dimen>
     <dimen name="screen_padding">16dp</dimen>
+    <dimen name="padding_auth_bottom">70dp</dimen>
 
 </resources>

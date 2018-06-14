@@ -22,18 +22,61 @@ class AuthActivity : BaseActivity() {
         }
 
         viewModel.goToMobileNumberLogin.observe(this, Observer {
-            replaceFragment(PhoneFragment.newInstance(), PhoneFragment.TAG)
+            addFragment(PhoneFragment.newInstance(), PhoneFragment.TAG)
         })
 
         viewModel.goToSocialLogin.observe(this, Observer {
 
         })
+
+        viewModel.goToVerifyNumber.observe(this, Observer {
+            addFragment(VerifyNumberFragment.newInstance(), VerifyNumberFragment.TAG)
+        })
+
+        viewModel.goToNameInput.observe(this, Observer {
+            addFragment(NameFragment.newInstance(), NameFragment.TAG)
+        })
+
+        viewModel.goToEmailInput.observe(this, Observer {
+            addFragment(EmailFragment.newInstance(), EmailFragment.TAG)
+        })
+
+        viewModel.goToPasswordInput.observe(this, Observer {
+            addFragment(PasswordFragment.newInstance(), PasswordFragment.TAG)
+        })
+
+        viewModel.goToBirthInput.observe(this, Observer {
+//            addFragment(BirthFragment.newInstance(), BirthFragment.TAG)
+        })
+
+        viewModel.goToIdInput.observe(this, Observer {
+//            addFragment(IdNumberFragment.newInstance(), IdNumberFragment.TAG)
+        })
+
+        viewModel.goToRules.observe(this, Observer {
+//            addFragment(RulesFragment.newInstance(), RulesFragment.TAG)
+        })
+
+        viewModel.backAction.observe(this, Observer {
+            popFragment()
+        })
+    }
+
+    private fun popFragment() {
+        supportFragmentManager.popBackStack()
     }
 
     private fun replaceFragment(fragment: Fragment, tag: String) {
         supportFragmentManager.beginTransaction()
                 .replace(R.id.container, fragment, tag)
                 .commitNow()
+    }
+
+    private fun addFragment(fragment: Fragment, tag: String) {
+        supportFragmentManager.beginTransaction()
+                .add(R.id.container, fragment, tag)
+                .addToBackStack("my_stack")
+                .commit()
     }
 
     companion object {

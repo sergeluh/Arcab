@@ -7,6 +7,9 @@
     android:layout_height="match_parent"
     tools:context=".ui.auth.AuthFragment"
     android:padding="@dimen/screen_padding"
+    android:background="@color/colorFragmentBg"
+    android:clickable="true"
+    android:focusable="true"
     android:fillViewport="true">
 
     <android.support.constraint.ConstraintLayout
@@ -70,10 +73,9 @@
             android:text="Read arcab Privacy and Safety Policy, Payments Policy. Terms of Use."
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
 
     </android.support.constraint.ConstraintLayout>
-
-
 
 </ScrollView>

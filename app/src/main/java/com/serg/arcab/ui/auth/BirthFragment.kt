@@ -8,21 +8,21 @@ import android.view.ViewGroup
 
 import com.serg.arcab.R
 import kotlinx.android.synthetic.main.auth_navigation_view.view.*
-import kotlinx.android.synthetic.main.fragment_phone.*
+import kotlinx.android.synthetic.main.fragment_birth.*
 import org.koin.android.architecture.ext.sharedViewModel
 
-class PhoneFragment : Fragment() {
+class BirthFragment : Fragment() {
 
     private val viewModel by sharedViewModel<AuthViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_phone, container, false)
+        return inflater.inflate(R.layout.fragment_birth, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         navBar.nextBtn.setOnClickListener {
-            viewModel.onGoToVerifyNumberScreenClicked()
+            viewModel.onGoToVerifyIdScreenClicked()
         }
 
         navBar.backBtn.setOnClickListener {
@@ -32,9 +32,9 @@ class PhoneFragment : Fragment() {
 
     companion object {
 
-        const val TAG = "PhoneFragment"
+        const val TAG = "BirthFragment"
 
         @JvmStatic
-        fun newInstance() = PhoneFragment()
+        fun newInstance() = BirthFragment()
     }
 }

@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity"/>
-        <activity android:name=".ui.auth.AuthActivity" />
+        <activity android:name=".ui.auth.AuthActivity"/>
         <activity android:name=".ui.splash.SplashActivity"
             android:theme="@style/Splash">
             <intent-filter>

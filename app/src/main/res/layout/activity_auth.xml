@@ -5,7 +5,5 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.auth.AuthActivity"
-    android:id="@+id/container">
-
-</FrameLayout>
+    android:id="@+id/container"
+    tools:context=".ui.auth.AuthActivity"/>
