@@ -1,4 +1,4 @@
-package com.serg.arcab.ui.auth
+package com.serg.arcab.ui.auth.mobile
 
 
 import android.os.Bundle
@@ -8,23 +8,24 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.serg.arcab.R
+import com.serg.arcab.ui.auth.AuthViewModel
 import kotlinx.android.synthetic.main.auth_navigation_view.view.*
-import kotlinx.android.synthetic.main.fragment_email.*
+import kotlinx.android.synthetic.main.fragment_password.*
 import org.koin.android.architecture.ext.sharedViewModel
 
-class EmailFragment : Fragment() {
+class PasswordFragment : Fragment() {
 
     private val viewModel by sharedViewModel<AuthViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_email, container, false)
+        return inflater.inflate(R.layout.fragment_password, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         navBar.nextBtn.setOnClickListener {
-            viewModel.onGoToPasswordScreenClicked()
+            viewModel.onGoToBirthScreenClicked()
         }
 
         navBar.backBtn.setOnClickListener {
@@ -34,9 +35,9 @@ class EmailFragment : Fragment() {
 
     companion object {
 
-        const val TAG = "EmailFragment"
+        const val TAG = "PasswordFragment"
 
         @JvmStatic
-        fun newInstance() = EmailFragment()
+        fun newInstance() = PasswordFragment()
     }
 }

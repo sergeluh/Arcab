@@ -1,28 +1,29 @@
-package com.serg.arcab.ui.auth
+package com.serg.arcab.ui.auth.mobile
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
 import com.serg.arcab.R
-import com.serg.arcab.base.BaseFragment
+import com.serg.arcab.ui.auth.AuthViewModel
 import kotlinx.android.synthetic.main.auth_navigation_view.view.*
-import kotlinx.android.synthetic.main.fragment_name.*
+import kotlinx.android.synthetic.main.fragment_phone.*
 import org.koin.android.architecture.ext.sharedViewModel
 
-class NameFragment : BaseFragment() {
+class PhoneFragment : Fragment() {
 
     private val viewModel by sharedViewModel<AuthViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(R.layout.fragment_name, container, false)
+        return inflater.inflate(R.layout.fragment_phone, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         navBar.nextBtn.setOnClickListener {
-            viewModel.onGoToEmailScreenClicked()
+            viewModel.onGoToVerifyNumberScreenClicked()
         }
 
         navBar.backBtn.setOnClickListener {
@@ -32,9 +33,9 @@ class NameFragment : BaseFragment() {
 
     companion object {
 
-        const val TAG = "NameFragment"
+        const val TAG = "PhoneFragment"
 
         @JvmStatic
-        fun newInstance() = NameFragment()
+        fun newInstance() = PhoneFragment()
     }
 }
