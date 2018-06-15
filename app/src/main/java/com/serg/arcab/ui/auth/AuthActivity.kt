@@ -7,6 +7,9 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import com.serg.arcab.R
 import com.serg.arcab.base.BaseActivity
+import com.serg.arcab.ui.auth.mobile.*
+import com.serg.arcab.ui.auth.social.FromSocialFragment
+import com.serg.arcab.ui.auth.social.SocialFragment
 import org.koin.android.architecture.ext.viewModel
 
 class AuthActivity : BaseActivity() {
@@ -26,7 +29,7 @@ class AuthActivity : BaseActivity() {
         })
 
         viewModel.goToSocialLogin.observe(this, Observer {
-
+            addFragment(SocialFragment.newInstance(), SocialFragment.TAG)
         })
 
         viewModel.goToVerifyNumber.observe(this, Observer {
@@ -46,19 +49,23 @@ class AuthActivity : BaseActivity() {
         })
 
         viewModel.goToBirthInput.observe(this, Observer {
-//            addFragment(BirthFragment.newInstance(), BirthFragment.TAG)
+            addFragment(BirthFragment.newInstance(), BirthFragment.TAG)
         })
 
         viewModel.goToIdInput.observe(this, Observer {
-//            addFragment(IdNumberFragment.newInstance(), IdNumberFragment.TAG)
+            addFragment(IdNumberFragment.newInstance(), IdNumberFragment.TAG)
         })
 
         viewModel.goToRules.observe(this, Observer {
-//            addFragment(RulesFragment.newInstance(), RulesFragment.TAG)
+            addFragment(RulesFragment.newInstance(), RulesFragment.TAG)
         })
 
         viewModel.backAction.observe(this, Observer {
             popFragment()
+        })
+
+        viewModel.goToFillInfoFromSocial.observe(this, Observer {
+            addFragment(FromSocialFragment.newInstance(), FromSocialFragment.TAG)
         })
     }
 
@@ -69,7 +76,7 @@ class AuthActivity : BaseActivity() {
     private fun replaceFragment(fragment: Fragment, tag: String) {
         supportFragmentManager.beginTransaction()
                 .replace(R.id.container, fragment, tag)
-                .commitNow()
+                .commit()
     }
 
     private fun addFragment(fragment: Fragment, tag: String) {

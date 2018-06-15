@@ -17,7 +17,7 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context=".ui.auth.PhoneFragment"
+            tools:context=".ui.auth.mobile.PhoneFragment"
             android:paddingStart="@dimen/screen_padding"
             android:paddingTop="@dimen/screen_padding"
             android:paddingEnd="@dimen/screen_padding"

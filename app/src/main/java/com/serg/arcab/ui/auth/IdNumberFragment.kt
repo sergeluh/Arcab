@@ -7,11 +7,27 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.serg.arcab.R
+import kotlinx.android.synthetic.main.auth_navigation_view.view.*
+import kotlinx.android.synthetic.main.fragment_id_number.*
+import org.koin.android.architecture.ext.sharedViewModel
 
 class IdNumberFragment : Fragment() {
 
+    private val viewModel by sharedViewModel<AuthViewModel>()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_id_number, container, false)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        navBar.nextBtn.setOnClickListener {
+            viewModel.onGoToRulesScreenClicked()
+        }
+
+        navBar.backBtn.setOnClickListener {
+            viewModel.onBackClicked()
+        }
     }
 
     companion object {

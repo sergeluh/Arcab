@@ -7,14 +7,17 @@ import com.serg.arcab.utils.SingleLiveEvent
 class AuthViewModel constructor(val userDataManager: UserDataManager): BaseViewModel() {
 
     val goToMobileNumberLogin = SingleLiveEvent<Unit>()
+    val goToMobileNumberFomSocial = SingleLiveEvent<Unit>()
     val goToSocialLogin = SingleLiveEvent<Unit>()
     val goToVerifyNumber = SingleLiveEvent<Unit>()
+    val goToVerifyNumberFomSocial = SingleLiveEvent<Unit>()
     val goToNameInput = SingleLiveEvent<Unit>()
     val goToEmailInput = SingleLiveEvent<Unit>()
     val goToPasswordInput = SingleLiveEvent<Unit>()
     val goToBirthInput = SingleLiveEvent<Unit>()
     val goToIdInput = SingleLiveEvent<Unit>()
     val goToRules = SingleLiveEvent<Unit>()
+    val goToFillInfoFromSocial = SingleLiveEvent<Unit>()
     val backAction = SingleLiveEvent<Unit>()
 
     fun onEnterWithMobileClicked() {
@@ -49,9 +52,27 @@ class AuthViewModel constructor(val userDataManager: UserDataManager): BaseViewM
         goToIdInput.call()
     }
 
+    fun onGoToRulesScreenClicked() {
+        goToRules.call()
+    }
+
+
+
     fun onBackClicked() {
         backAction.call()
     }
 
 
+
+    fun onLoginWithGoogleClicked() {
+        goToFillInfoFromSocial.call()
+    }
+
+    fun onGoToNumberScreenFromSocialClicked() {
+        goToMobileNumberFomSocial.call()
+    }
+
+    fun onGoToVerifyNumberScreenFromSocialClicked() {
+        goToVerifyNumberFomSocial.call()
+    }
 }

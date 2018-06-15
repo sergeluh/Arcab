@@ -6,4 +6,8 @@
     <string name="next">Next</string>
     <string name="mobile_number_explanation">Your mobile number is only used for authentication and will not be shared with anyone.</string>
     <string name="mobile_number_hint">Mobile number</string>
+    <string name="get_started">Get Started</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="email_address">Email address</string>
 </resources>

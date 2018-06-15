@@ -17,7 +17,7 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context=".ui.auth.PhoneFragment"
+            tools:context=".ui.auth.mobile.PhoneFragment"
             android:paddingStart="@dimen/screen_padding"
             android:paddingTop="@dimen/screen_padding"
             android:paddingEnd="@dimen/screen_padding"
@@ -50,23 +50,41 @@
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:button="@android:color/transparent"
-                    android:text="Female / "
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+                    android:button="@null"
+                    android:background="@android:color/transparent"
+                    android:text="Female"
+                    android:textColor="@drawable/selector_gender_text"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                    android:text=" / "/>
 
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
                     android:button="@android:color/transparent"
-                    android:text="Male / "
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+                    android:text="Male"
+                    android:textColor="@drawable/selector_gender_text"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                    android:text=" / "/>
 
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
                     android:button="@android:color/transparent"
                     android:text="Unspecified"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+                    android:textColor="@drawable/selector_gender_text"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
 
             </RadioGroup>
 
@@ -124,15 +142,26 @@
                 android:id="@+id/textView15"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:layout_marginTop="32dp"
-                android:text="You must be at least 18 years old for arcab. We don't share this with anyone"
+                android:text="You must be at least 18 years old for arcab. We don't share this with anyone."
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
+            <DatePicker
+                android:id="@+id/datePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                app:layout_constraintTop_toBottomOf="@+id/textView14"
-                app:layout_constraintVertical_bias="1" />
+                app:layout_constraintTop_toBottomOf="@+id/textView15"
+                app:layout_constraintVertical_bias="1"/>
 
         </android.support.constraint.ConstraintLayout>
 
