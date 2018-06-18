@@ -9,7 +9,7 @@ import android.view.ViewGroup
 
 import com.serg.arcab.R
 import com.serg.arcab.ui.auth.AuthViewModel
-import kotlinx.android.synthetic.main.auth_navigation_view.view.*
+import kotlinx.android.synthetic.main.navigation_view.view.*
 import kotlinx.android.synthetic.main.fragment_verify_number.*
 import org.koin.android.architecture.ext.sharedViewModel
 
@@ -25,7 +25,14 @@ class VerifyNumberFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         navBar.nextBtn.setOnClickListener {
-            viewModel.onGoToNameScreenClicked()
+            arguments?.also {
+                if (it[ARG_ACTION] == ACTION_MOBILE) {
+                    viewModel.onGoToNameScreenClicked()
+                } else {
+                    viewModel.onGoToBirthScreenClicked()
+                }
+            }
+
         }
 
         navBar.backBtn.setOnClickListener {
@@ -40,8 +47,15 @@ class VerifyNumberFragment : Fragment() {
     companion object {
 
         const val TAG = "VerifyNumberFragment"
+        const val ACTION_MOBILE = "ACTION_MOBILE"
+        const val ACTION_SOCIAL = "ACTION_SOCIAL"
+        private const val ARG_ACTION = "ARG_ACTION"
 
         @JvmStatic
-        fun newInstance() = VerifyNumberFragment()
+        fun newInstance(action: String) = VerifyNumberFragment().apply {
+            arguments = Bundle().apply {
+                putString(ARG_ACTION, action)
+            }
+        }
     }
 }

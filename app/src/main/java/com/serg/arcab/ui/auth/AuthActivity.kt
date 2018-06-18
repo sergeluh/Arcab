@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import com.serg.arcab.R
 import com.serg.arcab.base.BaseActivity
+import com.serg.arcab.ui.main.MainActivity
 import com.serg.arcab.ui.auth.mobile.*
 import com.serg.arcab.ui.auth.social.FromSocialFragment
 import com.serg.arcab.ui.auth.social.SocialFragment
@@ -25,7 +26,7 @@ class AuthActivity : BaseActivity() {
         }
 
         viewModel.goToMobileNumberLogin.observe(this, Observer {
-            addFragment(PhoneFragment.newInstance(), PhoneFragment.TAG)
+            addFragment(PhoneFragment.newInstance(PhoneFragment.ACTION_MOBILE), PhoneFragment.TAG)
         })
 
         viewModel.goToSocialLogin.observe(this, Observer {
@@ -33,7 +34,7 @@ class AuthActivity : BaseActivity() {
         })
 
         viewModel.goToVerifyNumber.observe(this, Observer {
-            addFragment(VerifyNumberFragment.newInstance(), VerifyNumberFragment.TAG)
+            addFragment(VerifyNumberFragment.newInstance(VerifyNumberFragment.ACTION_MOBILE), VerifyNumberFragment.TAG)
         })
 
         viewModel.goToNameInput.observe(this, Observer {
@@ -67,6 +68,19 @@ class AuthActivity : BaseActivity() {
         viewModel.goToFillInfoFromSocial.observe(this, Observer {
             addFragment(FromSocialFragment.newInstance(), FromSocialFragment.TAG)
         })
+
+        viewModel.goToMobileNumberFomSocial.observe(this, Observer {
+            addFragment(PhoneFragment.newInstance(PhoneFragment.ACTION_SOCIAL), PhoneFragment.TAG)
+        })
+
+        viewModel.goToVerifyNumberFomSocial.observe(this, Observer {
+            addFragment(VerifyNumberFragment.newInstance(VerifyNumberFragment.ACTION_SOCIAL), VerifyNumberFragment.TAG)
+        })
+
+        viewModel.goToMain.observe(this, Observer {
+            MainActivity.start(this)
+            finish()
+        })
     }
 
     private fun popFragment() {
@@ -81,7 +95,7 @@ class AuthActivity : BaseActivity() {
 
     private fun addFragment(fragment: Fragment, tag: String) {
         supportFragmentManager.beginTransaction()
-                .add(R.id.container, fragment, tag)
+                .replace(R.id.container, fragment, tag)
                 .addToBackStack("my_stack")
                 .commit()
     }

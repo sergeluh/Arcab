@@ -8,7 +8,7 @@ import android.view.ViewGroup
 
 import com.serg.arcab.R
 import com.serg.arcab.ui.auth.AuthViewModel
-import kotlinx.android.synthetic.main.auth_navigation_view.view.*
+import kotlinx.android.synthetic.main.navigation_view.view.*
 import kotlinx.android.synthetic.main.fragment_phone.*
 import org.koin.android.architecture.ext.sharedViewModel
 
@@ -23,7 +23,13 @@ class PhoneFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         navBar.nextBtn.setOnClickListener {
-            viewModel.onGoToVerifyNumberScreenClicked()
+            arguments?.also {
+                if (it[ARG_ACTION] == ACTION_MOBILE) {
+                    viewModel.onGoToVerifyNumberScreenClicked()
+                } else {
+                    viewModel.onGoToVerifyNumberScreenFromSocialClicked()
+                }
+            }
         }
 
         navBar.backBtn.setOnClickListener {
@@ -34,8 +40,15 @@ class PhoneFragment : Fragment() {
     companion object {
 
         const val TAG = "PhoneFragment"
+        const val ACTION_MOBILE = "ACTION_MOBILE"
+        const val ACTION_SOCIAL = "ACTION_SOCIAL"
+        private const val ARG_ACTION = "ARG_ACTION"
 
         @JvmStatic
-        fun newInstance() = PhoneFragment()
+        fun newInstance(action: String) = PhoneFragment().apply {
+            arguments = Bundle().apply {
+                putString(ARG_ACTION, action)
+            }
+        }
     }
 }

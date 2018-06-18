@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <android.support.design.widget.FloatingActionButton
+    <ImageView
         android:id="@+id/backBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,10 +17,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/ic_arrow_back_black_24dp"
-        app:backgroundTint="#ffffff"
-        app:fabSize="mini"/>
+        android:padding="8dp"
+        android:background="@drawable/bg_back_btn"/>
 
-    <Button
+    <TextView
         android:id="@+id/nextBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -18,6 +18,7 @@ class AuthViewModel constructor(val userDataManager: UserDataManager): BaseViewM
     val goToIdInput = SingleLiveEvent<Unit>()
     val goToRules = SingleLiveEvent<Unit>()
     val goToFillInfoFromSocial = SingleLiveEvent<Unit>()
+    val goToMain = SingleLiveEvent<Unit>()
     val backAction = SingleLiveEvent<Unit>()
 
     fun onEnterWithMobileClicked() {
@@ -74,5 +75,9 @@ class AuthViewModel constructor(val userDataManager: UserDataManager): BaseViewM
 
     fun onGoToVerifyNumberScreenFromSocialClicked() {
         goToVerifyNumberFomSocial.call()
+    }
+
+    fun onSignUpCompleteClicked() {
+        goToMain.call()
     }
 }

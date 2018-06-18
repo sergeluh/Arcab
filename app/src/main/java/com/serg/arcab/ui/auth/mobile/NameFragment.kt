@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.serg.arcab.R
 import com.serg.arcab.base.BaseFragment
 import com.serg.arcab.ui.auth.AuthViewModel
-import kotlinx.android.synthetic.main.auth_navigation_view.view.*
+import kotlinx.android.synthetic.main.navigation_view.view.*
 import kotlinx.android.synthetic.main.fragment_name.*
 import org.koin.android.architecture.ext.sharedViewModel
 

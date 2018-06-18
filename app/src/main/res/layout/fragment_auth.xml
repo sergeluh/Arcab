@@ -37,7 +37,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
+        <TextView
             android:id="@+id/mobileBtn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
             app:layout_constraintStart_toStartOf="parent"
             style="@style/Button"/>
 
-        <Button
+        <TextView
             android:id="@+id/socialBtn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
