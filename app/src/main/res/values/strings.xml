@@ -11,4 +11,9 @@
     <string name="last_name">Last name</string>
     <string name="email_address">Email address</string>
     <string name="title_activity_maps">Map</string>
+    <string name="pick">Pick</string>
+    <string name="nearby">Nearby</string>
+    <string name="search_result">Search Results</string>
+    <string name="current_location">Current Location</string>
+    <string name="location_on_map">Location on Map</string>
 </resources>

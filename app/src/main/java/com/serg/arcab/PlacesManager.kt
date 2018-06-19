@@ -3,6 +3,7 @@ package com.serg.arcab
 import android.content.Context
 import com.google.android.gms.common.data.DataBufferUtils
 import com.google.android.gms.location.places.*
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.tasks.Tasks
 import com.serg.arcab.utils.launchSilent
 import kotlinx.coroutines.experimental.DefaultDispatcher
@@ -23,18 +24,18 @@ class PlacesManager constructor(
     private val ioContext: CoroutineContext = DefaultDispatcher
     private val uiContext: CoroutineContext = UI
 
-    fun setQuery(query: String, callback: Callback) = launchSilent(uiContext) {
+    fun setQuery(query: String, latLngBounds: LatLngBounds?, callback: Callback) = launchSilent(uiContext) {
         job?.cancel()
         callback.loading(true)
-        val deferred = search(query)
+        val deferred = search(query, latLngBounds)
         job = deferred
         val list = deferred.await()
         callback.result(list)
     }
 
 
-    private fun search(query: String) = async(ioContext) {
-        val results = mGeoDataClient.getAutocompletePredictions(query, null, AutocompleteFilter.Builder()
+    private fun search(query: String, latLngBounds: LatLngBounds? = null) = async(ioContext) {
+        val results = mGeoDataClient.getAutocompletePredictions(query, latLngBounds, AutocompleteFilter.Builder()
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
                 .build())
         if (results != null) {
