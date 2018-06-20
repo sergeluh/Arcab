@@ -8,6 +8,8 @@ class MainViewModel: BaseViewModel() {
     val backAction = SingleLiveEvent<Unit>()
     val goToLinkId = SingleLiveEvent<Unit>()
     val goToPlaces = SingleLiveEvent<Unit>()
+    val goToPickupPoint = SingleLiveEvent<Unit>()
+    val goToPickupTiming = SingleLiveEvent<Unit>()
 
     fun onGoToLinkIdClicked() {
         goToLinkId.call()
@@ -19,5 +21,13 @@ class MainViewModel: BaseViewModel() {
 
     fun onGoToPlacesClicked() {
         goToPlaces.call()
+    }
+
+    fun onGoToPickupPointClicked() {
+        goToPickupPoint.call()
+    }
+
+    fun onGoToPickupTimingClicked() {
+        goToPickupTiming.call()
     }
 }

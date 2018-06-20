@@ -10,7 +10,8 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        AuthActivity.start(this)
+        //AuthActivity.start(this)
+        MainActivity.start(this)
         finish()
     }
 }

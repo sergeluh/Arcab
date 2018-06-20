@@ -6,4 +6,7 @@
     <color name="colorDisabled">#787878</color>
 
     <color name="colorFragmentBg">#ffffff</color>
+
+    <color name="colorGrayLine">#CCCCCC</color>
+    <color name="colorGrayText">#484848</color>
 </resources>

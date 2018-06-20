@@ -45,6 +45,10 @@ class PlacesFragment : Fragment() {
             viewModel.onBackClicked()
         }
 
+        navBar.nextBtn.setOnClickListener {
+            viewModel.onGoToPickupPointClicked()
+        }
+
         adapter = SectionedCompositeAdapter.Builder()
                 .add(Section.Builder()
                         .setHeader(HeaderDelegate())
