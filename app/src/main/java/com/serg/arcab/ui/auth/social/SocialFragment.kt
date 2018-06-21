@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.serg.arcab.R
 import com.serg.arcab.ui.auth.AuthViewModel
 import kotlinx.android.synthetic.main.navigation_view.view.*
@@ -27,19 +26,6 @@ class SocialFragment : Fragment() {
         navBar.nextBtn.visibility = View.GONE
         googleBtn.setOnClickListener {
             viewModel.onLoginWithGoogleClicked()
-        }
-
-        val acct = GoogleSignIn.getLastSignedInAccount(activity!!)
-        Timber.d("GoogleSignIn $acct")
-        if (acct != null) {
-            val personName = acct.displayName
-            val personGivenName = acct.givenName
-            val personFamilyName = acct.familyName
-            val personEmail = acct.email
-            val personId = acct.id
-            val personPhoto = acct.photoUrl
-
-            Timber.d("GoogleSignIn $personName, $personFamilyName, $personEmail")
         }
     }
 
