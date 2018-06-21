@@ -37,7 +37,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.serg.arcab.ui.custom.PinEditText
-                android:id="@+id/editText"
+                android:id="@+id/verification_code"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_marginEnd="8dp"

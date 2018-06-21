@@ -1,6 +1,7 @@
 package com.serg.arcab.ui.auth
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.Transformations
 import com.google.firebase.auth.PhoneAuthCredential
@@ -27,9 +28,21 @@ class AuthViewModel constructor(private val userDataManager: UserDataManager): B
     val backAction = SingleLiveEvent<Unit>()
 
     private var phoneNumber: String? = null
+    val verificationCode = MutableLiveData<String>()
     private val verifyPhoneNumberTrigger = SingleLiveEvent<String?>()
-    val verifyPhoneNumber: LiveData<Result<PhoneAuthCredential>> = Transformations.switchMap(verifyPhoneNumberTrigger) {
-        userDataManager.verifyPhoneNumber(it)
+    private val signInWithPhoneAuthCredentialTrigger = SingleLiveEvent<PhoneAuthCredential>()
+    private val createCredentionalWithCodeTrigger = SingleLiveEvent<String?>()
+
+    val verifyPhoneNumber: LiveData<Result<FirebaseAuthModel>> = Transformations.switchMap(verifyPhoneNumberTrigger) { phoneNumber ->
+        userDataManager.verifyPhoneNumber(phoneNumber)
+    }
+
+    val signInWithPhoneAuthCredential: LiveData<Result<FirebaseAuthModel>> = Transformations.switchMap(signInWithPhoneAuthCredentialTrigger) {
+        userDataManager.signInWithPhoneAuthCredential(it)
+    }
+
+    val createCredentialsWithCode: LiveData<Result<FirebaseAuthModel>> = Transformations.switchMap(createCredentionalWithCodeTrigger) {
+        userDataManager.createCredentiolsWithCode(it)
     }
 
     fun onEnterWithMobileClicked() {
@@ -99,4 +112,18 @@ class AuthViewModel constructor(private val userDataManager: UserDataManager): B
     fun onPhoneInputChanged(phoneNumber: String) {
         this.phoneNumber = phoneNumber
     }
+
+    fun signIn(credential: PhoneAuthCredential) {
+        signInWithPhoneAuthCredentialTrigger.value = credential
+    }
+
+    fun createCredentiols(code: String)
+    {
+        createCredentionalWithCodeTrigger.value = code
+    }
+
+    fun onVerificationCodeInputChanged(value: String) {
+        verificationCode.value = value
+    }
+
 }

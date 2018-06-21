@@ -25,7 +25,7 @@ class PinEditText: EditText {
 
     var mSpace = 24f
     var mCharSize = 0f
-    var mNumChars = 5
+    var mNumChars = 6
     var mLineSpacing = 8f
 
     private var mLineStroke = 1f //1dp by default

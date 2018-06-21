@@ -47,8 +47,13 @@ class PhoneFragment : BaseFragment() {
                     viewModel.onPhoneInputChanged(it.toString())
                 }
 
-        viewModel.verifyPhoneNumber.observe(this, Observer {
-            Timber.d("verifyPhoneNumber $it")
+        viewModel.verifyPhoneNumber.observe(this, Observer { authModel ->
+
+            if(authModel?.data?.authCode != null && authModel?.data?.authId != null ) {
+                viewModel.onGoToVerifyNumberScreenClicked()
+
+            }
+            Timber.d("verifyPhoneNumber $authModel")
         })
     }
 
