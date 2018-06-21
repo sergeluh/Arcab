@@ -1,10 +1,15 @@
 package com.serg.arcab.ui.auth
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.Transformations
+import com.google.firebase.auth.PhoneAuthCredential
+import com.serg.arcab.Result
 import com.serg.arcab.base.BaseViewModel
 import com.serg.arcab.datamanager.UserDataManager
 import com.serg.arcab.utils.SingleLiveEvent
 
-class AuthViewModel constructor(val userDataManager: UserDataManager): BaseViewModel() {
+class AuthViewModel constructor(private val userDataManager: UserDataManager): BaseViewModel() {
 
     val goToMobileNumberLogin = SingleLiveEvent<Unit>()
     val goToMobileNumberFomSocial = SingleLiveEvent<Unit>()
@@ -20,6 +25,12 @@ class AuthViewModel constructor(val userDataManager: UserDataManager): BaseViewM
     val goToFillInfoFromSocial = SingleLiveEvent<Unit>()
     val goToMain = SingleLiveEvent<Unit>()
     val backAction = SingleLiveEvent<Unit>()
+
+    private var phoneNumber: String? = null
+    private val verifyPhoneNumberTrigger = SingleLiveEvent<String?>()
+    val verifyPhoneNumber: LiveData<Result<PhoneAuthCredential>> = Transformations.switchMap(verifyPhoneNumberTrigger) {
+        userDataManager.verifyPhoneNumber(it)
+    }
 
     fun onEnterWithMobileClicked() {
         goToMobileNumberLogin.call()
@@ -79,5 +90,13 @@ class AuthViewModel constructor(val userDataManager: UserDataManager): BaseViewM
 
     fun onSignUpCompleteClicked() {
         goToMain.call()
+    }
+
+    fun verifyPhoneNumber() {
+        verifyPhoneNumberTrigger.value = phoneNumber
+    }
+
+    fun onPhoneInputChanged(phoneNumber: String) {
+        this.phoneNumber = phoneNumber
     }
 }
