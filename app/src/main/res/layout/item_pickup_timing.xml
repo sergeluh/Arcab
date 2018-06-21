@@ -48,13 +48,95 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.serg.arcab.ui.custom.LetterCheckBox
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginStart="212dp"
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewAddress" />
+        app:layout_constraintTop_toBottomOf="@+id/btnBack">
+
+        <ToggleButton
+            android:id="@+id/tog_sunday"
+            style="@style/CustomToggleButtonStyle"
+            android:textOn="S"
+            android:textOff="S"
+            android:checked="false"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintEnd_toStartOf="@+id/tog_monday"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ToggleButton
+            android:id="@+id/tog_monday"
+            style="@style/CustomToggleButtonStyle"
+            android:textOn="M"
+            android:textOff="M"
+            android:checked="false"
+            app:layout_constraintEnd_toStartOf="@+id/tog_tuesday"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tog_sunday"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ToggleButton
+            android:id="@+id/tog_tuesday"
+            style="@style/CustomToggleButtonStyle"
+            android:textOn="T"
+            android:textOff="T"
+            android:checked="false"
+            app:layout_constraintEnd_toStartOf="@+id/tog_wednesday"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tog_monday"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ToggleButton
+            android:id="@+id/tog_wednesday"
+            style="@style/CustomToggleButtonStyle"
+            android:textOn="W"
+            android:textOff="W"
+            android:checked="false"
+            app:layout_constraintEnd_toStartOf="@+id/tog_thursday"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tog_tuesday"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ToggleButton
+            android:id="@+id/tog_thursday"
+            style="@style/CustomToggleButtonStyle"
+            android:textOn="T"
+            android:textOff="T"
+            android:checked="false"
+            app:layout_constraintEnd_toStartOf="@+id/tog_friday"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tog_wednesday"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ToggleButton
+            android:id="@+id/tog_friday"
+            style="@style/CustomToggleButtonStyle"
+            android:textOn="F"
+            android:textOff="F"
+            android:checked="false"
+            android:enabled="false"
+            app:layout_constraintEnd_toStartOf="@+id/tog_saturday"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tog_thursday"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ToggleButton
+            android:id="@+id/tog_saturday"
+            style="@style/CustomToggleButtonStyle"
+            android:textOn="S"
+            android:textOff="S"
+            android:checked="false"
+            android:enabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tog_friday"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+
+
 
 
 

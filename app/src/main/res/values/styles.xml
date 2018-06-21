@@ -64,4 +64,18 @@
         <!--<item name="android:textColor">@color/colorGrayText</item>-->
     </style>
 
+
+    <!--Style for checkbox with letter-->
+    <style name="CustomToggleButtonStyle">
+        <item name="android:layout_width">35dp</item>
+        <item name="android:layout_height">35dp</item>
+        <item name="android:background">@drawable/selector_custom_check_box</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:layout_marginRight">12dp</item>
+        <item name="android:layout_marginEnd">12dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@drawable/selector_check_box_text_color</item>
+    </style>
+
 </resources>

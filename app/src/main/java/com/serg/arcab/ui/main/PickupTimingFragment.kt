@@ -63,7 +63,7 @@ class PickupTimingFragment : Fragment() {
         commonData.add("First point")
 
 
-        var commonAdapter = PointRecyclerViewAdapter(commonData, common_recycler_view)
+        var commonAdapter = TimingRecyclerViewAdapter(commonData, common_recycler_view)
 
         common_recycler_view.layoutManager = LinearLayoutManager(context, LinearLayout.HORIZONTAL, false)
         common_recycler_view.adapter = commonAdapter
@@ -81,7 +81,7 @@ class PickupTimingFragment : Fragment() {
         yourData.add("My asdfdfs point")
 
 
-        var yourAdapter = PointRecyclerViewAdapter(yourData, your_recycler_view)
+        var yourAdapter = TimingRecyclerViewAdapter(yourData, your_recycler_view)
 
         your_recycler_view.layoutManager = LinearLayoutManager(context, LinearLayout.HORIZONTAL, false)
         your_recycler_view.adapter = yourAdapter
@@ -91,15 +91,6 @@ class PickupTimingFragment : Fragment() {
 
         textViewYourPointAvailable.text = String.format(getString(R.string.initial_setup_pickup_point_available), yourData.size)
 
-        /*mapView.getMapAsync {
-
-        }
-        mapView.onCreate(savedInstanceState)
-
-        mapView2.getMapAsync {
-
-        }
-        mapView2.onCreate(savedInstanceState)*/
     }
 
     private fun checkSelected() {
@@ -113,36 +104,6 @@ class PickupTimingFragment : Fragment() {
             view.visibility = View.GONE
         }
 
-    }
-
-    override fun onStop() {
-        super.onStop()
-        /*mapView.onStop()
-        mapView2.onStop()*/
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        /*mapView.onDestroy()
-        mapView2.onDestroy()*/
-    }
-
-    override fun onResume() {
-        super.onResume()
-        /*mapView.onResume()
-        mapView2.onResume()*/
-    }
-
-    override fun onPause() {
-        super.onPause()
-        /*mapView.onPause()
-        mapView2.onPause()*/
-    }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        /*mapView.onLowMemory()
-        mapView2.onLowMemory()*/
     }
 
     companion object {
