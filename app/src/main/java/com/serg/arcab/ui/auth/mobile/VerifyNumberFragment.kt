@@ -1,25 +1,20 @@
 package com.serg.arcab.ui.auth.mobile
 
-
 import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
-import com.serg.arcab.R
-import com.serg.arcab.ui.auth.AuthViewModel
-import kotlinx.android.synthetic.main.navigation_view.view.*
-import kotlinx.android.synthetic.main.fragment_verify_number.*
-import org.koin.android.architecture.ext.sharedViewModel
-import timber.log.Timber
-import com.google.firebase.auth.PhoneAuthProvider
-import com.google.firebase.auth.PhoneAuthCredential
 import com.jakewharton.rxbinding2.widget.RxTextView
+import com.serg.arcab.R
+import com.serg.arcab.Result
+import com.serg.arcab.base.BaseFragment
+import com.serg.arcab.ui.auth.AuthViewModel
+import kotlinx.android.synthetic.main.fragment_verify_number.*
+import kotlinx.android.synthetic.main.navigation_view.view.*
+import org.koin.android.architecture.ext.sharedViewModel
 
-
-class VerifyNumberFragment : Fragment() {
+class VerifyNumberFragment : BaseFragment() {
 
     private val viewModel by sharedViewModel<AuthViewModel>()
 
@@ -31,8 +26,7 @@ class VerifyNumberFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         navBar.nextBtn.setOnClickListener {
-
-            viewModel.createCredentiols(navBar.nextBtn.text.toString())
+            viewModel.signIn()
 
             /*arguments?.also {
                 if (it[ARG_ACTION] == ACTION_MOBILE) {
@@ -46,6 +40,21 @@ class VerifyNumberFragment : Fragment() {
 
         }
 
+        viewModel.firebaseUser.observe(viewLifecycleOwner, Observer {
+            when(it?.status) {
+                Result.Status.SUCCESS -> {
+                    hideLoading()
+                }
+                Result.Status.ERROR -> {
+                    hideLoading()
+                    showMessage(it.message)
+                }
+                Result.Status.LOADING -> {
+                    showLoading()
+                }
+            }
+        })
+
         RxTextView.textChanges(verification_code)
                 .subscribe {
                     viewModel.onVerificationCodeInputChanged(it.toString())
@@ -58,39 +67,6 @@ class VerifyNumberFragment : Fragment() {
         editNumberBtn.setOnClickListener {
             viewModel.onBackClicked()
         }
-
-        viewModel.verifyPhoneNumber.observe(this, Observer { authModel ->
-
-            if(authModel?.data?.authUser != null) {
-                viewModel.onGoToNameScreenClicked()
-            }
-
-            if(authModel?.data?.credentials != null) {
-                //TODO sign in
-                viewModel.signIn(authModel.data!!.credentials!!)
-            }
-
-            if(authModel?.data?.authCode != null && authModel?.data?.authId != null ) {
-
-            }
-            Timber.d("verifyPhoneNumber $authModel")
-        })
-
-        viewModel.signInWithPhoneAuthCredential.observe(this, Observer {
-
-        })
-
-        viewModel.verificationCode.observe(this, Observer {
-            navBar.nextBtn.isEnabled = it != null && it.length == 6
-        })
-
-        viewModel.createCredentialsWithCode.observe(this, Observer { authModel ->
-            if(authModel?.data?.credentials != null) {
-                //TODO sign in
-                viewModel.signIn(authModel.data!!.credentials!!)
-            }
-        })
-
     }
 
     companion object {

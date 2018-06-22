@@ -33,11 +33,11 @@ class AuthActivity : BaseActivity() {
             addFragment(SocialFragment.newInstance(), SocialFragment.TAG)
         })
 
-        viewModel.goToVerifyNumber.observe(this, Observer {
+        viewModel.onCodeSentAction.observe(this, Observer {
             addFragment(VerifyNumberFragment.newInstance(VerifyNumberFragment.ACTION_MOBILE), VerifyNumberFragment.TAG)
         })
 
-        viewModel.goToNameInput.observe(this, Observer {
+        viewModel.onSignedInAction.observe(this, Observer {
             addFragment(NameFragment.newInstance(), NameFragment.TAG)
         })
 

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
 
 import com.serg.arcab.R
+import com.serg.arcab.Result
 import com.serg.arcab.base.BaseFragment
 import com.serg.arcab.ui.auth.AuthViewModel
 import kotlinx.android.synthetic.main.navigation_view.view.*
@@ -42,18 +43,23 @@ class PhoneFragment : BaseFragment() {
         }
 
         RxTextView.textChanges(phoneEditText)
-//                .skipInitialValue()
                 .subscribe {
                     viewModel.onPhoneInputChanged(it.toString())
                 }
 
-        viewModel.verifyPhoneNumber.observe(this, Observer { authModel ->
-
-            if(authModel?.data?.authCode != null && authModel?.data?.authId != null ) {
-                viewModel.onGoToVerifyNumberScreenClicked()
-
+        viewModel.phoneVerification.observe(viewLifecycleOwner, Observer { result ->
+            when(result?.status) {
+                Result.Status.ERROR -> {
+                    hideLoading()
+                    showMessage(result.message)
+                }
+                Result.Status.SUCCESS -> {
+                    hideLoading()
+                }
+                Result.Status.LOADING -> {
+                    showLoading()
+                }
             }
-            Timber.d("verifyPhoneNumber $authModel")
         })
     }
 

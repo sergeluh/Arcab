@@ -1,11 +1,7 @@
 package com.serg.arcab.ui.auth
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.Transformations
 import com.google.firebase.auth.PhoneAuthCredential
-import com.serg.arcab.Result
 import com.serg.arcab.base.BaseViewModel
 import com.serg.arcab.datamanager.UserDataManager
 import com.serg.arcab.utils.SingleLiveEvent
@@ -15,9 +11,7 @@ class AuthViewModel constructor(private val userDataManager: UserDataManager): B
     val goToMobileNumberLogin = SingleLiveEvent<Unit>()
     val goToMobileNumberFomSocial = SingleLiveEvent<Unit>()
     val goToSocialLogin = SingleLiveEvent<Unit>()
-    val goToVerifyNumber = SingleLiveEvent<Unit>()
     val goToVerifyNumberFomSocial = SingleLiveEvent<Unit>()
-    val goToNameInput = SingleLiveEvent<Unit>()
     val goToEmailInput = SingleLiveEvent<Unit>()
     val goToPasswordInput = SingleLiveEvent<Unit>()
     val goToBirthInput = SingleLiveEvent<Unit>()
@@ -29,21 +23,12 @@ class AuthViewModel constructor(private val userDataManager: UserDataManager): B
 
     private var phoneNumber: String? = null
     val verificationCode = MutableLiveData<String>()
-    private val verifyPhoneNumberTrigger = SingleLiveEvent<String?>()
-    private val signInWithPhoneAuthCredentialTrigger = SingleLiveEvent<PhoneAuthCredential>()
-    private val createCredentionalWithCodeTrigger = SingleLiveEvent<String?>()
 
-    val verifyPhoneNumber: LiveData<Result<FirebaseAuthModel>> = Transformations.switchMap(verifyPhoneNumberTrigger) { phoneNumber ->
-        userDataManager.verifyPhoneNumber(phoneNumber)
-    }
-
-    val signInWithPhoneAuthCredential: LiveData<Result<FirebaseAuthModel>> = Transformations.switchMap(signInWithPhoneAuthCredentialTrigger) {
-        userDataManager.signInWithPhoneAuthCredential(it)
-    }
-
-    val createCredentialsWithCode: LiveData<Result<FirebaseAuthModel>> = Transformations.switchMap(createCredentionalWithCodeTrigger) {
-        userDataManager.createCredentiolsWithCode(it)
-    }
+    val user = userDataManager.getUser()
+    val onCodeSentAction = userDataManager.getOnCodeSentAction()
+    val onSignedInAction = userDataManager.getOnSignedInAction()
+    val phoneVerification = userDataManager.getPhoneVerification()
+    val firebaseUser = userDataManager.getFirebaseUser()
 
     fun onEnterWithMobileClicked() {
         goToMobileNumberLogin.call()
@@ -53,13 +38,13 @@ class AuthViewModel constructor(private val userDataManager: UserDataManager): B
         goToSocialLogin.call()
     }
 
-    fun onGoToVerifyNumberScreenClicked() {
-        goToVerifyNumber.call()
-    }
+    /*fun onGoToVerifyNumberScreenClicked() {
+        onCodeSentAction.call()
+    }*/
 
-    fun onGoToNameScreenClicked() {
-        goToNameInput.call()
-    }
+    /*fun onGoToNameScreenClicked() {
+        onPhoneVerifiedAction.call()
+    }*/
 
     fun onGoToEmailScreenClicked() {
         goToEmailInput.call()
@@ -83,9 +68,7 @@ class AuthViewModel constructor(private val userDataManager: UserDataManager): B
 
 
 
-    fun onBackClicked() {
-        backAction.call()
-    }
+
 
 
 
@@ -105,25 +88,32 @@ class AuthViewModel constructor(private val userDataManager: UserDataManager): B
         goToMain.call()
     }
 
-    fun verifyPhoneNumber() {
-        verifyPhoneNumberTrigger.value = phoneNumber
-    }
+
+
+
+
+
 
     fun onPhoneInputChanged(phoneNumber: String) {
         this.phoneNumber = phoneNumber
-    }
-
-    fun signIn(credential: PhoneAuthCredential) {
-        signInWithPhoneAuthCredentialTrigger.value = credential
-    }
-
-    fun createCredentiols(code: String)
-    {
-        createCredentionalWithCodeTrigger.value = code
     }
 
     fun onVerificationCodeInputChanged(value: String) {
         verificationCode.value = value
     }
 
+    fun signIn() {
+        userDataManager.createCredentialsWithCode(verificationCode.value)
+    }
+
+    fun verifyPhoneNumber() {
+        userDataManager.verifyPhoneNumber(phoneNumber)
+    }
+
+
+
+
+    fun onBackClicked() {
+        backAction.call()
+    }
 }
