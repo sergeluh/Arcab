@@ -90,16 +90,6 @@ class PickupPointFragment : Fragment() {
         snapHelper.attachToRecyclerView(your_recycler_view)
 
         textViewYourPointAvailable.text = String.format(getString(R.string.initial_setup_pickup_point_available), yourData.size)
-
-        /*mapView.getMapAsync {
-
-        }
-        mapView.onCreate(savedInstanceState)
-
-        mapView2.getMapAsync {
-
-        }
-        mapView2.onCreate(savedInstanceState)*/
     }
 
     private fun checkSelected() {
@@ -113,36 +103,6 @@ class PickupPointFragment : Fragment() {
             view.visibility = View.GONE
         }
 
-    }
-
-    override fun onStop() {
-        super.onStop()
-        /*mapView.onStop()
-        mapView2.onStop()*/
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        /*mapView.onDestroy()
-        mapView2.onDestroy()*/
-    }
-
-    override fun onResume() {
-        super.onResume()
-        /*mapView.onResume()
-        mapView2.onResume()*/
-    }
-
-    override fun onPause() {
-        super.onPause()
-        /*mapView.onPause()
-        mapView2.onPause()*/
-    }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        /*mapView.onLowMemory()
-        mapView2.onLowMemory()*/
     }
 
     companion object {

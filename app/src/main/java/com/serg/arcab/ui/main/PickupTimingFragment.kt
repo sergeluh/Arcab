@@ -34,26 +34,18 @@ class PickupTimingFragment : Fragment() {
         }
 
         navBar.nextBtn.setOnClickListener {
-            viewModel.onGoToPickupTimingClicked()
+            viewModel.onGoToPreferredSeatClicked()
         }
 
         navBar.nextBtn.isEnabled = false
 
         check_box_common_point.setOnClickListener(View.OnClickListener {
             setVisibility(common_recycler_view, check_box_common_point.isChecked)
-            if(check_box_your_point.isChecked) {
-                check_box_your_point.isChecked = false
-                setVisibility(your_recycler_view)
-            }
             checkSelected()
         })
 
         check_box_your_point.setOnClickListener(View.OnClickListener {
             setVisibility(your_recycler_view, check_box_your_point.isChecked)
-            if(check_box_common_point.isChecked) {
-                check_box_common_point.isChecked = false
-                setVisibility(common_recycler_view)
-            }
             checkSelected()
         })
 
@@ -71,7 +63,7 @@ class PickupTimingFragment : Fragment() {
         val commonSnapHelper = PagerSnapHelper()
         commonSnapHelper.attachToRecyclerView(common_recycler_view)
 
-        textViewCommonPointAvailable.text = String.format(getString(R.string.initial_setup_pickup_point_available), commonData.size)
+        textViewCommonPointAvailable.text = String.format(getString(R.string.initial_setup_pickup_timing_available), commonData.size)
 
         //
 

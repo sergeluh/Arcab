@@ -41,6 +41,15 @@ class MainActivity : BaseActivity() {
             addFragment(PickupTimingFragment.newInstance(), PlacesFragment.TAG)
         })
 
+        viewModel.goToPreferredSeat.observe(this, Observer {
+            addFragment(PreferredSeatFragment.newInstance(), PlacesFragment.TAG)
+        })
+
+        viewModel.goToPaymentPlan.observe(this, Observer {
+            addFragment(PaymentPlanFragment.newInstance(), PlacesFragment.TAG)
+        })
+
+
     }
 
     private fun popFragment() {
