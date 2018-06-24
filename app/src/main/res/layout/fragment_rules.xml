@@ -127,7 +127,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/switch4" />
 
             <CheckBox
-                android:id="@+id/checkBox"
+                android:id="@+id/termsAgreementCheckBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -151,7 +151,7 @@
                 android:textColor="@color/colorAccent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/checkBox"
+                app:layout_constraintTop_toBottomOf="@+id/termsAgreementCheckBox"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintVertical_bias="0.0"/>
 

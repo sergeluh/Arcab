@@ -26,10 +26,11 @@
     <string name="initial_setup_pickup_point_available">%1$d Points Available</string>
     <string name="initial_setup_pickup_timing_available">%1$d Timings Available</string>
     <string name="initial_setup_pickup_from">From Burjuman Metro Station Bus Stop C</string>
-    <string name="initial_setup_pickup_address">9th Street, Bank Road, Bur Dub...</string>
+    <string name="initial_setup_pickup_address">9th Street, Bank Road, Bur Dub…</string>
     <string name="initial_setup_pickup_pick_point">Pick Me Up At</string>
     <string name="initial_setup_pickup_drop_point">Drop Me Off At</string>
     <string name="initial_setup_pickup_timing_switch">Ask me to reschedule these timings at the beginning of every week.</string>
+    <string name="initial_setup_email_title">Hi %1$s</string>
 
 
 </resources>

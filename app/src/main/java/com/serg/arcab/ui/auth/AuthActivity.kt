@@ -77,7 +77,7 @@ class AuthActivity : BaseActivity() {
             addFragment(VerifyNumberFragment.newInstance(VerifyNumberFragment.ACTION_SOCIAL), VerifyNumberFragment.TAG)
         })
 
-        viewModel.goToMain.observe(this, Observer {
+        viewModel.onProfileUploadedAction.observe(this, Observer {
             MainActivity.start(this)
             finish()
         })

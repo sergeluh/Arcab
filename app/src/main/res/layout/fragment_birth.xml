@@ -37,7 +37,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <RadioGroup
-                android:id="@+id/radioGroup2"
+                android:id="@+id/genderRadioGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
@@ -48,12 +48,13 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView">
 
                 <RadioButton
+                    android:id="@+id/female"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:button="@null"
                     android:background="@android:color/transparent"
                     android:text="Female"
-                    android:textColor="@drawable/selector_gender_text"
+                    android:textColor="@drawable/selector_text"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
 
                 <TextView
@@ -63,12 +64,13 @@
                     android:text=" / "/>
 
                 <RadioButton
+                    android:id="@+id/male"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:button="@android:color/transparent"
                     android:text="Male"
-                    android:textColor="@drawable/selector_gender_text"
+                    android:textColor="@drawable/selector_text"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
 
                 <TextView
@@ -78,12 +80,13 @@
                     android:text=" / "/>
 
                 <RadioButton
+                    android:id="@+id/unspecified"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:button="@android:color/transparent"
                     android:text="Unspecified"
-                    android:textColor="@drawable/selector_gender_text"
+                    android:textColor="@drawable/selector_text"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
 
             </RadioGroup>
@@ -92,9 +95,9 @@
                 android:id="@+id/textView10"
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
-                app:layout_constraintEnd_toEndOf="@+id/radioGroup2"
-                app:layout_constraintStart_toStartOf="@+id/radioGroup2"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup2"
+                app:layout_constraintEnd_toEndOf="@+id/genderRadioGroup"
+                app:layout_constraintStart_toStartOf="@+id/genderRadioGroup"
+                app:layout_constraintTop_toBottomOf="@+id/genderRadioGroup"
                 android:background="@color/colorDisabled"/>
 
             <TextView
@@ -105,11 +108,11 @@
                 android:textAllCaps="true"
                 android:textStyle="bold"
                 android:layout_marginTop="4dp"
-                app:layout_constraintStart_toStartOf="@+id/radioGroup2"
+                app:layout_constraintStart_toStartOf="@+id/genderRadioGroup"
                 app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
             <TextView
-                android:id="@+id/textView12"
+                android:id="@+id/dateTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -122,9 +125,9 @@
                 android:id="@+id/textView13"
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
-                app:layout_constraintEnd_toEndOf="@+id/radioGroup2"
-                app:layout_constraintStart_toStartOf="@+id/radioGroup2"
-                app:layout_constraintTop_toBottomOf="@+id/textView12"
+                app:layout_constraintEnd_toEndOf="@+id/genderRadioGroup"
+                app:layout_constraintStart_toStartOf="@+id/genderRadioGroup"
+                app:layout_constraintTop_toBottomOf="@+id/dateTextView"
                 android:background="@color/colorDisabled" />
 
             <TextView
@@ -135,7 +138,7 @@
                 android:text="Date of birth"
                 android:textAllCaps="true"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/textView12"
+                app:layout_constraintStart_toStartOf="@+id/dateTextView"
                 app:layout_constraintTop_toBottomOf="@+id/textView13" />
 
             <TextView

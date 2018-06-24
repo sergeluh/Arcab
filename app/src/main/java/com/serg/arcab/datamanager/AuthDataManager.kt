@@ -7,6 +7,7 @@ import android.os.Looper
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
+import com.google.firebase.database.FirebaseDatabase
 import com.serg.arcab.Result
 import com.serg.arcab.User
 import com.serg.arcab.data.AppExecutors
@@ -16,39 +17,47 @@ import timber.log.Timber
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 
-interface UserDataManager {
+interface AuthDataManager {
     fun verifyPhoneNumber(phoneNumber: String?)
-    fun createCredentialsWithCode(code: String?)
+    fun signInWithCode(code: String?)
+    fun getStarted()
 
-    fun getUser(): LiveData<Result<User>>
+    fun getUser(): MutableLiveData<User>
     fun getOnCodeSentAction(): LiveData<Unit>
-    fun getPhoneVerification(): LiveData<Result<FirebaseAuthModel>>
+    fun getPhoneVerificationModel(): LiveData<Result<FirebaseAuthModel>>
     fun getFirebaseUser(): LiveData<Result<FirebaseUser>>
     fun getOnSignedInAction(): SingleLiveEvent<Unit>
+    fun getProfileUpload(): MutableLiveData<Result<Unit>>
+    fun getOnProfileUploadedAction(): SingleLiveEvent<Unit>
 }
 
-class UserDataManagerImpl constructor(val appExecutors: AppExecutors): UserDataManager {
-    override fun getUser(): LiveData<Result<User>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+class AuthDataManagerImpl constructor(val appExecutors: AppExecutors): AuthDataManager {
 
-    private val phoneVerification = MutableLiveData<Result<FirebaseAuthModel>>()
+    private val phoneVerificationModel = MutableLiveData<Result<FirebaseAuthModel>>()
     private val onCodeSentAction = SingleLiveEvent<Unit>()
     private val firebaseUser = MutableLiveData<Result<FirebaseUser>>()
     private val onSignedInAction = SingleLiveEvent<Unit>()
+    private val user = MutableLiveData<User>().apply {
+        value = User()
+    }
+    private val profileUpload = MutableLiveData<Result<Unit>>()
+    private val onProfileUploadedAction = SingleLiveEvent<Unit>()
 
     override fun getOnCodeSentAction() = onCodeSentAction
-    override fun getPhoneVerification() = phoneVerification
+    override fun getOnProfileUploadedAction() = onProfileUploadedAction
+    override fun getPhoneVerificationModel() = phoneVerificationModel
     override fun getFirebaseUser() = firebaseUser
     override fun getOnSignedInAction() = onSignedInAction
+    override fun getUser() = user
+    override fun getProfileUpload() = profileUpload
 
     override fun verifyPhoneNumber(phoneNumber: String?) {
         Timber.d("verifyPhoneNumber $phoneNumber")
 
         if (phoneNumber == null || phoneNumber.isBlank()) {
-            phoneVerification.value = Result.error("Invalid phone number")
+            phoneVerificationModel.value = Result.error("Invalid phone number")
         } else {
-            phoneVerification.value = Result.loading()
+            phoneVerificationModel.value = Result.loading()
             PhoneAuthProvider.getInstance().verifyPhoneNumber(
                     phoneNumber,
                     60,
@@ -57,23 +66,24 @@ class UserDataManagerImpl constructor(val appExecutors: AppExecutors): UserDataM
                     object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                         override fun onVerificationCompleted(credentials: PhoneAuthCredential) {
                             Timber.d("onVerificationCompleted $credentials")
+                            phoneVerificationModel.value = Result.success(null)
                             signInWithPhoneAuthCredential(credentials)
                         }
 
                         override fun onVerificationFailed(exc: FirebaseException) {
                             Timber.e(exc, "onVerificationFailed")
-                            phoneVerification.value = Result.error(exc.message)
+                            phoneVerificationModel.value = Result.error(exc.message)
                         }
 
                         override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken?) {
                             Timber.d("onCodeSentAction $verificationId, token: $token")
-                            phoneVerification.value = Result.success(FirebaseAuthModel(verificationId, token))
+                            phoneVerificationModel.value = Result.success(FirebaseAuthModel(verificationId, token))
                             onCodeSentAction.call()
                         }
 
                         override fun onCodeAutoRetrievalTimeOut(p0: String?) {
                             Timber.w("onCodeAutoRetrievalTimeOut $p0")
-                            phoneVerification.value = Result.error("Timeout")
+                            phoneVerificationModel.value = Result.error("Timeout")
                         }
                     })
         }
@@ -81,6 +91,7 @@ class UserDataManagerImpl constructor(val appExecutors: AppExecutors): UserDataM
 
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
         Timber.d("signInWithPhoneAuthCredential")
+        firebaseUser.value = Result.loading()
         FirebaseAuth.getInstance()
                 .signInWithCredential(credential)
                 .addOnCompleteListener(UiThreadExecutor(), OnCompleteListener<AuthResult> { task ->
@@ -89,7 +100,6 @@ class UserDataManagerImpl constructor(val appExecutors: AppExecutors): UserDataM
                         val user = task.result.user
                         Timber.d("signInWithPhoneAuthCredential user $user")
                         firebaseUser.value = Result.success(user)
-                        phoneVerification.value = Result.success(null)
                         onSignedInAction.call()
                     } else {
                         Timber.e(task.exception)
@@ -103,8 +113,8 @@ class UserDataManagerImpl constructor(val appExecutors: AppExecutors): UserDataM
                 })
     }
 
-    override fun createCredentialsWithCode(code: String?) {
-        val verificationId = phoneVerification.value?.data?.verificationId
+    override fun signInWithCode(code: String?) {
+        val verificationId = phoneVerificationModel.value?.data?.verificationId
         if (code == null || code.isBlank() || code.length != 6) {
             firebaseUser.value = Result.error("Input verification code")
         } else if (verificationId != null) {
@@ -114,7 +124,22 @@ class UserDataManagerImpl constructor(val appExecutors: AppExecutors): UserDataM
         }
     }
 
+    override fun getStarted() {
+        val database = FirebaseDatabase.getInstance()
+        val myRef = database.getReference()
 
+        profileUpload.value = Result.loading()
+
+        myRef.child("users").child(firebaseUser.value?.data?.uid!!).setValue(user.value)
+                .addOnSuccessListener {
+                    profileUpload.value = Result.success(Unit)
+                    onProfileUploadedAction.call()
+                }
+                .addOnFailureListener {
+                    Timber.e(it)
+                    profileUpload.value = Result.error(it.message)
+                }
+    }
 
     private class UiThreadExecutor : Executor {
         private val mHandler = Handler(Looper.getMainLooper())
@@ -124,3 +149,35 @@ class UserDataManagerImpl constructor(val appExecutors: AppExecutors): UserDataM
         }
     }
 }
+
+/*
+*
+* {
+  "rules": {
+    "r-users":{
+      ".write": true,
+      ".read": true
+    },
+    "users": {
+      "$uid": {
+        ".write": "$uid === auth.uid",
+        ".read": "$uid === auth.uid"
+      }
+    },
+    "universities": {
+    	".write": true,
+      ".read": true,
+      ".indexOn": ["id", "sufix"]
+    },
+      "common_points": {
+        ".write": true,
+        ".read": true,
+        ".indexOn": ["id"]
+      },
+      "trips": {
+        ".write": true,
+        ".read": true,
+        ".indexOn": ["id"]
+      }
+  }
+}*/

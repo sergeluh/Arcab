@@ -2,7 +2,6 @@ package com.serg.arcab.ui.auth.mobile
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,6 @@ import com.serg.arcab.ui.auth.AuthViewModel
 import kotlinx.android.synthetic.main.navigation_view.view.*
 import kotlinx.android.synthetic.main.fragment_phone.*
 import org.koin.android.architecture.ext.sharedViewModel
-import timber.log.Timber
 
 class PhoneFragment : BaseFragment() {
 
@@ -47,7 +45,22 @@ class PhoneFragment : BaseFragment() {
                     viewModel.onPhoneInputChanged(it.toString())
                 }
 
-        viewModel.phoneVerification.observe(viewLifecycleOwner, Observer { result ->
+        viewModel.phoneVerificationModel.observe(viewLifecycleOwner, Observer { result ->
+            when(result?.status) {
+                Result.Status.ERROR -> {
+                    hideLoading()
+                    showMessage(result.message)
+                }
+                Result.Status.SUCCESS -> {
+                    hideLoading()
+                }
+                Result.Status.LOADING -> {
+                    showLoading()
+                }
+            }
+        })
+
+        viewModel.firebaseUser.observe(viewLifecycleOwner, Observer { result ->
             when(result?.status) {
                 Result.Status.ERROR -> {
                     hideLoading()
