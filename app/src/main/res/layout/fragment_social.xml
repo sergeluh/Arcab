@@ -43,8 +43,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:text="Google"
-            style="@style/Button"
-            android:elevation="2dp">
+            style="@style/Button">
 
             <ImageView
                 android:layout_width="24dp"

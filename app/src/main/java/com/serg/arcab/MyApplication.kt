@@ -13,6 +13,7 @@ class MyApplication: Application() {
         super.onCreate()
         initTimber()
         startKoin(this, moduleList)
+
     }
 
     private fun initTimber() {

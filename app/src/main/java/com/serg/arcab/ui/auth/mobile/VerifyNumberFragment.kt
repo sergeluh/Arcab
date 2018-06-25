@@ -1,11 +1,13 @@
 package com.serg.arcab.ui.auth.mobile
 
 import android.arch.lifecycle.Observer
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
+import com.serg.arcab.ACTION_OLD_USER
 import com.serg.arcab.R
 import com.serg.arcab.Result
 import com.serg.arcab.base.BaseFragment
@@ -18,6 +20,22 @@ class VerifyNumberFragment : BaseFragment() {
 
     private val viewModel by sharedViewModel<AuthViewModel>()
 
+    private lateinit var action: String
+
+    private lateinit var callback: Callback
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callback = context as Callback
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        action = arguments!!.getString(ARG_ACTION)
+    }
+
+
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_verify_number, container, false)
     }
@@ -27,20 +45,9 @@ class VerifyNumberFragment : BaseFragment() {
 
         navBar.nextBtn.setOnClickListener {
             viewModel.signIn()
-
-            /*arguments?.also {
-                if (it[ARG_ACTION] == ACTION_MOBILE) {
-
-                    //val credential = PhoneAuthProvider.getCredential(verificationId, code)
-                    viewModel.onGoToNameScreenClicked()
-                } else {
-                    viewModel.onGoToBirthScreenClicked()
-                }
-            }*/
-
         }
 
-        viewModel.firebaseUser.observe(viewLifecycleOwner, Observer {
+        viewModel.codeVerificationProgress.observe(viewLifecycleOwner, Observer {
             when(it?.status) {
                 Result.Status.SUCCESS -> {
                     hideLoading()
@@ -56,6 +63,7 @@ class VerifyNumberFragment : BaseFragment() {
         })
 
         RxTextView.textChanges(verification_code)
+                .skipInitialValue()
                 .subscribe {
                     viewModel.onVerificationCodeInputChanged(it.toString())
                 }
@@ -67,13 +75,44 @@ class VerifyNumberFragment : BaseFragment() {
         editNumberBtn.setOnClickListener {
             viewModel.onBackClicked()
         }
+
+        viewModel.user.observe(viewLifecycleOwner, Observer {
+            it?.also {  user ->
+                explainTextView.text = String.format(getString(R.string.auth_verify_number_explanation), user.phone_number)
+            }
+        })
+
+        viewModel.signedInAction.observe(viewLifecycleOwner, Observer {
+            when (action) {
+                com.serg.arcab.ACTION_MOBILE -> {
+                    if (it == null) {
+                        callback.goToName()
+                    } else {
+                        callback.goToPassword(ACTION_OLD_USER)
+                    }
+                }
+                com.serg.arcab.ACTION_SOCIAL -> {
+                    if (it == null) {
+                        callback.goToBirth()
+                    } else {
+                        callback.goToMain()
+                    }
+                }
+            }
+        })
+    }
+
+
+    interface Callback {
+        fun goToPassword(action: String)
+        fun goToBirth()
+        fun goToMain()
+        fun goToName()
     }
 
     companion object {
 
         const val TAG = "VerifyNumberFragment"
-        const val ACTION_MOBILE = "ACTION_MOBILE"
-        const val ACTION_SOCIAL = "ACTION_SOCIAL"
         private const val ARG_ACTION = "ARG_ACTION"
 
         @JvmStatic

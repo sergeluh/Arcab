@@ -35,7 +35,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/editText4"
+                android:id="@+id/firstNameEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
@@ -51,11 +51,11 @@
                 android:layout_height="wrap_content"
                 style="@style/TextAppearanceHint"
                 android:text="@string/first_name"
-                app:layout_constraintStart_toStartOf="@+id/editText4"
-                app:layout_constraintTop_toBottomOf="@+id/editText4" />
+                app:layout_constraintStart_toStartOf="@+id/firstNameEditText"
+                app:layout_constraintTop_toBottomOf="@+id/firstNameEditText" />
 
             <EditText
-                android:id="@+id/editText5"
+                android:id="@+id/lastNameEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -71,11 +71,11 @@
                 android:layout_height="wrap_content"
                 android:text="@string/last_name"
                 style="@style/TextAppearanceHint"
-                app:layout_constraintStart_toStartOf="@+id/editText5"
-                app:layout_constraintTop_toBottomOf="@+id/editText5" />
+                app:layout_constraintStart_toStartOf="@+id/lastNameEditText"
+                app:layout_constraintTop_toBottomOf="@+id/lastNameEditText" />
 
             <EditText
-                android:id="@+id/editText6"
+                android:id="@+id/emailEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -91,8 +91,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/email_address"
                 style="@style/TextAppearanceHint"
-                app:layout_constraintStart_toStartOf="@+id/editText6"
-                app:layout_constraintTop_toBottomOf="@+id/editText6" />
+                app:layout_constraintStart_toStartOf="@+id/emailEditText"
+                app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
 
         </android.support.constraint.ConstraintLayout>
 

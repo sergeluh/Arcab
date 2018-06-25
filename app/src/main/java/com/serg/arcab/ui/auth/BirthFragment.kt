@@ -1,6 +1,7 @@
 package com.serg.arcab.ui.auth
 
 import android.arch.lifecycle.Observer
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,13 @@ import java.util.*
 class BirthFragment : BaseFragment() {
 
     private val viewModel by sharedViewModel<AuthViewModel>()
+
+    private lateinit var callback: Callback
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callback = context as Callback
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_birth, container, false)
@@ -43,14 +51,14 @@ class BirthFragment : BaseFragment() {
 
         viewModel.user.observe(viewLifecycleOwner, Observer {
             it?.also { user ->
-                Timber.d("user ${user.gender}, ${user.birthDate}")
+                Timber.d("user ${user.gender}, ${user.birth_date}")
                 when(user.gender) {
                     1 -> genderRadioGroup.check(R.id.female)
                     2 -> genderRadioGroup.check(R.id.male)
                     3 -> genderRadioGroup.check(R.id.unspecified)
                     null -> genderRadioGroup.check(0)
                 }
-                initDatePicker(user.birthDate)
+                initDatePicker(user.birth_date)
             }
         })
 
@@ -61,6 +69,10 @@ class BirthFragment : BaseFragment() {
             it?.second?.also { timeMillis ->
                 dateTextView.text = getDate(timeMillis)
             }
+        })
+
+        viewModel.goToIdInput.observe(viewLifecycleOwner, Observer {
+            callback.goToEmiratesId()
         })
     }
 
@@ -86,6 +98,10 @@ class BirthFragment : BaseFragment() {
         } catch (ex: Exception) {
             ""
         }
+    }
+
+    interface Callback {
+        fun goToEmiratesId()
     }
 
     companion object {

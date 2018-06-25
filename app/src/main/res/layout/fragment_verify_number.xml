@@ -55,7 +55,7 @@
                 android:layout_marginTop="8dp"
                 android:text="Code"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText"
+                app:layout_constraintTop_toBottomOf="@+id/verification_code"
                 android:textStyle="bold"
                 android:textAllCaps="true"/>
 
@@ -67,16 +67,16 @@
                 android:layout_marginTop="8dp"
                 android:text="Edit mobile number"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText"
+                app:layout_constraintTop_toBottomOf="@+id/verification_code"
                 android:textStyle="bold"
                 android:textAllCaps="true"
                 android:textColor="@color/colorAccent"/>
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/explainTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="We sent you an SMS to %s to continue creating your new account"
+                android:text="@string/auth_verify_number_explanation"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

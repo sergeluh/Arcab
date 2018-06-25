@@ -1,5 +1,7 @@
 package com.serg.arcab.ui.auth
 
+import android.arch.lifecycle.Observer
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -7,13 +9,21 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.serg.arcab.R
+import com.serg.arcab.base.BaseFragment
 import kotlinx.android.synthetic.main.navigation_view.view.*
 import kotlinx.android.synthetic.main.fragment_id_number.*
 import org.koin.android.architecture.ext.sharedViewModel
 
-class IdNumberFragment : Fragment() {
+class IdNumberFragment : BaseFragment() {
 
     private val viewModel by sharedViewModel<AuthViewModel>()
+
+    private lateinit var callback: Callback
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callback = context as Callback
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_id_number, container, false)
@@ -28,6 +38,14 @@ class IdNumberFragment : Fragment() {
         navBar.backBtn.setOnClickListener {
             viewModel.onBackClicked()
         }
+
+        viewModel.goToRules.observe(viewLifecycleOwner, Observer {
+            callback.goToRules()
+        })
+    }
+
+    interface Callback {
+        fun goToRules()
     }
 
     companion object {

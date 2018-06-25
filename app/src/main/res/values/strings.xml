@@ -18,6 +18,8 @@
     <string name="location_on_map">Location on Map</string>
     <string name="link_your_id">Link Your Id</string>
 
+    <string name="sign_in">Sign In</string>
+
     <string name="initial_setup_pickup_title">Pickup/ Dropoff</string>
     <string name="initial_setup_pickup_point_description">We picked the following points for you. Walk and save a bit or let us come and pick you up.</string>
     <string name="initial_setup_pickup_timing_description">Select when you’d like to be picked up to and from your organization. You may edit these at anytime.</string>
@@ -30,7 +32,11 @@
     <string name="initial_setup_pickup_pick_point">Pick Me Up At</string>
     <string name="initial_setup_pickup_drop_point">Drop Me Off At</string>
     <string name="initial_setup_pickup_timing_switch">Ask me to reschedule these timings at the beginning of every week.</string>
-    <string name="initial_setup_email_title">Hi %1$s</string>
+
+    <string name="auth_email_title">Hi %1$s</string>
+    <string name="auth_password_title_new">Set Your Password</string>
+    <string name="auth_password_title_old">Welcome Back</string>
+    <string name="auth_verify_number_explanation">We sent you an SMS to %1$s to continue creating your new account</string>
 
 
 </resources>

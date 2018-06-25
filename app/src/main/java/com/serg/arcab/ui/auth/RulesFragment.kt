@@ -1,8 +1,8 @@
 package com.serg.arcab.ui.auth
 
 import android.arch.lifecycle.Observer
+import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +18,13 @@ import timber.log.Timber
 class RulesFragment : BaseFragment() {
 
     private val viewModel by sharedViewModel<AuthViewModel>()
+
+    private lateinit var callback: Callback
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callback = context as Callback
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_rules, container, false)
@@ -64,14 +71,14 @@ class RulesFragment : BaseFragment() {
 
         viewModel.user.observe(viewLifecycleOwner, Observer {
             it?.also { user ->
-                switch1.isChecked = user.terms.directlyContact
-                switch2.isChecked = user.terms.searchAds
-                switch3.isChecked = user.terms.usageData
-                switch4.isChecked = user.terms.usageStats
+                switch1.isChecked = user.terms.directly_contact
+                switch2.isChecked = user.terms.search_ads
+                switch3.isChecked = user.terms.usage_data
+                switch4.isChecked = user.terms.usage_stats
             }
         })
 
-        viewModel.profileUpload.observe(viewLifecycleOwner, Observer {
+        viewModel.profileUploadProgress.observe(viewLifecycleOwner, Observer {
             when(it?.status) {
                 Result.Status.SUCCESS -> {
                     hideLoading()
@@ -86,7 +93,13 @@ class RulesFragment : BaseFragment() {
             }
         })
 
+        viewModel.profileUploadedAction.observe(viewLifecycleOwner, Observer {
+            callback.goToMain()
+        })
+    }
 
+    interface Callback {
+        fun goToMain()
     }
 
     companion object {

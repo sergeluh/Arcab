@@ -2,12 +2,14 @@ package com.serg.arcab.ui.auth.mobile
 
 
 import android.arch.lifecycle.Observer
+import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
+import com.serg.arcab.ACTION_MOBILE
+import com.serg.arcab.ACTION_NEW_USER
 
 import com.serg.arcab.R
 import com.serg.arcab.base.BaseFragment
@@ -19,6 +21,13 @@ import org.koin.android.architecture.ext.sharedViewModel
 class EmailFragment : BaseFragment() {
 
     private val viewModel by sharedViewModel<AuthViewModel>()
+
+    private lateinit var callback: Callback
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callback = context as Callback
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_email, container, false)
@@ -36,13 +45,14 @@ class EmailFragment : BaseFragment() {
         }
 
         RxTextView.textChanges(emailEditText)
+                .skipInitialValue()
                 .subscribe {
                     viewModel.onEmailInputChanged(it.toString())
                 }
 
         viewModel.user.observe(viewLifecycleOwner, Observer {
             it?.also { user ->
-                titleTextView.text = String.format(getString(R.string.initial_setup_email_title), user.firstName)
+                titleTextView.text = String.format(getString(R.string.auth_email_title), user.first_name)
                 emailEditText.setText(user.email)
             }
         })
@@ -50,6 +60,14 @@ class EmailFragment : BaseFragment() {
         viewModel.emailValidation.observe(viewLifecycleOwner, Observer {
             showMessage(it)
         })
+
+        viewModel.goToPasswordInput.observe(viewLifecycleOwner, Observer {
+            callback.goToPassword(ACTION_NEW_USER)
+        })
+    }
+
+    interface Callback {
+        fun goToPassword(action: String)
     }
 
     companion object {

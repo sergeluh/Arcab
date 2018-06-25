@@ -4,19 +4,19 @@ import com.google.gson.annotations.SerializedName
 
 data class User(
         @SerializedName("birth_date")
-        var birthDate: Long? = null,
+        var birth_date: Long? = null,
 
         @SerializedName("email")
         var email: String? = null,
 
         @SerializedName("emirates_id")
-        var emiratesId: String? = null,
+        var emirates_id: String? = null,
 
         @SerializedName("first_name")
-        var firstName: String? = null,
+        var first_name: String? = null,
 
         @SerializedName("last_name")
-        var lastName: String? = null,
+        var last_name: String? = null,
 
         @SerializedName("flags")
         var flags: Flags = Flags(),
@@ -28,7 +28,7 @@ data class User(
         var password: String? = null,
 
         @SerializedName("phone_number")
-        var phoneNumber: String? = null,
+        var phone_number: String? = null,
 
         @SerializedName("terms")
         var terms: Terms = Terms()
@@ -43,15 +43,15 @@ data class User(
 
         data class Terms(
                 @SerializedName("directly_contact")
-                var directlyContact: Boolean = false,
+                var directly_contact: Boolean = false,
 
                 @SerializedName("search_ads")
-                var searchAds: Boolean = false,
+                var search_ads: Boolean = false,
 
                 @SerializedName("usage_data")
-                var usageData: Boolean = false,
+                var usage_data: Boolean = false,
 
                 @SerializedName("usage_stats")
-                var usageStats: Boolean = false
+                var usage_stats: Boolean = false
         )
 }

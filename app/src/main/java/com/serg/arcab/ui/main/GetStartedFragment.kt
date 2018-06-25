@@ -1,5 +1,6 @@
 package com.serg.arcab.ui.main
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,8 +9,10 @@ import android.view.ViewGroup
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.firebase.auth.FirebaseAuth
 import com.serg.arcab.R
 import com.serg.arcab.base.BaseFragment
+import com.serg.arcab.ui.splash.SplashActivity
 import kotlinx.android.synthetic.main.fragment_get_started.*
 import kotlinx.android.synthetic.main.navigation_view.view.*
 import org.koin.android.architecture.ext.sharedViewModel
@@ -35,6 +38,12 @@ class GetStartedFragment : BaseFragment(), OnMapReadyCallback {
         }
 
         navBar.backBtn.visibility = View.GONE
+
+        signOutBtn.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            startActivity(Intent(context, SplashActivity::class.java))
+            activity!!.finish()
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {

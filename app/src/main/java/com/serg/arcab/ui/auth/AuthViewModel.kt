@@ -3,10 +3,12 @@ package com.serg.arcab.ui.auth
 import android.arch.lifecycle.MutableLiveData
 import android.text.TextUtils
 import android.util.Patterns
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.serg.arcab.User
 import com.serg.arcab.base.BaseViewModel
 import com.serg.arcab.datamanager.AuthDataManager
 import com.serg.arcab.utils.SingleLiveEvent
+import timber.log.Timber
 import java.util.*
 
 class AuthViewModel constructor(private val authDataManager: AuthDataManager): BaseViewModel() {
@@ -45,15 +47,22 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
         value = false
     }
 
-    val onCodeSentAction = authDataManager.getOnCodeSentAction()
-    val onSignedInAction = authDataManager.getOnSignedInAction()
-    val onProfileUploadedAction = authDataManager.getOnProfileUploadedAction()
+    val phoneVerificationProgress = authDataManager.getPhoneVerificationProgress()
+    val codeSentAction = authDataManager.getOnCodeSentAction()
 
+    val codeVerificationProgress = authDataManager.getCodeVerificationProgress()
+    val signedInAction = authDataManager.getSignedInAction()
+
+    val profileUploadProgress = authDataManager.getProfileUploadProgress()
+    val profileUploadedAction = authDataManager.getProfileUploadedAction()
+
+    val checkPasswordProgress = authDataManager.getCheckPasswordProgress()
+    val passwordCheckedAction = authDataManager.getPasswordCheckedAction()
 
     val user = authDataManager.getUser()
-    val phoneVerificationModel = authDataManager.getPhoneVerificationModel()
-    val firebaseUser = authDataManager.getFirebaseUser()
-    val profileUpload = authDataManager.getProfileUpload()
+
+
+
 
     fun onBackClicked() {
         backAction.call()
@@ -75,9 +84,9 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
 
 
 
-    fun onGoToVerifyIdScreenClicked() {
-        goToIdInput.call()
-    }
+//    fun onGoToVerifyIdScreenClicked() {
+//        goToIdInput.call()
+//    }
 
     fun onGoToRulesScreenClicked() {
         goToRules.call()
@@ -89,17 +98,17 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
 
 
 
-    fun onLoginWithGoogleClicked() {
-        goToFillInfoFromSocial.call()
-    }
-
-    fun onGoToNumberScreenFromSocialClicked() {
-        goToMobileNumberFomSocial.call()
-    }
-
-    fun onGoToVerifyNumberScreenFromSocialClicked() {
-        goToVerifyNumberFomSocial.call()
-    }
+//    fun onLoginWithGoogleClicked() {
+//        goToFillInfoFromSocial.call()
+//    }
+//
+//    fun onGoToNumberScreenFromSocialClicked() {
+//        goToMobileNumberFomSocial.call()
+//    }
+//
+//    fun onGoToVerifyNumberScreenFromSocialClicked() {
+//        goToVerifyNumberFomSocial.call()
+//    }
 
 
 
@@ -109,7 +118,7 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
 
 
     fun signIn() {
-        user.value?.phoneNumber = phoneNumber.value
+        user.value?.phone_number = phoneNumber.value
         authDataManager.signInWithCode(verificationCode)
     }
 
@@ -118,8 +127,8 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
     }
 
     fun saveName() {
-        user.value?.firstName = name.value?.first
-        user.value?.lastName = name.value?.second
+        user.value?.first_name = name.value?.first
+        user.value?.last_name = name.value?.second
         goToEmailInput.call()
     }
 
@@ -132,7 +141,31 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
         }
     }
 
+    fun saveNameAndEmail() {
+        if (user.value?.email.isNullOrEmpty() || Patterns.EMAIL_ADDRESS.matcher(user.value?.email).matches()) {
+            user.value?.email = email.value
+            user.value?.first_name = name.value?.first
+            user.value?.last_name = name.value?.second
+            goToMobileNumberFomSocial.call()
+        } else {
+            emailValidation.value = "Email is not valid"
+        }
+    }
+
     fun savePassword() {
+        if (validatePassword()) {
+            user.value?.password = password.value
+            goToBirthInput.call()
+        }
+    }
+
+    fun checkPassword() {
+        if (validatePassword()) {
+            authDataManager.checkPassword(password.value)
+        }
+    }
+
+    private fun validatePassword(): Boolean {
         val pass = password.value
         if (pass == null || pass.isBlank()) {
             passwordValidation.value = "Enter password"
@@ -141,9 +174,10 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
         } else if (TextUtils.isDigitsOnly(pass)) {
             passwordValidation.value = "Password must include at least one symbol"
         } else {
-            user.value?.password = password.value
-            goToBirthInput.call()
+            return true
         }
+
+        return false
     }
 
     fun saveBirth() {
@@ -152,18 +186,27 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
             birth.value?.second == null -> genderValidation.value = "Select birth date"
             else -> {
                 user.value?.gender = birth.value?.first
-                user.value?.birthDate = birth.value?.second
+                user.value?.birth_date = birth.value?.second
                 goToIdInput.call()
             }
         }
     }
 
+    fun setDataFromGoogleAccount(account: GoogleSignInAccount) {
+        user.value?.first_name = account.givenName
+        user.value?.last_name = account.familyName
+        user.value?.email = account.email
 
+        name.value = Pair(account.givenName, account.familyName)
+        email.value = account.email
+
+        goToFillInfoFromSocial.call()
+    }
 
 
 
     fun onPhoneInputChanged(phone: String) {
-        user.value?.phoneNumber = phone
+        user.value?.phone_number = phone
         phoneNumber.value = phone
     }
 
@@ -172,14 +215,14 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
     }
 
     fun onFirstNameInputChanged(firstName: String) {
-        user.value?.firstName = firstName
+        user.value?.first_name = firstName
         name.value = name.value?.let {
             Pair(firstName, it.second)
         }
     }
 
     fun onLastNameInputChanged(lastName: String) {
-        user.value?.lastName = lastName
+        user.value?.last_name = lastName
         name.value = name.value?.let {
             Pair(it.first, lastName)
         }
@@ -208,37 +251,37 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
         calendar.set(Calendar.MONTH, month)
         calendar.set(Calendar.DAY_OF_MONTH, day)
 
-        user.value?.birthDate = calendar.timeInMillis
+        user.value?.birth_date = calendar.timeInMillis
         birth.value = birth.value?.let {
             Pair(it.first, calendar.timeInMillis)
         }
     }
 
     fun setDirectlyContact(value: Boolean) {
-        user.value?.terms?.directlyContact = value
+        user.value?.terms?.directly_contact = value
         terms.value = terms.value?.also {
-            it.directlyContact = value
+            it.directly_contact = value
         }
     }
 
     fun setSearchAds(value: Boolean) {
-        user.value?.terms?.searchAds = value
+        user.value?.terms?.search_ads = value
         terms.value = terms.value?.also {
-            it.searchAds = value
+            it.search_ads = value
         }
     }
 
     fun setUsageData(value: Boolean) {
-        user.value?.terms?.usageData = value
+        user.value?.terms?.usage_data = value
         terms.value = terms.value?.also {
-            it.usageData = value
+            it.usage_data = value
         }
     }
 
     fun setUsageStats(value: Boolean) {
-        user.value?.terms?.usageStats = value
+        user.value?.terms?.usage_stats = value
         terms.value = terms.value?.also {
-            it.usageStats = value
+            it.usage_stats = value
         }
     }
 
@@ -249,4 +292,6 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
     fun onGetStartedClicked() {
         authDataManager.getStarted()
     }
+
+
 }

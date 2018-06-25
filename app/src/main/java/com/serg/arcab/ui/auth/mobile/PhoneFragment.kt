@@ -1,14 +1,14 @@
 package com.serg.arcab.ui.auth.mobile
 
 import android.arch.lifecycle.Observer
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
+import com.serg.arcab.*
 
-import com.serg.arcab.R
-import com.serg.arcab.Result
 import com.serg.arcab.base.BaseFragment
 import com.serg.arcab.ui.auth.AuthViewModel
 import kotlinx.android.synthetic.main.navigation_view.view.*
@@ -19,6 +19,20 @@ class PhoneFragment : BaseFragment() {
 
     private val viewModel by sharedViewModel<AuthViewModel>()
 
+    private lateinit var action: String
+
+    private lateinit var callback: Callback
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callback = context as Callback
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        action = arguments!!.getString(ARG_ACTION)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_phone, container, false)
     }
@@ -27,13 +41,6 @@ class PhoneFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         navBar.nextBtn.setOnClickListener {
             viewModel.verifyPhoneNumber()
-//            arguments?.also {
-//                if (it[ARG_ACTION] == ACTION_MOBILE) {
-//                    viewModel.onGoToVerifyNumberScreenClicked()
-//                } else {
-//                    viewModel.onGoToVerifyNumberScreenFromSocialClicked()
-//                }
-//            }
         }
 
         navBar.backBtn.setOnClickListener {
@@ -41,11 +48,12 @@ class PhoneFragment : BaseFragment() {
         }
 
         RxTextView.textChanges(phoneEditText)
+                .skipInitialValue()
                 .subscribe {
                     viewModel.onPhoneInputChanged(it.toString())
                 }
 
-        viewModel.phoneVerificationModel.observe(viewLifecycleOwner, Observer { result ->
+        viewModel.phoneVerificationProgress.observe(viewLifecycleOwner, Observer { result ->
             when(result?.status) {
                 Result.Status.ERROR -> {
                     hideLoading()
@@ -60,17 +68,25 @@ class PhoneFragment : BaseFragment() {
             }
         })
 
-        viewModel.firebaseUser.observe(viewLifecycleOwner, Observer { result ->
-            when(result?.status) {
-                Result.Status.ERROR -> {
-                    hideLoading()
-                    showMessage(result.message)
+        viewModel.codeSentAction.observe(this, Observer {
+            callback.goToCodeVerification(action)
+        })
+
+        viewModel.signedInAction.observe(viewLifecycleOwner, Observer {
+            when (action) {
+                ACTION_MOBILE -> {
+                    if (it == null) {
+                        callback.goToName()
+                    } else {
+                        callback.goToPassword(ACTION_OLD_USER)
+                    }
                 }
-                Result.Status.SUCCESS -> {
-                    hideLoading()
-                }
-                Result.Status.LOADING -> {
-                    showLoading()
+                ACTION_SOCIAL -> {
+                    if (it == null) {
+                        callback.goToBirth()
+                    } else {
+                        callback.goToMain()
+                    }
                 }
             }
         })
@@ -79,8 +95,6 @@ class PhoneFragment : BaseFragment() {
     companion object {
 
         const val TAG = "PhoneFragment"
-        const val ACTION_MOBILE = "ACTION_MOBILE"
-        const val ACTION_SOCIAL = "ACTION_SOCIAL"
         private const val ARG_ACTION = "ARG_ACTION"
 
         @JvmStatic
@@ -89,5 +103,13 @@ class PhoneFragment : BaseFragment() {
                 putString(ARG_ACTION, action)
             }
         }
+    }
+
+    interface Callback {
+        fun goToCodeVerification(action: String)
+        fun goToPassword(action: String)
+        fun goToBirth()
+        fun goToMain()
+        fun goToName()
     }
 }
