@@ -22,7 +22,6 @@ class SplashActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         val user = FirebaseAuth.getInstance().currentUser
         if(user != null) {
             val database = FirebaseDatabase.getInstance()
@@ -56,7 +55,6 @@ class SplashActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
 
     }
 }

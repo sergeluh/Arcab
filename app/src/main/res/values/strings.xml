@@ -17,6 +17,7 @@
     <string name="current_location">Current Location</string>
     <string name="location_on_map">Location on Map</string>
     <string name="link_your_id">Link Your Id</string>
+    <string name="button_confirm">Confirm</string>
 
     <string name="sign_in">Sign In</string>
 
@@ -38,5 +39,15 @@
     <string name="auth_password_title_old">Welcome Back</string>
     <string name="auth_verify_number_explanation">We sent you an SMS to %1$s to continue creating your new account</string>
 
+    <!--Preferred Seat block-->
+    <string name="initial_setup_preferred_seat_title">Your Preferred Seat</string>
+    <string name="initial_setup_preferred_seat_description">We may assign you another seat in case your selection has already been taken by someone else at a particular day/ time.</string>
+    <string name="initial_setup_preferred_seat_select_seat">Select Seat</string>
+
+    <!--Payment plan block-->
+    <string name="initial_setup_payment_plan_title">Your Plan?</string>
+    <string name="initial_setup_payment_plan_description">Choose if you’d like to pay per trip or once a month.</string>
+    <string name="initial_setup_payment_plan_per_trip">Pay Per Trip</string>
+    <string name="initial_setup_payment_plan_monthly">Monthly</string>
 
 </resources>
