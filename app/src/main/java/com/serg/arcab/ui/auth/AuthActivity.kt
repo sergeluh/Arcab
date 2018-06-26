@@ -41,42 +41,6 @@ class AuthActivity : BaseActivity(),
         viewModel.backAction.observe(this, Observer {
             popFragment()
         })
-
-        /*viewModel.goToMobileNumberLogin.observe(this, Observer {
-            addFragment(PhoneFragment.newInstance(PhoneFragment.ACTION_MOBILE), PhoneFragment.TAG)
-        })
-
-        viewModel.goToSocialLogin.observe(this, Observer {
-            addFragment(SocialFragment.newInstance(), SocialFragment.TAG)
-        })
-
-
-        viewModel.goToPasswordInput.observe(this, Observer {
-            addFragment(PasswordFragment.newInstance(PasswordFragment.ACTION_NEW_USER), PasswordFragment.TAG)
-        })
-
-        viewModel.goToBirthInput.observe(this, Observer {
-
-        })
-
-
-        viewModel.goToFillInfoFromSocial.observe(this, Observer {
-            addFragment(FromSocialFragment.newInstance(), FromSocialFragment.TAG)
-        })
-
-        viewModel.goToMobileNumberFomSocial.observe(this, Observer {
-            addFragment(PhoneFragment.newInstance(PhoneFragment.ACTION_SOCIAL), PhoneFragment.TAG)
-        })
-
-        viewModel.goToVerifyNumberFomSocial.observe(this, Observer {
-            addFragment(VerifyNumberFragment.newInstance(VerifyNumberFragment.ACTION_SOCIAL), VerifyNumberFragment.TAG)
-        })
-
-        viewModel.passwordCheckedAction.observe(this, Observer {
-            goToMain()
-        })
-
-        */
     }
 
     private fun popFragment() {

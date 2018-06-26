@@ -7,6 +7,9 @@ import java.security.NoSuchAlgorithmException;
 public class Sha1 {
 
     public static String getHash(String str) {
+        if (str == null) {
+            return null;
+        }
         MessageDigest digest = null;
         byte[] input = null;
 
@@ -15,7 +18,7 @@ public class Sha1 {
             digest.reset();
             input = digest.digest(str.getBytes("UTF-8"));
 
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e1) {
+        } catch (Exception e1) {
             e1.printStackTrace();
         }
         return convertToHex(input);

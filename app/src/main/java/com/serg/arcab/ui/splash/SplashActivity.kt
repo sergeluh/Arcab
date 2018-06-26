@@ -30,7 +30,7 @@ class SplashActivity : BaseActivity() {
                     .child(user.uid)
                     .addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onCancelled(error: DatabaseError) {
-                            showMessage(error.message)
+                            AuthActivity.start(this@SplashActivity)
                             finish()
                         }
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
