@@ -18,20 +18,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:context=".ui.auth.mobile.PhoneFragment"
-            android:paddingStart="@dimen/screen_padding"
-            android:paddingTop="@dimen/screen_padding"
-            android:paddingEnd="@dimen/screen_padding"
-            android:paddingBottom="@dimen/padding_auth_bottom">
+            android:paddingBottom="@dimen/auth_content_padding_bottom">
 
             <TextView
                 android:id="@+id/textView"
                 style="@style/TextAppearanceHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="@dimen/margin_top"
-                android:text="Your Number?"
+                android:text="@string/auth_phone_number_header"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -40,36 +34,53 @@
                 android:id="@+id/phoneEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="@dimen/auth_header_margin_top"
                 android:inputType="phone"
-                android:text="+"
+                style="@style/EditText"
+                android:paddingStart="108dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                app:layout_constraintTop_toBottomOf="@+id/textView"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                android:textStyle="bold"
+                android:textColor="@color/colorGrayText"/>
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AE +971 |"
+                android:layout_marginStart="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/phoneEditText"
+                app:layout_constraintStart_toStartOf="@+id/phoneEditText"
+                app:layout_constraintTop_toTopOf="@+id/phoneEditText"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                android:textStyle="bold"
+                android:textColor="@color/colorDisabled"/>
 
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/mobile_number_hint"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/phoneEditText"
+                android:textAllCaps="true"
                 android:textStyle="bold"
-                android:textAllCaps="true"/>
+                app:layout_constraintStart_toStartOf="@+id/phoneEditText"
+                app:layout_constraintTop_toBottomOf="@+id/phoneEditText" />
 
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="32dp"
+                style="@style/TextAppearanceText"
                 android:text="@string/mobile_number_explanation"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView4"
-                app:layout_constraintVertical_bias="1"/>
+                app:layout_constraintVertical_bias="1"
+                android:layout_marginBottom="@dimen/auth_screen_padding"/>
 
         </android.support.constraint.ConstraintLayout>
 

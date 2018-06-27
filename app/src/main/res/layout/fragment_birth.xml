@@ -18,34 +18,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:context=".ui.auth.mobile.PhoneFragment"
-            android:paddingStart="@dimen/screen_padding"
-            android:paddingTop="@dimen/screen_padding"
-            android:paddingEnd="@dimen/screen_padding"
-            android:paddingBottom="@dimen/padding_auth_bottom">
+            android:paddingBottom="@dimen/auth_content_padding_bottom">
 
             <TextView
                 android:id="@+id/textView"
                 style="@style/TextAppearanceHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="@dimen/margin_top"
-                android:text="And?"
+                android:text="@string/auth_header_birth"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <RadioGroup
                 android:id="@+id/genderRadioGroup"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:gravity="center"
+                android:layout_marginTop="@dimen/auth_header_margin_bottom"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView">
+                app:layout_constraintTop_toBottomOf="@+id/textView"
+                android:layout_marginStart="@dimen/auth_screen_padding"
+                android:layout_marginEnd="@dimen/auth_screen_padding"
+                android:gravity="center">
 
                 <RadioButton
                     android:id="@+id/female"
@@ -53,7 +49,7 @@
                     android:layout_height="wrap_content"
                     android:button="@null"
                     android:background="@android:color/transparent"
-                    android:text="Female"
+                    android:text="@string/female"
                     android:textColor="@drawable/selector_text"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
 
@@ -69,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:button="@android:color/transparent"
-                    android:text="Male"
+                    android:text="@string/male"
                     android:textColor="@drawable/selector_text"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
 
@@ -85,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:button="@android:color/transparent"
-                    android:text="Unspecified"
+                    android:text="@string/unspecified"
                     android:textColor="@drawable/selector_text"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
 
@@ -93,7 +89,7 @@
 
             <View
                 android:id="@+id/textView10"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="1dp"
                 app:layout_constraintEnd_toEndOf="@+id/genderRadioGroup"
                 app:layout_constraintStart_toStartOf="@+id/genderRadioGroup"
@@ -104,7 +100,7 @@
                 android:id="@+id/textView11"
                 android:layout_width="56dp"
                 android:layout_height="17dp"
-                android:text="Gender"
+                android:text="@string/gender"
                 android:textAllCaps="true"
                 android:textStyle="bold"
                 android:layout_marginTop="4dp"
@@ -115,27 +111,26 @@
                 android:id="@+id/dateTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView11"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+                style="@style/TextAppearanceText"/>
 
             <View
                 android:id="@+id/textView13"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="1dp"
-                app:layout_constraintEnd_toEndOf="@+id/genderRadioGroup"
-                app:layout_constraintStart_toStartOf="@+id/genderRadioGroup"
+                android:background="@color/colorDisabled"
+                app:layout_constraintStart_toStartOf="@+id/dateTextView"
                 app:layout_constraintTop_toBottomOf="@+id/dateTextView"
-                android:background="@color/colorDisabled" />
+                app:layout_constraintEnd_toEndOf="@id/dateTextView"/>
 
             <TextView
                 android:id="@+id/textView14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Date of birth"
+                android:text="@string/date_of_birth"
                 android:textAllCaps="true"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/dateTextView"
@@ -145,26 +140,23 @@
                 android:id="@+id/textView15"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:text="You must be at least 18 years old for arcab. We don't share this with anyone."
+                android:text="@string/auth_footer_birth"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                app:layout_constraintBottom_toTopOf="@+id/datePicker"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView14" />
+                style="@style/TextAppearanceText"/>
 
             <DatePicker
                 android:id="@+id/datePicker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
                 android:calendarViewShown="false"
                 android:datePickerMode="spinner"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView15"
-                app:layout_constraintVertical_bias="1"/>
+                app:layout_constraintStart_toStartOf="parent" />
 
         </android.support.constraint.ConstraintLayout>
 

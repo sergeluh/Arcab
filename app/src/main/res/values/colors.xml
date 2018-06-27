@@ -9,4 +9,5 @@
 
     <color name="colorGrayLine">#CCCCCC</color>
     <color name="colorGrayText">#484848</color>
+    <color name="colorGrayIcon">#484848</color>
 </resources>

@@ -18,20 +18,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:context=".ui.auth.mobile.PhoneFragment"
-            android:paddingStart="@dimen/screen_padding"
-            android:paddingTop="@dimen/screen_padding"
-            android:paddingEnd="@dimen/screen_padding"
-            android:paddingBottom="@dimen/padding_auth_bottom">
+            android:paddingBottom="@dimen/auth_content_padding_bottom">
 
             <TextView
                 android:id="@+id/textView"
                 style="@style/TextAppearanceHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="@dimen/margin_top"
-                android:text="Verify ID"
+                android:text="@string/auth_header_verify_id"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -40,18 +34,19 @@
                 android:id="@+id/editText2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="@dimen/auth_header_margin_bottom"
                 android:ems="10"
                 android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                app:layout_constraintTop_toBottomOf="@+id/textView"
+                style="@style/EditText"/>
 
             <TextView
                 android:id="@+id/textView16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Emirates id number"
+                android:text="@string/emirates_id_number"
                 android:textAllCaps="true"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/editText2"
@@ -61,8 +56,7 @@
                 android:id="@+id/button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Capture Emirates ID"
+                android:text="@string/capture_emirates_id"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView16"
@@ -72,15 +66,14 @@
                 android:id="@+id/textView17"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="31dp"
-                android:text="In order to build trust in the real world, we ask everyone to verify they official identity. This info is strictly for verification and will never be shared publicly. You may also verify later within 7 days."
+                android:layout_marginBottom="@dimen/auth_screen_padding"
+                android:text="@string/auth_footer_verify_id"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/button"
                 app:layout_constraintVertical_bias="1"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+                style="@style/TextAppearanceText" />
 
 
         </android.support.constraint.ConstraintLayout>

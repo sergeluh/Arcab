@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.auth.AuthFragment"
-    android:padding="@dimen/screen_padding"
     android:background="@color/colorFragmentBg"
     android:clickable="true"
     android:focusable="true"
@@ -20,8 +19,7 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Move \nTogether."
-            android:layout_marginTop="@dimen/margin_top"
+            android:text="@string/auth_header"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             style="@style/TextAppearanceHeader"/>
@@ -33,7 +31,8 @@
             app:layout_constraintWidth_percent="0.2"
             android:src="@drawable/logo"
             android:adjustViewBounds="true"
-            android:layout_marginTop="@dimen/margin_top"
+            android:layout_marginTop="@dimen/auth_header_margin_top"
+            android:layout_marginEnd="@dimen/auth_screen_padding"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,10 +40,7 @@
             android:id="@+id/mobileBtn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:text="Enter with mobile number"
+            android:text="@string/auth_enter_with_mobile_number"
             app:layout_constraintBottom_toTopOf="@+id/socialBtn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -54,27 +50,23 @@
             android:id="@+id/socialBtn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:text="Enter with Social Account"
+            android:text="@string/auth_enter_with_social_account"
             app:layout_constraintBottom_toTopOf="@+id/textView3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            style="@style/ButtonOutline"/>
+            style="@style/ButtonOutline"
+            android:layout_marginBottom="24dp"/>
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:text="Read arcab Privacy and Safety Policy, Payments Policy. Terms of Use."
+            android:text="@string/auth_footer"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+            style="@style/TextAppearanceText"
+            android:layout_marginBottom="@dimen/auth_screen_padding"/>
 
     </android.support.constraint.ConstraintLayout>
 

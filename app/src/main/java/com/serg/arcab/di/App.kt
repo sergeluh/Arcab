@@ -1,5 +1,7 @@
 package com.serg.arcab.di
 
+import com.google.android.gms.location.places.Places
+import com.serg.arcab.LocationManager
 import com.serg.arcab.PlacesManager
 import com.serg.arcab.data.AppExecutors
 import com.serg.arcab.datamanager.AuthDataManager
@@ -23,7 +25,9 @@ private val dataManagerModule = applicationContext {
 }
 
 private val helperModule = applicationContext {
-    factory { PlacesManager(get()) }
+    factory { Places.getGeoDataClient(get()) }
+    factory { PlacesManager(get(), get(), get()) }
+    factory { LocationManager(get()) }
 }
 
 val moduleList = listOf(appModule, dataManagerModule, viewModelModule, helperModule)

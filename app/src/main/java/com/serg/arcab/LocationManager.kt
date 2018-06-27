@@ -31,16 +31,16 @@ class LocationManager(private val context: Context) {
     }
 
     @SuppressLint("MissingPermission")
-    fun requestLastLocation(onLastLocationCallback: LastLocationCallback) {
+    fun requestLastLocation(callback: LastLocationCallback) {
         if(!checkLocationPermissions()) {
-            onLastLocationCallback.onRequiredLocationPermission()
+            callback.onRequiredLocationPermission()
         } else {
             fusedLocationClient.lastLocation
                     .addOnSuccessListener {
-                        onLastLocationCallback.onSuccess(it)
+                        callback.onSuccess(it)
                     }
                     .addOnFailureListener {
-                        onLastLocationCallback.onFailure(it)
+                        callback.onFailure(it)
                     }
         }
     }
@@ -49,6 +49,38 @@ class LocationManager(private val context: Context) {
         return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
     }
+
+    fun checkLocationSettings(callback: LocationSettingsCallback) {
+        val builder = LocationSettingsRequest.Builder()
+                .setAlwaysShow(true)
+                .addLocationRequest(createLocationRequest())
+        val client: SettingsClient = LocationServices.getSettingsClient(context)
+        val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
+        task.addOnSuccessListener { locationSettingsResponse ->
+            if (locationSettingsResponse.locationSettingsStates.isGpsUsable) {
+                callback.onGpsUsable()
+            }
+        }
+        task.addOnFailureListener { exception ->
+            if (exception is ResolvableApiException) {
+                callback.onResolutionRequired(exception)
+            }
+        }
+    }
+
+    fun startResolutionForResult(activity: Activity, exception: ResolvableApiException, requestCode: Int) {
+        try {
+            exception.startResolutionForResult(activity, requestCode)
+        } catch (sendEx: IntentSender.SendIntentException) {
+            Timber.w(sendEx, "startResolutionForResult")
+        }
+    }
+
+
+
+
+
+
 
     @SuppressLint("MissingPermission")
     fun registerLocationUpdatesListener(callback: LocationUpdatesCallback,
@@ -69,32 +101,6 @@ class LocationManager(private val context: Context) {
         return true
     }
 
-    fun checkLocationSettings(locationSettingsCallback: LocationSettingsCallback) {
-        val builder = LocationSettingsRequest.Builder()
-                .setAlwaysShow(true)
-                .addLocationRequest(createLocationRequest())
-        val client: SettingsClient = LocationServices.getSettingsClient(context)
-        val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
-        task.addOnSuccessListener { locationSettingsResponse ->
-            if (locationSettingsResponse.locationSettingsStates.isGpsUsable) {
-                locationSettingsCallback.onGpsUsable()
-            }
-        }
-        task.addOnFailureListener { exception ->
-            if (exception is ResolvableApiException) {
-                locationSettingsCallback.onResolutionRequired(exception)
-            }
-        }
-    }
-
-    fun startResolutionForResult(activity: Activity, exception: ResolvableApiException, requestCode: Int) {
-        try {
-            exception.startResolutionForResult(activity, requestCode)
-        } catch (sendEx: IntentSender.SendIntentException) {
-            Timber.w(sendEx, "startResolutionForResult")
-        }
-    }
-
     fun unregisterLocationUpdatesListener() {
         try {
             fusedLocationClient.removeLocationUpdates(locationCallback)
@@ -102,6 +108,11 @@ class LocationManager(private val context: Context) {
             Timber.w("unregisterLocationUpdatesListener ${exc.message}")
         }
     }
+
+
+
+
+
 
     @Suppress("DEPRECATION")
     @SuppressLint("MissingPermission")
@@ -129,6 +140,12 @@ class LocationManager(private val context: Context) {
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         locationManager.removeGpsStatusListener(gpsStatusListener)
     }
+
+
+
+
+
+
 
     private fun createLocationRequest(interval: Long = LOCATION_UPDATE_INTERVAL,
                                       fastestInterval: Long = FASTEST_LOCATION_UPDATE_INTERVAL): LocationRequest {

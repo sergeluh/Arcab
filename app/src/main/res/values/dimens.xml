@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="header_text_height">30sp</dimen>
-    <dimen name="margin_top">50dp</dimen>
-    <dimen name="screen_padding">16dp</dimen>
-    <dimen name="padding_auth_bottom">70dp</dimen>
+    <dimen name="auth_header_text_height">30sp</dimen>
+    <dimen name="auth_header_margin_top">48dp</dimen>
+    <dimen name="auth_header_margin_bottom">48dp</dimen>
+    <dimen name="auth_screen_padding">32dp</dimen>
+    <dimen name="auth_content_padding_bottom">70dp</dimen>
+    <dimen name="auth_button_margin">16dp</dimen>
+    <dimen name="auth_text_margin">16dp</dimen>
+    <dimen name="auth_edit_text_margin">16dp</dimen>
 
-    <dimen name="small_header_text">20sp</dimen>
+    <dimen name="auth_small_header_text_height">20sp</dimen>
 </resources>

@@ -18,19 +18,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:context=".ui.auth.mobile.PhoneFragment"
-            android:paddingStart="@dimen/screen_padding"
-            android:paddingTop="@dimen/screen_padding"
-            android:paddingEnd="@dimen/screen_padding"
-            android:paddingBottom="@dimen/padding_auth_bottom">
+            android:paddingBottom="@dimen/auth_content_padding_bottom">
 
             <TextView
                 android:id="@+id/textView"
                 style="@style/TextAppearanceHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="@dimen/margin_top"
                 android:text="Okay,"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -40,79 +34,79 @@
                 android:id="@+id/textView18"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="@dimen/auth_header_margin_bottom"
                 android:text="At arcab we value your privacy above anything else. We are always upfront about the information that you choose to provide us."
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                app:layout_constraintTop_toBottomOf="@+id/textView"
+                style="@style/TextAppearanceText"/>
 
             <TextView
                 android:id="@+id/textView19"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:text="Learn More at arcab.ae/privacy"
                 android:textStyle="bold"
                 android:textColor="@color/colorAccent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView18" />
+                app:layout_constraintTop_toBottomOf="@+id/textView18"
+                style="@style/TextAppearanceText"/>
 
             <TextView
                 android:id="@+id/textView20"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:text="You set the rules"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView19"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+                style="@style/TextAppearanceHeader2"/>
 
             <Switch
                 android:id="@+id/switch1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:text="I’d like to annonymously provide limited amounts of usage data to help measure, develop and improve the arcab platform."
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView20"
-                android:paddingEnd="8dp"/>
+                android:paddingEnd="8dp"
+                style="@style/TextAppearanceText"/>
 
             <Switch
                 android:id="@+id/switch2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:text="I’d like to annonymously share my usage stats with arcab partners on how I discover and use their services."
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/switch1"
-                android:paddingEnd="8dp"/>
+                android:paddingEnd="8dp"
+                style="@style/TextAppearanceText"/>
 
             <Switch
                 android:id="@+id/switch3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:text="I’d like to receive relevant search ads based on my age, gender and location. Opting out still shows ads, but less-relevant."
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/switch2"
-                android:paddingEnd="8dp"/>
+                android:paddingEnd="8dp"
+                style="@style/TextAppearanceText"/>
 
             <Switch
                 android:id="@+id/switch4"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:text="arcab may directly contact me for feedback, suggestions and usage observations. BETA ONLY."
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/switch3"
-                android:paddingEnd="8dp"/>
+                android:paddingEnd="8dp"
+                style="@style/TextAppearanceText"/>
 
             <TextView
                 android:id="@+id/textView21"
@@ -124,7 +118,8 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/switch4" />
+                app:layout_constraintTop_toBottomOf="@+id/switch4"
+                style="@style/TextAppearanceHeader2"/>
 
             <CheckBox
                 android:id="@+id/termsAgreementCheckBox"
@@ -138,7 +133,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView21"
-                android:paddingEnd="8dp"/>
+                android:paddingEnd="8dp"
+                style="@style/TextAppearanceText"/>
 
             <TextView
                 android:id="@+id/textView22"
@@ -147,13 +143,14 @@
                 android:layout_marginTop="8dp"
                 android:text="Read a Summary"
                 android:textStyle="bold"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="@dimen/auth_screen_padding"
                 android:textColor="@color/colorAccent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/termsAgreementCheckBox"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintVertical_bias="0.0"/>
+                app:layout_constraintVertical_bias="0.0"
+                style="@style/TextAppearanceText" />
 
 
         </android.support.constraint.ConstraintLayout>

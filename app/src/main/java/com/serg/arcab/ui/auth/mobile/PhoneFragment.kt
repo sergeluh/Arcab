@@ -14,6 +14,7 @@ import com.serg.arcab.ui.auth.AuthViewModel
 import kotlinx.android.synthetic.main.navigation_view.view.*
 import kotlinx.android.synthetic.main.fragment_phone.*
 import org.koin.android.architecture.ext.sharedViewModel
+import timber.log.Timber
 
 class PhoneFragment : BaseFragment() {
 
@@ -47,9 +48,11 @@ class PhoneFragment : BaseFragment() {
             viewModel.onBackClicked()
         }
 
+        phoneEditText.addTextChangedListener(MaskWatcher.getDefault())
         RxTextView.textChanges(phoneEditText)
                 .skipInitialValue()
                 .subscribe {
+                    Timber.d("phone $it")
                     viewModel.onPhoneInputChanged(it.toString())
                 }
 

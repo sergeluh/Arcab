@@ -15,6 +15,7 @@ import android.text.InputFilter
 import android.content.res.ColorStateList
 import android.support.v4.content.ContextCompat
 import com.serg.arcab.R
+import com.serg.arcab.utils.DimensUtils
 
 class PinEditText: EditText {
 
@@ -28,7 +29,7 @@ class PinEditText: EditText {
     var mNumChars = 6
     var mLineSpacing = 8f
 
-    private var mLineStroke = 1f //1dp by default
+    private var mLineStroke = DimensUtils.dpToPx(2f).toFloat()
     private var mLinesPaint: Paint
     var mStates = arrayOf(intArrayOf(android.R.attr.state_selected),
             intArrayOf(android.R.attr.state_focused),
@@ -47,9 +48,10 @@ class PinEditText: EditText {
 
         mLineSpacing = multi * mLineSpacing; //convert to pixels
 
-        mLineStroke = multi * mLineStroke
         mLinesPaint = Paint(getPaint())
         mLinesPaint.setStrokeWidth(mLineStroke)
+
+        paint.color = ContextCompat.getColor(context, R.color.colorGrayText)
 
         //Disable copy paste
         super.setCustomSelectionActionModeCallback(
@@ -123,6 +125,7 @@ class PinEditText: EditText {
         val text = text
         val textLength = text.length
         val textWidths = FloatArray(textLength)
+//        paint.textSize = DimensUtils.dpToPx(30f).toFloat()
         paint.getTextWidths(getText(), 0, textLength, textWidths)
 
         for (i in 0 until mNumChars) {

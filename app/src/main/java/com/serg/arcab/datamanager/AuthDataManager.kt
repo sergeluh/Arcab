@@ -23,7 +23,7 @@ import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 
 interface AuthDataManager {
-    fun verifyPhoneNumber(phoneNumber: String?)
+    fun verifyPhoneNumber(phone: String?)
     fun signInWithCode(code: String?)
     fun getStarted()
     fun checkPassword(password: String?)
@@ -75,15 +75,16 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors): AuthDataM
 
     override fun getUser() = user
 
-    override fun verifyPhoneNumber(phoneNumber: String?) {
-        Timber.d("verifyPhoneNumber $phoneNumber")
+    override fun verifyPhoneNumber(phone: String?) {
 
-        if (phoneNumber == null || phoneNumber.isBlank()) {
+        if (phone == null || phone.isBlank()) {
             phoneVerificationProgress.value = Result.error("Invalid phone number")
         } else {
+            val validPhone = getValidPhoneNumber(phone)
+            Timber.d("validPhone $validPhone")
             phoneVerificationProgress.value = Result.loading()
             PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                    phoneNumber,
+                    validPhone,
                     60,
                     TimeUnit.SECONDS,
                     UiThreadExecutor(),
@@ -227,6 +228,7 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors): AuthDataM
         user?.flags?.isInitialSetupComplete = true
         user?.flags?.isRegistered = true
         user?.password = Sha1.getHash(user?.password)
+        user?.phone_number = getValidPhoneNumber(user?.phone_number)
 
         val firebaseUser = FirebaseAuth.getInstance().currentUser
         firebaseUser?.uid?.also {  uid ->
@@ -240,6 +242,10 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors): AuthDataM
                         profileUploadProgress.value = Result.error(it.message)
                     }
         }
+    }
+
+    private fun getValidPhoneNumber(phone: String?): String {
+        return "+971" + phone?.replace(" ", "")
     }
 
 

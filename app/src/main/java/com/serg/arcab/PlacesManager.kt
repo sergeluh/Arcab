@@ -5,6 +5,7 @@ import com.google.android.gms.common.data.DataBufferUtils
 import com.google.android.gms.location.places.*
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.tasks.Tasks
+import com.serg.arcab.data.AppExecutors
 import com.serg.arcab.utils.launchSilent
 import kotlinx.coroutines.experimental.DefaultDispatcher
 import kotlinx.coroutines.experimental.Deferred
@@ -15,16 +16,14 @@ import java.util.concurrent.TimeUnit
 import kotlin.coroutines.experimental.CoroutineContext
 
 class PlacesManager constructor(
-        val context: Context
+        private val context: Context,
+        private val appExecutors: AppExecutors,
+        private var geoDataClient: GeoDataClient
 ) {
 
     var job: Deferred<MutableList<AutocompletePrediction>>? = null
 
-    private var mGeoDataClient = Places.getGeoDataClient(context)
-    private val ioContext: CoroutineContext = DefaultDispatcher
-    private val uiContext: CoroutineContext = UI
-
-    fun setQuery(query: String, latLngBounds: LatLngBounds?, callback: Callback) = launchSilent(uiContext) {
+    fun setQuery(query: String, latLngBounds: LatLngBounds?, callback: Callback) = launchSilent(appExecutors.uiContext) {
         job?.cancel()
         callback.loading(true)
         val deferred = search(query, latLngBounds)
@@ -34,8 +33,8 @@ class PlacesManager constructor(
     }
 
 
-    private fun search(query: String, latLngBounds: LatLngBounds? = null) = async(ioContext) {
-        val results = mGeoDataClient.getAutocompletePredictions(query, latLngBounds, AutocompleteFilter.Builder()
+    private fun search(query: String, latLngBounds: LatLngBounds? = null) = async(appExecutors.ioContext) {
+        val results = geoDataClient.getAutocompletePredictions(query, latLngBounds, AutocompleteFilter.Builder()
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
                 .build())
         if (results != null) {
@@ -48,7 +47,7 @@ class PlacesManager constructor(
 
     fun fetchPlaceDetail(placeId: String?, function: (Place) -> Unit) {
         placeId?.let {
-            mGeoDataClient?.getPlaceById(placeId)?.addOnCompleteListener {
+            geoDataClient.getPlaceById(placeId)?.addOnCompleteListener {
                 if (it.isSuccessful) {
                     val places = it.result as PlaceBufferResponse
                     val myPlace = places.get(0)

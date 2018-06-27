@@ -18,20 +18,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:context=".ui.auth.mobile.PhoneFragment"
-            android:paddingStart="@dimen/screen_padding"
-            android:paddingTop="@dimen/screen_padding"
-            android:paddingEnd="@dimen/screen_padding"
-            android:paddingBottom="@dimen/padding_auth_bottom">
+            android:paddingBottom="@dimen/auth_content_padding_bottom">
 
             <TextView
                 android:id="@+id/titleTextView"
                 style="@style/TextAppearanceHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="@dimen/margin_top"
-                android:text="Hi"
+                android:text="@string/auth_header_email"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -40,12 +34,13 @@
                 android:id="@+id/emailEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:ems="10"
                 android:inputType="textEmailAddress"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
+                app:layout_constraintTop_toBottomOf="@+id/titleTextView"
+                style="@style/EditText"
+                android:layout_marginTop="@dimen/auth_header_margin_bottom"/>
 
             <TextView
                 android:id="@+id/textView7"
@@ -59,16 +54,17 @@
 
             <TextView
                 android:id="@+id/textView9"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="32dp"
-                android:text="Use your personal email address. You can connect your work/university address later on."
+                android:text="@string/auth_footer_email"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintVertical_bias="1"
-                app:layout_constraintTop_toBottomOf="@+id/textView7" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView7"
+                style="@style/TextAppearanceText"
+                android:layout_marginBottom="@dimen/auth_screen_padding"/>
 
         </android.support.constraint.ConstraintLayout>
 

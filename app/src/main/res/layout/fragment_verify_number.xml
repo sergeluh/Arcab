@@ -18,20 +18,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:context=".ui.auth.mobile.PhoneFragment"
-            android:paddingStart="@dimen/screen_padding"
-            android:paddingTop="@dimen/screen_padding"
-            android:paddingEnd="@dimen/screen_padding"
-            android:paddingBottom="@dimen/padding_auth_bottom">
+            android:paddingBottom="@dimen/auth_content_padding_bottom">
 
             <TextView
                 android:id="@+id/textView"
                 style="@style/TextAppearanceHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="@dimen/margin_top"
-                android:text="Verify"
+                android:text="@string/auth_header_verify_phone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -39,38 +33,36 @@
             <com.serg.arcab.ui.custom.PinEditText
                 android:id="@+id/verification_code"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView"/>
+                app:layout_constraintTop_toBottomOf="@+id/textView"
+                android:inputType="number"
+                android:textStyle="bold"
+                android:textSize="30dp"
+                style="@style/EditText"
+                android:layout_marginTop="@dimen/auth_header_margin_bottom"/>
 
             <TextView
                 android:id="@+id/textView6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="Code"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/verification_code"
+                android:text="@string/auth_verify_phone_code_hint"
+                android:textAllCaps="true"
                 android:textStyle="bold"
-                android:textAllCaps="true"/>
+                app:layout_constraintStart_toStartOf="@+id/verification_code"
+                app:layout_constraintTop_toBottomOf="@+id/verification_code" />
 
             <TextView
                 android:id="@+id/editNumberBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="8dp"
-                android:text="Edit mobile number"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/verification_code"
-                android:textStyle="bold"
+                android:text="@string/edit_mobile_number"
                 android:textAllCaps="true"
-                android:textColor="@color/colorAccent"/>
+                android:textColor="@color/colorAccent"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/verification_code"
+                app:layout_constraintTop_toBottomOf="@+id/verification_code" />
 
             <TextView
                 android:id="@+id/explainTextView"
@@ -82,9 +74,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView6"
                 app:layout_constraintVertical_bias="1"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="32dp"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+                android:layout_marginBottom="@dimen/auth_screen_padding"
+                style="@style/TextAppearanceText"/>
 
         </android.support.constraint.ConstraintLayout>
 

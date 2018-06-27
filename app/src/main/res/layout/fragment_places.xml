@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="70dp"
-        android:paddingBottom="@dimen/padding_auth_bottom"
+        android:paddingBottom="@dimen/auth_content_padding_bottom"
         android:clipToPadding="false"/>
 
     <EditText

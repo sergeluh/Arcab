@@ -18,18 +18,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:context=".ui.auth.mobile.PhoneFragment"
-            android:paddingStart="@dimen/screen_padding"
-            android:paddingTop="@dimen/screen_padding"
-            android:paddingEnd="@dimen/screen_padding"
-            android:paddingBottom="@dimen/padding_auth_bottom">
+            android:paddingBottom="@dimen/auth_content_padding_bottom">
 
             <TextView
                 android:id="@+id/textView"
                 style="@style/TextAppearanceHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_top"
-                android:text="Is That Right?"
+                android:text="@string/auth_header_from_social"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -38,12 +34,13 @@
                 android:id="@+id/firstNameEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="@dimen/auth_header_margin_bottom"
                 android:ems="10"
                 android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                app:layout_constraintTop_toBottomOf="@+id/textView"
+                style="@style/EditText"/>
 
             <TextView
                 android:id="@+id/textView23"
@@ -58,7 +55,7 @@
                 android:id="@+id/lastNameEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                style="@style/EditText"
                 android:ems="10"
                 android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -78,7 +75,7 @@
                 android:id="@+id/emailEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                style="@style/EditText"
                 android:ems="10"
                 android:inputType="textEmailAddress"
                 app:layout_constraintEnd_toEndOf="parent"

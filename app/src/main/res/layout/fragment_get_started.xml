@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.main.GetStartedFragment"
-    android:focusable="true">
+    android:focusable="true"
+    android:fitsSystemWindows="true">
 
     <fragment
         android:id="@+id/map"

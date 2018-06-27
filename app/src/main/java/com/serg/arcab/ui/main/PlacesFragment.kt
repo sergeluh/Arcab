@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.gms.location.places.AutocompletePrediction
 import com.jakewharton.rxbinding2.widget.RxTextView
+import com.serg.arcab.LocationManager
 import com.serg.arcab.PlacesManager
 import com.serg.arcab.R
 import com.serg.arcab.recycleradapter.BaseDelegateAdapter
@@ -17,6 +18,7 @@ import com.serg.arcab.recycleradapter.section.BaseHeaderFooterDelegateAdapter
 import com.serg.arcab.recycleradapter.section.Section
 import com.serg.arcab.recycleradapter.section.SectionedCompositeAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_places.*
 import kotlinx.android.synthetic.main.list_item_places_address.*
 import kotlinx.android.synthetic.main.list_item_places_header.*
@@ -30,9 +32,13 @@ class PlacesFragment : Fragment() {
 
     private val viewModel by sharedViewModel<MainViewModel>()
 
-    private val placesManager: PlacesManager by inject()
+    private val placesManager by inject<PlacesManager>()
+
+    private val locationManager by inject<LocationManager>()
 
     private lateinit var adapter: SectionedCompositeAdapter
+
+    private var searchDisposable: Disposable? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_places, container, false)
@@ -67,23 +73,24 @@ class PlacesFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
 
-        adapter.setHeaderDataInSection(0, getString(R.string.pick))
-        adapter.setHeaderDataInSection(1, getString(R.string.nearby))
-        adapter.setHeaderDataInSection(2, getString(R.string.search_result))
-        adapter.swapDataInSection(0, listOf(getString(R.string.current_location), getString(R.string.location_on_map)))
+        adapter.setHeaderDataInSection(0, getString(R.string.initial_setup_places_fragment_header_pick))
+        adapter.setHeaderDataInSection(1, getString(R.string.initial_setup_places_fragment_header_nearby))
+        adapter.setHeaderDataInSection(2, getString(R.string.initial_setup_places_fragment_header_search_result))
+        adapter.swapDataInSection(0, listOf(getString(R.string.initial_setup_places_fragment_pick_current_location),
+                getString(R.string.initial_setup_places_fragment_pick_location_on_map)))
 
-        RxTextView.textChanges(editText)
+        searchDisposable = RxTextView.textChanges(editText)
                 .skipInitialValue()
                 .debounce(300, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    search(it.toString())
+                    searchQuery(it.toString())
                 }, {
 
                 })
     }
 
-    private fun search(query: String) {
+    private fun searchQuery(query: String) {
         placesManager.setQuery(query, null, object : PlacesManager.Callback {
             override fun loading(isLoading: Boolean) {
 
@@ -93,6 +100,19 @@ class PlacesFragment : Fragment() {
             }
         })
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        searchDisposable?.dispose()
+    }
+
+
+
+
+
+
+
+
 
     class HeaderDelegate: BaseHeaderFooterDelegateAdapter() {
         override fun getLayoutId(): Int {
@@ -135,6 +155,12 @@ class PlacesFragment : Fragment() {
             holder.addressTextView.text = prediction.getFullText(null)
         }
     }
+
+
+
+
+
+
 
     companion object {
 
