@@ -11,7 +11,7 @@ import com.serg.arcab.model.Seat
 import kotlinx.android.synthetic.main.item_pickup_point.view.*
 
 
-class PreferredSeatRecyclerViewAdapter(val callback: Callback, val seatList: MutableList<Seat>) : RecyclerView.Adapter<PreferredSeatRecyclerViewAdapter.ViewHolder>() {
+class PreferredSeatRecyclerViewAdapter(val callback: Callback, val seatList: MutableList<Seat>, val selectedSeatId: String?) : RecyclerView.Adapter<PreferredSeatRecyclerViewAdapter.ViewHolder>() {
 
     private var currentCheckedItem: CompoundButton? = null
 
@@ -36,8 +36,18 @@ class PreferredSeatRecyclerViewAdapter(val callback: Callback, val seatList: Mut
 
             val btnSeat = itemView.findViewById(R.id.btnSeat) as CheckBox
 
+            if (item.id == selectedSeatId) {
+                item.isSelected = true
+            }
+
             if(item.id.equals("1D") || item.id.equals("2C") || item.id.equals("3C")) {
                 btnSeat.visibility = View.INVISIBLE
+            }
+
+//            //Set seats selected if user seats id matches to current seats id
+            if (item.isSelected){
+                btnSeat.isChecked = true
+                currentCheckedItem = btnSeat
             }
 
             if(item.user_id != null) {

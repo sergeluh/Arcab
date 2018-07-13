@@ -4,10 +4,14 @@ import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.serg.arcab.recycleradapter.BaseViewHolder
 import com.serg.arcab.recycleradapter.DataHolder
+import kotlinx.android.synthetic.main.list_item_places_address.view.*
+import kotlinx.android.synthetic.main.list_item_places_pick.view.*
 import timber.log.Timber
 
 class SectionedCompositeAdapter
 private constructor(private val sectionList: List<Section>): RecyclerView.Adapter<BaseViewHolder>() {
+
+        var pickCallback: PickCallback? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         for (section in sectionList) {
@@ -26,6 +30,12 @@ private constructor(private val sectionList: List<Section>): RecyclerView.Adapte
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         getSectionForPosition(position).onBindViewHolder(holder, getLocalPositionInSection(position))
+        holder.itemView.setOnClickListener {
+            when(it.pickTextView?.text){
+                "Current Location" -> pickCallback?.currentLocationClicked()
+                "Location on Map" -> pickCallback?.locationOnMapClicked()
+            }
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -78,9 +88,6 @@ private constructor(private val sectionList: List<Section>): RecyclerView.Adapte
     }*/
 
 
-
-
-
     class Builder {
 
         private val sectionList = mutableListOf<Section>()
@@ -96,8 +103,6 @@ private constructor(private val sectionList: List<Section>): RecyclerView.Adapte
             }
             return SectionedCompositeAdapter(sectionList)
         }
-
-
     }
 
     fun change(sectionNumber: Int, header: (DataHolder?) -> Unit, listData: (DataHolder?) -> Boolean, footer: (DataHolder?) -> Unit) {
@@ -143,5 +148,11 @@ private constructor(private val sectionList: List<Section>): RecyclerView.Adapte
         if(sectionList[sectionPosition].setFooterData(data)) {
             notifyDataSetChanged()
         }
+    }
+
+    interface PickCallback{
+        fun currentLocationClicked()
+
+        fun locationOnMapClicked()
     }
 }

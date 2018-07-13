@@ -245,7 +245,8 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors): AuthDataM
     }
 
     private fun getValidPhoneNumber(phone: String?): String {
-        return "+971" + phone?.replace(" ", "")
+//        return "+971" + phone?.replace(" ", "")
+        return "+380" + phone?.replace(" ", "")
     }
 
 

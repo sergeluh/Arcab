@@ -12,19 +12,18 @@
     <ImageView
         android:id="@+id/btnBack"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_height="40dp"
         android:background="@drawable/bg_back_btn"
         android:padding="8dp"
-        android:text="@string/initial_setup_pickup_from"
         android:src="@drawable/arrow_left_black_24dp"
+        android:text="@string/initial_setup_pickup_from"
         app:layout_constraintEnd_toStartOf="@+id/btnNext"
-        app:layout_constraintTop_toTopOf="parent" />
+        map:layout_editor_absoluteY="8dp" />
 
     <TextView
         android:id="@+id/textViewAddress"
         android:layout_width="0dp"
-        android:layout_height="17dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -39,39 +38,28 @@
     <ImageView
         android:id="@+id/btnNext"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
         android:background="@drawable/bg_back_btn"
         android:padding="8dp"
         android:src="@drawable/arrow_right_black_24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView31"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toStartOf="@+id/btnBack"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewAddress" />
+        app:layout_constraintBottom_toBottomOf="@+id/btnBack"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="0dp"
-        android:layout_height="150dp"
+        android:layout_height="0dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        map:liteMode="true"
+        android:clickable="false"
+        app:layout_constraintDimensionRatio="w,1:2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView31" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewAddress"
+        map:liteMode="true" />
 
     <TextView
         android:id="@+id/textView33"

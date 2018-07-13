@@ -5,9 +5,12 @@ import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.widget.Toast
+import com.google.firebase.database.FirebaseDatabase
 import com.serg.arcab.R
 import com.serg.arcab.base.BaseActivity
 import org.koin.android.architecture.ext.viewModel
+import timber.log.Timber
 
 class MainActivity : BaseActivity() {
 
@@ -49,6 +52,31 @@ class MainActivity : BaseActivity() {
             addFragment(PaymentPlanFragment.newInstance(), PlacesFragment.TAG)
         })
 
+        viewModel.goToResult.observe(this, Observer {
+            addFragment(ResultFragment.newInstance(), PlacesFragment.TAG)
+        })
+
+        viewModel.confirmOrder.observe(this, Observer {
+            viewModel.onGoToPaymentPlanClicked()
+            FirebaseDatabase.getInstance().reference.child("trips")
+                    .child(viewModel.tripOrder.pickMeUpAt?.tripId.toString())
+                    .child("booked_days")
+                    .child(viewModel.tripOrder.dayIndex.toString())
+                    .child("seats")
+                    .child(viewModel.tripOrder.preferredSeat?.id!!)
+                    .setValue(viewModel.tripOrder.preferredSeat)
+        })
+
+        viewModel.goToNotAvailableFragment.observe(this, Observer {
+            addFragment(UniversityNotAvailableFragment.newInstance(), PlacesFragment.TAG)
+        })
+
+        viewModel.letMeIn.observe(this, Observer {
+            Timber.d("Observer received string: $it")
+            val messageText = if (it != null && it.isNotEmpty()) "Your organization ($it) will be notified"
+            else "Enter organization name please"
+            Toast.makeText(this, messageText, Toast.LENGTH_SHORT).show()
+        })
 
     }
 

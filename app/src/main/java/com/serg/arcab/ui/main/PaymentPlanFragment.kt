@@ -32,7 +32,7 @@ class PaymentPlanFragment : Fragment() {
         }
 
         navBar.nextBtn.setOnClickListener {
-            //viewModel.onGoToPickupTimingClicked()
+            viewModel.onGoToResultClicked()
         }
 
         navBar.nextBtn.isEnabled = false

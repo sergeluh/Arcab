@@ -14,8 +14,10 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import com.serg.arcab.LocationManager
 import com.serg.arcab.R
+import com.serg.arcab.model.Trip
 import com.serg.arcab.base.BaseFragment
 import com.serg.arcab.ui.splash.SplashActivity
 import kotlinx.android.synthetic.main.fragment_get_started.*
@@ -82,7 +84,7 @@ class GetStartedFragment : BaseFragment(), OnMapReadyCallback {
         Timber.d("onPermissionLocationGranted ${googleMap?.hashCode()}")
         googleMap?.isMyLocationEnabled = true
 
-        locationManager.requestLastLocation( object : LocationManager.LastLocationCallback() {
+        locationManager.requestLastLocation(object : LocationManager.LastLocationCallback() {
             override fun onSuccess(location: Location?) {
                 location?.also {
                     googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 16f))

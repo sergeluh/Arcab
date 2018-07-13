@@ -4,20 +4,32 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.serg.arcab.R
+import com.serg.arcab.model.CommonPoint
 import kotlinx.android.synthetic.main.item_pickup_point.view.*
+import timber.log.Timber
 
 
-class PointRecyclerViewAdapter(val userList: MutableList<String>, val view: RecyclerView) : RecyclerView.Adapter<PointRecyclerViewAdapter.ViewHolder>() {
+class PointRecyclerViewAdapter(val userList: MutableList<CommonPoint>, val view: RecyclerView) : RecyclerView.Adapter<PointRecyclerViewAdapter.ViewHolder>() {
 
     //this method is returning the view for each item in the list
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PointRecyclerViewAdapter.ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.item_pickup_point, parent, false)
         v.mapView.onCreate(null)
-        v.mapView.getMapAsync {  }
+//        v.mapView.getMapAsync {
+//            it.setOnMapClickListener {
+//                //Show clicked position in logs
+//                Timber.d("Map clicked on: ${it.latitude} : ${it.longitude}")
+//            }
+//            val pos = LatLng(48.858093, 2.294694)
+//            it.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15f))
+//            it.addMarker(MarkerOptions().position(pos))
+//        }
         return ViewHolder(v)
     }
 
@@ -34,10 +46,18 @@ class PointRecyclerViewAdapter(val userList: MutableList<String>, val view: Recy
     //the class is hodling the list view
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bindItems(item: String) {
+        fun bindItems(item: CommonPoint) {
             val textViewAddress = itemView.findViewById(R.id.textViewAddress) as TextView
-
-            textViewAddress.text = item
+            itemView.mapView.getMapAsync {
+                it.setOnMapClickListener {
+                    //Show clicked position in logs
+                    Timber.d("Map clicked on: ${it.latitude} : ${it.longitude}")
+                }
+                val latLng = LatLng(item.latitude!!, item.longitude!!)
+                it.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f))
+                it.addMarker(MarkerOptions().position(latLng))
+            }
+            textViewAddress.text = "From ${item.title}\n${item.address}"
 
             val btnBack = itemView.findViewById(R.id.btnBack) as ImageView
             val btnNext = itemView.findViewById(R.id.btnNext) as ImageView
@@ -59,4 +79,6 @@ class PointRecyclerViewAdapter(val userList: MutableList<String>, val view: Recy
 
         }
     }
+
+    fun getItem(position: Int) = LatLng(userList[position].latitude!!, userList[position].longitude!!)
 }

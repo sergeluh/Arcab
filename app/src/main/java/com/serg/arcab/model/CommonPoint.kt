@@ -2,12 +2,16 @@ package com.serg.arcab.model
 
 import com.google.gson.annotations.SerializedName
 
-data class UserPoint constructor(
-        @SerializedName("id")
-        var id: Int? = null,
+/**
+ * Model that stores common_points data from database
+ */
+data class CommonPoint(
 
         @SerializedName("address")
         var address: String? = null,
+
+        @SerializedName("id")
+        var id: Int? = null,
 
         @SerializedName("latitude")
         var latitude: Double? = null,
@@ -16,8 +20,4 @@ data class UserPoint constructor(
         var longitude: Double? = null,
 
         @SerializedName("title")
-        var title: String? = null,
-
-        @SerializedName("type")
-        var type: String? = null
-)
+        var title: String? = null)

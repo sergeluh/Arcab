@@ -35,6 +35,14 @@
     <string name="initial_setup_pickup_drop_point">Drop Me Off At</string>
     <string name="initial_setup_pickup_timing_switch">Ask me to reschedule these timings at the beginning of every week.</string>
 
+    <!-- Not available university block-->
+    <string name="initial_setup_else_reject_uh_oh">Uh oh,</string>
+    <string name="initial_setup_else_reject_message">We\'re sorry, but arcab is not available in
+        your university or workplace at the moment. Enter the name of your organization and we will
+        get back to your ASAP.</string>
+    <string name="initial_setup_else_reject_hint">WORKPLACE/UNIVERSITY NAME</string>
+    <string name="initial_setup_else_reject_let_me_in">Let me in!</string>
+
     <!--Preferred Seat block-->
     <string name="initial_setup_preferred_seat_title">Your Preferred Seat</string>
     <string name="initial_setup_preferred_seat_description">We may assign you another seat in case your selection has already been taken by someone else at a particular day/ time.</string>
@@ -45,6 +53,13 @@
     <string name="initial_setup_payment_plan_description">Choose if you’d like to pay per trip or once a month.</string>
     <string name="initial_setup_payment_plan_per_trip">Pay Per Trip</string>
     <string name="initial_setup_payment_plan_monthly">Monthly</string>
+
+    <!--Result block-->
+    <string name="initial_setup_result_header">Pickup/Dropoff</string>
+    <string name="initial_setup_result_message_to_from">You will be collected from here by arcab, to and from your organization.</string>
+    <string name="initial_setup_result_message_to_only">You will be collected from here by arcab, to your organization.</string>
+    <string name="initial_setup_result_message_from_only">You will be collected from here by arcab, from your organization.</string>
+    <string name="initial_setup_result_premium_pickup">Premium pickup, tou are collected from the nearest street to home.</string>
 
     <string name="female">Female</string>
     <string name="male">Male</string>
