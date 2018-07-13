@@ -57,7 +57,6 @@ class MainActivity : BaseActivity() {
         })
 
         viewModel.confirmOrder.observe(this, Observer {
-            viewModel.onGoToPaymentPlanClicked()
             FirebaseDatabase.getInstance().reference.child("trips")
                     .child(viewModel.tripOrder.pickMeUpAt?.tripId.toString())
                     .child("booked_days")
