@@ -36,11 +36,38 @@ class PickupTimingFragment : Fragment() {
 
         navBar.nextBtn.setOnClickListener {
             viewModel.onGoToPreferredSeatClicked()
-            viewModel.tripOrder.resultMessage = when{
-                check_box_common_point.isChecked && check_box_your_point.isChecked -> resources.getString(R.string.initial_setup_result_message_to_from)
-                check_box_common_point.isChecked -> resources.getString(R.string.initial_setup_result_message_to_only)
-                check_box_your_point.isChecked -> resources.getString(R.string.initial_setup_result_message_from_only)
-                else -> ""
+            val commonAdapter = common_recycler_view.adapter as TimingRecyclerViewAdapter
+            val yourAdapter = your_recycler_view.adapter as TimingRecyclerViewAdapter
+            viewModel.tripOrder.pickMeUpDays = mutableListOf()
+            viewModel.tripOrder.dropMeOffDays = mutableListOf()
+            with(viewModel.tripOrder){
+                when{
+                    check_box_common_point.isChecked && check_box_your_point.isChecked -> {
+                        resultMessage = resources.getString(R.string.initial_setup_result_message_to_from)
+                        val commonItem = commonAdapter.getItem((common_recycler_view.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition())
+                        setCheckedDays(commonItem, pickMeUpDays)
+                        val yourItem = yourAdapter.getItem((your_recycler_view.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition())
+                        setCheckedDays(yourItem, dropMeOffDays)
+                        tripIdTo = commonItem.tripId
+                        tripIdFrom = yourItem.tripId
+                        Timber.d("Selected both trips. Common id: ${commonItem.tripId}, your id: ${yourItem.tripId}")
+                    }
+                    check_box_common_point.isChecked -> {
+                        resultMessage = resources.getString(R.string.initial_setup_result_message_to_only)
+                        val commonItem = commonAdapter.getItem((common_recycler_view.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition())
+                        setCheckedDays(commonItem, pickMeUpDays)
+                        tripIdTo = commonItem.tripId
+                        Timber.d("Selected common trip id = ${commonItem.tripId}. In model: $tripIdTo")
+                    }
+                    check_box_your_point.isChecked -> {
+                        resultMessage = resources.getString(R.string.initial_setup_result_message_from_only)
+                        val yourItem = yourAdapter.getItem((your_recycler_view.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition())
+                        setCheckedDays(yourItem, dropMeOffDays)
+                        tripIdFrom = yourItem.tripId
+                        Timber.d("Selected your trip id = ${yourItem.tripId}. In model: $tripIdFrom")
+                    }
+                    else -> {}
+                }
             }
             //Set viewModel tripOrder timing items
             setTimingItem(common_recycler_view, your_recycler_view)
@@ -155,6 +182,15 @@ class PickupTimingFragment : Fragment() {
             resultList.add(TimingItem(it.time!!, checkedList, tripId = it.id))
         }
         return resultList
+    }
+
+    //Method for setting checked days in trip order
+    private fun setCheckedDays(item: TimingItem, targetList: MutableList<Int>?){
+        for (indx in item.daysChecked.indices){
+            if (item.daysChecked[indx]){
+                targetList?.add(indx + 1)
+            }
+        }
     }
 
     companion object {

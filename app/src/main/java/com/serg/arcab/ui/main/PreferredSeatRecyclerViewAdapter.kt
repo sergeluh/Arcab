@@ -38,6 +38,7 @@ class PreferredSeatRecyclerViewAdapter(val callback: Callback, val seatList: Mut
 
             if (item.id == selectedSeatId) {
                 item.isSelected = true
+                currentCheckedItem = btnSeat
             }
 
             if(item.id.equals("1D") || item.id.equals("2C") || item.id.equals("3C")) {
@@ -45,14 +46,14 @@ class PreferredSeatRecyclerViewAdapter(val callback: Callback, val seatList: Mut
             }
 
 //            //Set seats selected if user seats id matches to current seats id
-            if (item.isSelected){
-                btnSeat.isChecked = true
-                currentCheckedItem = btnSeat
-            }
+//            if (item.isSelected){
+//                btnSeat.isChecked = true
+//                currentCheckedItem = btnSeat
+//            }
 
-            if(item.user_id != null) {
-                btnSeat.isEnabled = false
-            } else {
+//            if(item.user_id != null) {
+//                btnSeat.isEnabled = false
+//            } else {
                 btnSeat.setOnCheckedChangeListener { buttonView, isChecked ->
                     if(isChecked) {
                         changeChecked(buttonView)
@@ -63,7 +64,7 @@ class PreferredSeatRecyclerViewAdapter(val callback: Callback, val seatList: Mut
                     }
 
                 }
-            }
+//            }
 
         }
         private fun changeChecked(checkBox: CompoundButton)

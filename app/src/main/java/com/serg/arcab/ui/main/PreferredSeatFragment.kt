@@ -7,11 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 
 import com.serg.arcab.R
 import org.koin.android.architecture.ext.sharedViewModel
 import com.serg.arcab.model.Seat
+import com.serg.arcab.model.Trip
 import kotlinx.android.synthetic.main.fragment_preferred_seat.*
 import kotlinx.android.synthetic.main.navigation_view.view.*
 import timber.log.Timber
@@ -21,19 +21,48 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
 
     private var dayIndex: Int? = null
 
+    private val reservedSeatsToMap = mutableMapOf<Int, MutableList<Seat>>()
+    private val reservedSeatsFromMap = mutableMapOf<Int, MutableList<Seat>>()
+    private val weekDays = mutableMapOf(Pair(1, "Sunday"),
+            Pair(2, "Monday"),
+            Pair(3, "Tuesday"),
+            Pair(4, "Wednesday"),
+            Pair(5, "Thursday"),
+            Pair(6, "Friday"),
+            Pair(7, "Saturday"))
+
     override fun checkedChange(seat: Seat?) {
-        if(seat == null) {
+        if (seat == null) {
             navBar.nextBtn.isEnabled = false
             text_view_seat.visibility = View.INVISIBLE
         } else {
-            navBar.nextBtn.isEnabled = true
-            text_view_seat.text = seat.id
-            text_view_seat.visibility = View.VISIBLE
-            //Set user selected seats when new seats selected
-            with(viewModel.tripOrder){
-                preferredSeat = seat
-                preferredSeat!!.user_id = FirebaseAuth.getInstance().uid
-                preferredSeat!!.user_point = userPoint
+            var reservedDaysTo = ""
+            var reservedDaysFrom = ""
+            for ((key, value) in reservedSeatsToMap) {
+                value.filter { it.id == seat.id }.forEach { reservedDaysTo += if (reservedDaysTo.isEmpty()) weekDays[key] else ", ${weekDays[key]}" }
+            }
+            for ((key, value) in reservedSeatsFromMap) {
+                value.filter { it.id == seat.id }.forEach { reservedDaysFrom += if (reservedDaysFrom.isEmpty()) weekDays[key] else ", ${weekDays[key]}" }
+            }
+            //Count how many times current seat reserved
+            var daysReserved = 0
+            reservedSeatsToMap.values.forEach { it.forEach { if (it.id == seat.id) daysReserved++ } }
+            reservedSeatsFromMap.values.forEach { it.forEach { if (it.id == seat.id) daysReserved++ } }
+            if (reservedDaysTo.isEmpty() && reservedDaysFrom.isEmpty()) {
+                navBar.nextBtn.isEnabled = true
+                text_view_seat.text = seat.id
+                text_view_seat.visibility = View.VISIBLE
+                //Set user selected seats when new seats selected
+                with(viewModel.tripOrder) {
+                    preferredSeat = seat
+                    preferredSeat!!.user_id = FirebaseAuth.getInstance().uid
+                    preferredSeat!!.user_point = userPoint
+                }
+            } else {
+                text_view_seat.text = "${seat.id} is reserved for ${if (reservedDaysTo.isNotEmpty()) "pickup at $reservedDaysTo" else ""} ${if (reservedDaysFrom.isNotEmpty()) " dropoff at $reservedDaysFrom" else ""}"
+                text_view_seat.visibility = View.VISIBLE
+                //Set button enabled if selected seat is free at least in one of selected days
+                navBar.nextBtn.isEnabled = daysReserved < (reservedSeatsToMap.size + reservedSeatsFromMap.size)
             }
         }
     }
@@ -46,6 +75,18 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        Timber.d("Trip ids in model: ${viewModel.tripOrder.tripIdTo}, ${viewModel.tripOrder.tripIdFrom}")
+        with(viewModel.tripOrder) {
+            if (pickMeUpDays!!.size > 0) {
+                getReservedSeats(tripIdTo!!, viewModel.tripsTo, viewModel.tripOrder.pickMeUpDays, reservedSeatsToMap)
+            }
+            if (dropMeOffDays!!.size > 0) {
+                getReservedSeats(tripIdFrom!!, viewModel.tripsFrom, viewModel.tripOrder.dropMeOffDays, reservedSeatsFromMap)
+            }
+        }
+
+        Timber.d("Reserved seats to is: $reservedSeatsToMap \n Reserved seats from is: $reservedSeatsFromMap")
 
         navBar.backBtn.setOnClickListener {
             viewModel.onBackClicked()
@@ -61,18 +102,18 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
 
         navBar.nextBtn.isEnabled = false
 
-        with(viewModel.tripOrder.pickMeUpAt?.daysChecked) {
-            for (index in 0 until this!!.size) {
-                if (this[index]){
-                    dayIndex = index + 1
-                    break
-                }
-            }
-        }
-        Timber.d("Day index is $dayIndex")
-        var reservedSeats = mutableListOf<String?>()
-                viewModel.tripsTo.filter { it.id ==  viewModel.tripOrder.pickMeUpAt?.tripId}[0]
-                .booked_days?.get(dayIndex!!)?.seats?.forEach { reservedSeats.add(it.value.id) }
+//        with(viewModel.tripOrder.pickMeUpAt?.daysChecked) {
+//            for (index in 0 until this!!.size) {
+//                if (this[index]) {
+//                    dayIndex = index + 1
+//                    break
+//                }
+//            }
+//        }
+//        Timber.d("Day index is $dayIndex")
+//        var reservedSeats = mutableListOf<String?>()
+//        viewModel.tripsTo.filter { it.id == viewModel.tripOrder.pickMeUpAt?.tripId }[0]
+//                .booked_days?.get(dayIndex!!)?.seats?.forEach { reservedSeats.add(it.value.id) }
 
         var seats = mutableListOf<Seat>()
         val seatCodes = arrayOf("D", "C", "B", "A")
@@ -80,13 +121,13 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
             for (code in seatCodes.iterator()) {
                 var seatId = "$i$code"
 
-                if(reservedSeats.contains(seatId)){
-                    Timber.d("Seat $seatId is reserved")
-                    seats.add(Seat(seatId, "sdf"))//одно место занято
-                } else {
-                    //Add flags to seats items to detect whether the user select current seats
-                    seats.add(Seat(seatId))
-                }
+//                if (reservedSeats.contains(seatId)) {
+//                    Timber.d("Seat $seatId is reserved")
+//                    seats.add(Seat(seatId, "sdf"))//одно место занято
+//                } else {
+                //Add flags to seats items to detect whether the user select current seats
+                seats.add(Seat(seatId))
+//                }
             }
         }
 
@@ -101,10 +142,26 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
     override fun onResume() {
         super.onResume()
         //Show text_view_seat and populate it with user seats data when user comes back from on of the other fragments
-        if (viewModel.tripOrder.preferredSeat != null){
+        if (viewModel.tripOrder.preferredSeat != null) {
             text_view_seat.visibility = View.VISIBLE
             text_view_seat.text = viewModel.tripOrder.preferredSeat?.id
             navBar.nextBtn.isEnabled = true
+        }
+    }
+
+    //Method for creating reserved seat list from trip object
+    private fun getReservedSeats(id: Int, trips: MutableList<Trip>, selectedDays: MutableList<Int>?, target: MutableMap<Int, MutableList<Seat>>) {
+        Timber.d("Trip id: $id, selectedDays: $selectedDays")
+        val tempTrips = trips.filter { it.id == id }
+        if (tempTrips.isNotEmpty()) {
+            val trip = trips[0]
+            Timber.d("Reserved seats trip is: $trip")
+            trip.booked_days?.filter { it != null }?.forEach {
+                Timber.d("Book day index is ${it.index}")
+                if (selectedDays!!.contains(it.index)) {
+                    target[it.index!!] = it.seats?.values!!.toMutableList()
+                }
+            }
         }
     }
 

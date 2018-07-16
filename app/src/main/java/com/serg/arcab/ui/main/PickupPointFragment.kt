@@ -60,6 +60,7 @@ class PickupPointFragment : Fragment() {
                 googleMap?.addMarker(MarkerOptions().position(it))
                 address = geocoder!!.getFromLocation(it.latitude, it.longitude, 1)[0]
                         .getAddressLine(0)
+                addressView!!.text = "From $address"
                 fromLatLng = it
             }
             viewModel.tripOrder.currentLocation?.also {

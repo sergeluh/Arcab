@@ -11,8 +11,6 @@ import timber.log.Timber
 class SectionedCompositeAdapter
 private constructor(private val sectionList: List<Section>): RecyclerView.Adapter<BaseViewHolder>() {
 
-        var pickCallback: PickCallback? = null
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         for (section in sectionList) {
             val viewHolder = section.onCreateViewHolder(parent, viewType)
@@ -30,12 +28,6 @@ private constructor(private val sectionList: List<Section>): RecyclerView.Adapte
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         getSectionForPosition(position).onBindViewHolder(holder, getLocalPositionInSection(position))
-        holder.itemView.setOnClickListener {
-            when(it.pickTextView?.text){
-                "Current Location" -> pickCallback?.currentLocationClicked()
-                "Location on Map" -> pickCallback?.locationOnMapClicked()
-            }
-        }
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -148,11 +140,5 @@ private constructor(private val sectionList: List<Section>): RecyclerView.Adapte
         if(sectionList[sectionPosition].setFooterData(data)) {
             notifyDataSetChanged()
         }
-    }
-
-    interface PickCallback{
-        fun currentLocationClicked()
-
-        fun locationOnMapClicked()
     }
 }

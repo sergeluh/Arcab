@@ -59,7 +59,7 @@
     <string name="initial_setup_result_message_to_from">You will be collected from here by arcab, to and from your organization.</string>
     <string name="initial_setup_result_message_to_only">You will be collected from here by arcab, to your organization.</string>
     <string name="initial_setup_result_message_from_only">You will be collected from here by arcab, from your organization.</string>
-    <string name="initial_setup_result_premium_pickup">Premium pickup, tou are collected from the nearest street to home.</string>
+    <string name="initial_setup_result_premium_pickup">Premium pickup, you are collected from the nearest street to home.</string>
 
     <string name="female">Female</string>
     <string name="male">Male</string>

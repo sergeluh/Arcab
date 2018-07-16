@@ -21,15 +21,6 @@ class PointRecyclerViewAdapter(val userList: MutableList<CommonPoint>, val view:
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PointRecyclerViewAdapter.ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.item_pickup_point, parent, false)
         v.mapView.onCreate(null)
-//        v.mapView.getMapAsync {
-//            it.setOnMapClickListener {
-//                //Show clicked position in logs
-//                Timber.d("Map clicked on: ${it.latitude} : ${it.longitude}")
-//            }
-//            val pos = LatLng(48.858093, 2.294694)
-//            it.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15f))
-//            it.addMarker(MarkerOptions().position(pos))
-//        }
         return ViewHolder(v)
     }
 

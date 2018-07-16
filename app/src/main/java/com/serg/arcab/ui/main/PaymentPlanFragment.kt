@@ -36,7 +36,6 @@ class PaymentPlanFragment : Fragment() {
         }
 
         navBar.nextBtn.isEnabled = false
-        navBar.nextBtn.text = getString(R.string.button_confirm)
 
         check_box_common_point.setOnClickListener(View.OnClickListener {
             if(check_box_your_point.isChecked) {

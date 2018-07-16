@@ -8,19 +8,31 @@ import com.google.android.gms.maps.model.LatLng
 data class TripOrder(
         var linkId: String? = null,
 
+        var tripIdTo: Int? = null,
+
+        var tripIdFrom: Int? = null,
+
         var currentLocation: LatLng? = null,
 
         var address: String? = null,
 
         var dayIndex: Int? = null,
 
+        var dayIndexesTo: MutableList<Int>? = null,
+
+        var dayIndexesFrom: MutableList<Int>? = null,
+
         var pickMeUpAt: TimingItem? = null,
 
         var pickMeUpAtIndex: Int? = null,
 
+        var pickMeUpDays: MutableList<Int>? = null,
+
         var dropMeOffAt: TimingItem? = null,
 
         var dropMeOfAtIndex: Int? = null,
+
+        var dropMeOffDays: MutableList<Int>? = null,
 
         var userPoint: UserPoint? = null,
 

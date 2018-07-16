@@ -5,6 +5,7 @@ import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.widget.Toast
 import com.google.firebase.database.FirebaseDatabase
 import com.serg.arcab.R
@@ -57,13 +58,18 @@ class MainActivity : BaseActivity() {
         })
 
         viewModel.confirmOrder.observe(this, Observer {
-            FirebaseDatabase.getInstance().reference.child("trips")
-                    .child(viewModel.tripOrder.pickMeUpAt?.tripId.toString())
-                    .child("booked_days")
-                    .child(viewModel.tripOrder.dayIndex.toString())
-                    .child("seats")
-                    .child(viewModel.tripOrder.preferredSeat?.id!!)
-                    .setValue(viewModel.tripOrder.preferredSeat)
+            with(viewModel.tripOrder){
+                pickMeUpDays?.forEach {
+                    writeSeatToDb(tripIdTo!!, it, preferredSeat?.id!!)
+                }
+                dropMeOffDays?.forEach {
+                    writeSeatToDb(tripIdFrom!!, it, preferredSeat?.id!!)
+                }
+            }
+            Timber.d("Fragment back stack ${supportFragmentManager.backStackEntryCount}")
+            supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            Timber.d("Fragment back stack after pop ${supportFragmentManager.backStackEntryCount}")
+            addFragment(GetStartedFragment.newInstance(), PlacesFragment.TAG)
         })
 
         viewModel.goToNotAvailableFragment.observe(this, Observer {
@@ -100,5 +106,16 @@ class MainActivity : BaseActivity() {
         fun start(activity: Activity) {
             activity.startActivity(Intent(activity, MainActivity::class.java))
         }
+    }
+
+    //Method wor writing preferred user seat to db in selected days
+    private fun writeSeatToDb(tripId: Int, dayIndex: Int, seatId: String){
+        FirebaseDatabase.getInstance().reference.child("trips")
+                .child(tripId.toString())
+                .child("booked_days")
+                .child(dayIndex.toString())
+                .child("seats")
+                .child(seatId)
+                .setValue(viewModel.tripOrder.preferredSeat)
     }
 }

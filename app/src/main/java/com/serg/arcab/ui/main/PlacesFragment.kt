@@ -5,6 +5,8 @@ import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
@@ -36,6 +38,7 @@ import kotlinx.android.synthetic.main.fragment_places.*
 import kotlinx.android.synthetic.main.list_item_places_address.*
 import kotlinx.android.synthetic.main.list_item_places_header.*
 import kotlinx.android.synthetic.main.list_item_places_pick.*
+import kotlinx.android.synthetic.main.list_item_places_pick.view.*
 import kotlinx.android.synthetic.main.navigation_view.view.*
 import org.koin.android.architecture.ext.sharedViewModel
 import org.koin.android.ext.android.inject
@@ -85,10 +88,33 @@ class PlacesFragment : Fragment() {
                     })
         }
 
+        val pickDelegateAdapter = PickDelegateAdapter{
+            when(it.pickTextView?.text){
+                "Current Location" -> {
+                    if (ActivityCompat.checkSelfPermission(context!!,
+                                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        val lm = context?.getSystemService(Context.LOCATION_SERVICE) as android.location.LocationManager
+                        var location = lm.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER)
+                        if (location == null) {
+                            location = lm.getLastKnownLocation(android.location.LocationManager.NETWORK_PROVIDER)
+                        }
+                        viewModel.tripOrder.currentLocation = LatLng(location.latitude, location.longitude)
+                        Timber.d("Place is ${viewModel.tripOrder.currentLocation}")
+                        changeBackground(it)
+                    }
+                }
+                "Location on Map" -> {
+                    //Intent builder for picking places
+                    val builder = PlacePicker.IntentBuilder()
+                    startActivityForResult(builder.build(activity), placePickerRequest)
+                    changeBackground(it)
+                }
+            }
+        }
         adapter = SectionedCompositeAdapter.Builder()
                 .add(Section.Builder()
                         .setHeader(HeaderDelegate())
-                        .add(PickDelegateAdapter())
+                        .add(pickDelegateAdapter)
                         .build())
                 .add(Section.Builder()
                         .setHeader(HeaderDelegate())
@@ -99,27 +125,6 @@ class PlacesFragment : Fragment() {
                         .add(PlaceDelegateAdapter())
                         .build())
                 .build()
-        adapter.pickCallback = object : SectionedCompositeAdapter.PickCallback{
-            override fun currentLocationClicked() {
-                if (ActivityCompat.checkSelfPermission(context!!,
-                                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                    val lm = context?.getSystemService(Context.LOCATION_SERVICE) as android.location.LocationManager
-                    var location = lm.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER)
-                    if (location == null){
-                        location = lm.getLastKnownLocation(android.location.LocationManager.NETWORK_PROVIDER)
-                    }
-                    viewModel.tripOrder.currentLocation = LatLng(location.latitude, location.longitude)
-                    Timber.d("Place is ${viewModel.tripOrder.currentLocation}")
-                }
-            }
-
-            override fun locationOnMapClicked() {
-                //Intent builder for picking places
-                val builder = PlacePicker.IntentBuilder()
-                startActivityForResult(builder.build(activity), placePickerRequest)
-            }
-
-        }
 
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
@@ -164,6 +169,21 @@ class PlacesFragment : Fragment() {
         })
     }
 
+    @Suppress("DEPRECATION")
+    private fun changeBackground(v: View){
+        Timber.d("Current color = ${v.background}")
+        val backGround = v.background
+        if (backGround != null && backGround is ColorDrawable){
+            if (backGround.color == ColorDrawable(resources.getColor(R.color.colorPrimary)).color){
+                v.background = ColorDrawable(Color.TRANSPARENT)
+            }else{
+                v.background = ColorDrawable(resources.getColor(R.color.colorPrimary))
+            }
+        }else{
+            v.background = ColorDrawable(resources.getColor(R.color.colorPrimary))
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         searchDisposable?.dispose()
@@ -188,7 +208,8 @@ class PlacesFragment : Fragment() {
         }
     }
 
-    class PickDelegateAdapter: BaseDelegateAdapter() {
+    class PickDelegateAdapter(val callback: (View) -> Unit): BaseDelegateAdapter() {
+
         override fun isForViewType(items: List<DataHolder>, position: Int): Boolean {
             return true
         }
@@ -200,6 +221,9 @@ class PlacesFragment : Fragment() {
         override fun bindViewHolder(holder: BaseViewHolder, dataHolder: DataHolder, position: Int) {
             val text = dataHolder.data as String
             holder.pickTextView.text = text
+            holder.itemView.setOnClickListener {
+                callback(it)
+            }
         }
     }
 
