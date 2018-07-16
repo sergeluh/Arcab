@@ -160,6 +160,7 @@ class PickupPointFragment : Fragment() {
                                 super.onSuccess(location)
                                 location?.also {
                                     setAddressAndPosition(it.latitude, it.longitude)
+                                    fromLatLng = LatLng(it.latitude, it.longitude)
                                 }
                             }
                         })

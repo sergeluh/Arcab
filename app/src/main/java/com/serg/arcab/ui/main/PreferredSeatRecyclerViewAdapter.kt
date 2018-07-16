@@ -1,14 +1,12 @@
 package com.serg.arcab.ui.main
 
 import android.support.v7.widget.RecyclerView
-import android.telecom.Call
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.serg.arcab.R
 import com.serg.arcab.model.Seat
-import kotlinx.android.synthetic.main.item_pickup_point.view.*
 
 
 class PreferredSeatRecyclerViewAdapter(val callback: Callback, val seatList: MutableList<Seat>, val selectedSeatId: String?) : RecyclerView.Adapter<PreferredSeatRecyclerViewAdapter.ViewHolder>() {
@@ -41,35 +39,25 @@ class PreferredSeatRecyclerViewAdapter(val callback: Callback, val seatList: Mut
                 currentCheckedItem = btnSeat
             }
 
-            if(item.id.equals("1D") || item.id.equals("2C") || item.id.equals("3C")) {
+            if (item.id.equals("1D") || item.id.equals("2C") || item.id.equals("3C")) {
                 btnSeat.visibility = View.INVISIBLE
             }
 
-//            //Set seats selected if user seats id matches to current seats id
-//            if (item.isSelected){
-//                btnSeat.isChecked = true
-//                currentCheckedItem = btnSeat
-//            }
-
-//            if(item.user_id != null) {
-//                btnSeat.isEnabled = false
-//            } else {
-                btnSeat.setOnCheckedChangeListener { buttonView, isChecked ->
-                    if(isChecked) {
-                        changeChecked(buttonView)
-                        callback.checkedChange(item)
-                    } else {
-                        currentCheckedItem = null
-                        callback.checkedChange(null)
-                    }
-
+            btnSeat.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked) {
+                    changeChecked(buttonView)
+                    callback.checkedChange(item)
+                } else {
+                    currentCheckedItem = null
+                    callback.checkedChange(null)
                 }
-//            }
+
+            }
 
         }
-        private fun changeChecked(checkBox: CompoundButton)
-        {
-            if(currentCheckedItem != null){
+
+        private fun changeChecked(checkBox: CompoundButton) {
+            if (currentCheckedItem != null) {
                 currentCheckedItem!!.isChecked = false
             }
             currentCheckedItem = checkBox

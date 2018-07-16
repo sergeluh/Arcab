@@ -16,8 +16,6 @@ data class TripOrder(
 
         var address: String? = null,
 
-        var dayIndex: Int? = null,
-
         var dayIndexesTo: MutableList<Int>? = null,
 
         var dayIndexesFrom: MutableList<Int>? = null,

@@ -84,7 +84,6 @@ class TimingRecyclerViewAdapter(val userList: MutableList<TimingItem>, val view:
         button.isEnabled = userList[position].daysEnabled[buttonIndex]
         button.isChecked = userList[position].daysChecked[buttonIndex]
         button.setOnCheckedChangeListener{_, isChecked ->
-//            userList[position].daysEnabled[buttonIndex] = isChecked
             userList[position].daysChecked[buttonIndex] = isChecked
         }
     }

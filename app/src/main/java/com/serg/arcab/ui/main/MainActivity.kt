@@ -11,7 +11,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.serg.arcab.R
 import com.serg.arcab.base.BaseActivity
 import org.koin.android.architecture.ext.viewModel
-import timber.log.Timber
 
 class MainActivity : BaseActivity() {
 
@@ -66,9 +65,7 @@ class MainActivity : BaseActivity() {
                     writeSeatToDb(tripIdFrom!!, it, preferredSeat?.id!!)
                 }
             }
-            Timber.d("Fragment back stack ${supportFragmentManager.backStackEntryCount}")
             supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-            Timber.d("Fragment back stack after pop ${supportFragmentManager.backStackEntryCount}")
             addFragment(GetStartedFragment.newInstance(), PlacesFragment.TAG)
         })
 
@@ -77,7 +74,6 @@ class MainActivity : BaseActivity() {
         })
 
         viewModel.letMeIn.observe(this, Observer {
-            Timber.d("Observer received string: $it")
             val messageText = if (it != null && it.isNotEmpty()) "Your organization ($it) will be notified"
             else "Enter organization name please"
             Toast.makeText(this, messageText, Toast.LENGTH_SHORT).show()

@@ -32,8 +32,11 @@ class ResultFragment : BaseFragment() {
         val map = childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment
         map.onCreate(null)
         map.getMapAsync {
-            it.moveCamera(CameraUpdateFactory.newLatLngZoom(viewModel.tripOrder.currentLocation, 16f))
-            it.addMarker(MarkerOptions().position(viewModel.tripOrder.currentLocation!!))
+            val gm = it
+            viewModel.tripOrder.currentLocation?.also {
+                gm.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 16f))
+                gm.addMarker(MarkerOptions().position(it))
+            }
         }
 
         header_text.text = viewModel.tripOrder.resultMessage

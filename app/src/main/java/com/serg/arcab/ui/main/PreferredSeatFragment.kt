@@ -19,8 +19,6 @@ import timber.log.Timber
 
 class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callback {
 
-    private var dayIndex: Int? = null
-
     private val reservedSeatsToMap = mutableMapOf<Int, MutableList<Seat>>()
     private val reservedSeatsFromMap = mutableMapOf<Int, MutableList<Seat>>()
     private val weekDays = mutableMapOf(Pair(1, "Sunday"),
@@ -86,7 +84,6 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
             }
         }
 
-        Timber.d("Reserved seats to is: $reservedSeatsToMap \n Reserved seats from is: $reservedSeatsFromMap")
 
         navBar.backBtn.setOnClickListener {
             viewModel.onBackClicked()
@@ -95,39 +92,19 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
         }
 
         navBar.nextBtn.setOnClickListener {
-            viewModel.tripOrder.dayIndex = dayIndex
             viewModel.onGoToPaymentPlanClicked()
             Timber.d("Preferred seats selected: ${viewModel.tripOrder}")
         }
 
         navBar.nextBtn.isEnabled = false
 
-//        with(viewModel.tripOrder.pickMeUpAt?.daysChecked) {
-//            for (index in 0 until this!!.size) {
-//                if (this[index]) {
-//                    dayIndex = index + 1
-//                    break
-//                }
-//            }
-//        }
-//        Timber.d("Day index is $dayIndex")
-//        var reservedSeats = mutableListOf<String?>()
-//        viewModel.tripsTo.filter { it.id == viewModel.tripOrder.pickMeUpAt?.tripId }[0]
-//                .booked_days?.get(dayIndex!!)?.seats?.forEach { reservedSeats.add(it.value.id) }
 
         var seats = mutableListOf<Seat>()
         val seatCodes = arrayOf("D", "C", "B", "A")
         for (i in 4 downTo 1) {
             for (code in seatCodes.iterator()) {
                 var seatId = "$i$code"
-
-//                if (reservedSeats.contains(seatId)) {
-//                    Timber.d("Seat $seatId is reserved")
-//                    seats.add(Seat(seatId, "sdf"))//одно место занято
-//                } else {
-                //Add flags to seats items to detect whether the user select current seats
                 seats.add(Seat(seatId))
-//                }
             }
         }
 
@@ -151,14 +128,12 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
 
     //Method for creating reserved seat list from trip object
     private fun getReservedSeats(id: Int, trips: MutableList<Trip>, selectedDays: MutableList<Int>?, target: MutableMap<Int, MutableList<Seat>>) {
-        Timber.d("Trip id: $id, selectedDays: $selectedDays")
         val tempTrips = trips.filter { it.id == id }
         if (tempTrips.isNotEmpty()) {
             val trip = trips[0]
-            Timber.d("Reserved seats trip is: $trip")
             trip.booked_days?.filter { it != null }?.forEach {
-                Timber.d("Book day index is ${it.index}")
-                if (selectedDays!!.contains(it.index)) {
+                Timber.d("Current booked day $it")
+                if (selectedDays?.contains(it.index)!! && it.seats != null) {
                     target[it.index!!] = it.seats?.values!!.toMutableList()
                 }
             }

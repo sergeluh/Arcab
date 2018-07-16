@@ -11,7 +11,6 @@ import com.serg.arcab.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_university_not_available.*
 import kotlinx.android.synthetic.main.navigation_view.view.*
 import org.koin.android.architecture.ext.sharedViewModel
-import timber.log.Timber
 
 class UniversityNotAvailableFragment : BaseFragment() {
 
@@ -28,7 +27,6 @@ class UniversityNotAvailableFragment : BaseFragment() {
         navBar.nextBtn.text = resources.getString(R.string.initial_setup_else_reject_let_me_in)
 
         navBar.nextBtn.setOnClickListener{
-            Timber.d("organization name: ${organization_name.text}")
             viewModel.onLetMeInClicked(organization_name.text.toString())
         }
 
