@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.serg.arcab.LocationManager
 import com.serg.arcab.model.UserPoint
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 import java.util.*
 
 
@@ -61,7 +62,6 @@ class PickupPointFragment : Fragment() {
                 address = geocoder!!.getFromLocation(it.latitude, it.longitude, 1)[0]
                         .getAddressLine(0)
                 addressView!!.text = "From $address"
-                fromLatLng = it
             }
             viewModel.tripOrder.currentLocation?.also {
                 googleMap?.addMarker(MarkerOptions().position(it))
@@ -95,6 +95,7 @@ class PickupPointFragment : Fragment() {
                         fromLatLng?.longitude, type = "custom")
                 viewModel.tripOrder.pickupMessage = resources.getString(R.string.initial_setup_result_premium_pickup)
             }
+            Timber.d("Current order is ${viewModel.tripOrder}")
         }
 
         navBar.nextBtn.isEnabled = false
@@ -160,7 +161,6 @@ class PickupPointFragment : Fragment() {
                                 super.onSuccess(location)
                                 location?.also {
                                     setAddressAndPosition(it.latitude, it.longitude)
-                                    fromLatLng = LatLng(it.latitude, it.longitude)
                                 }
                             }
                         })
@@ -191,6 +191,7 @@ class PickupPointFragment : Fragment() {
                         1)[0]
         address = myAddress.getAddressLine(0)
         addressView?.text = "From $address"
+        fromLatLng = LatLng(latitude, longitude)
     }
 
     //Method for setting initial visibility of the recycler view items and setting "Next" button enabled if it needs to

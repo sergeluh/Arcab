@@ -11,6 +11,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.serg.arcab.R
 import com.serg.arcab.base.BaseActivity
 import org.koin.android.architecture.ext.viewModel
+import timber.log.Timber
 
 class MainActivity : BaseActivity() {
 
@@ -59,10 +60,14 @@ class MainActivity : BaseActivity() {
         viewModel.confirmOrder.observe(this, Observer {
             with(viewModel.tripOrder){
                 pickMeUpDays?.forEach {
-                    writeSeatToDb(tripIdTo!!, it, preferredSeat?.id!!)
+                    if (preferredSeat != null) {
+                        writeSeatToDb(tripIdTo!!, it, preferredSeat?.id!!)
+                    }
                 }
                 dropMeOffDays?.forEach {
-                    writeSeatToDb(tripIdFrom!!, it, preferredSeat?.id!!)
+                    if (preferredSeat != null) {
+                        writeSeatToDb(tripIdFrom!!, it, preferredSeat?.id!!)
+                    }
                 }
             }
             supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)

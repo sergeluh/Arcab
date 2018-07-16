@@ -59,6 +59,11 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
             } else {
                 text_view_seat.text = "${seat.id} is reserved for ${if (reservedDaysTo.isNotEmpty()) "pickup at $reservedDaysTo" else ""} ${if (reservedDaysFrom.isNotEmpty()) " dropoff at $reservedDaysFrom" else ""}"
                 text_view_seat.visibility = View.VISIBLE
+                with(viewModel.tripOrder) {
+                    preferredSeat = seat
+                    preferredSeat!!.user_id = FirebaseAuth.getInstance().uid
+                    preferredSeat!!.user_point = userPoint
+                }
                 //Set button enabled if selected seat is free at least in one of selected days
                 navBar.nextBtn.isEnabled = daysReserved < (reservedSeatsToMap.size + reservedSeatsFromMap.size)
             }
