@@ -1,5 +1,7 @@
 package com.serg.arcab.di
 
+import android.content.Context
+import com.google.android.gms.location.places.GeoDataClient
 import com.google.android.gms.location.places.Places
 import com.serg.arcab.LocationManager
 import com.serg.arcab.PlacesManager
@@ -25,7 +27,7 @@ private val dataManagerModule = applicationContext {
 }
 
 private val helperModule = applicationContext {
-    factory { Places.getGeoDataClient(get()) }
+    factory { Places.getGeoDataClient(get<Context>()) as GeoDataClient }
     factory { PlacesManager(get(), get(), get()) }
     factory { LocationManager(get()) }
 }

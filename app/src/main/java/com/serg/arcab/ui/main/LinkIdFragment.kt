@@ -30,6 +30,7 @@ class LinkIdFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         navBar.nextBtn.setOnClickListener {
+            viewModel.onHideKeyboard()
             //Add link id to model by clicking next
             viewModel.tripOrder.linkId = editText2.text.toString()
             //Read universities from database

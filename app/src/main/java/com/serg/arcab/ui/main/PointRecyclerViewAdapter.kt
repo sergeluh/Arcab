@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.serg.arcab.R
 import com.serg.arcab.model.CommonPoint
@@ -39,6 +41,7 @@ class PointRecyclerViewAdapter(val userList: MutableList<CommonPoint>, val view:
         fun bindItems(item: CommonPoint) {
             val textViewAddress = itemView.findViewById(R.id.textViewAddress) as TextView
             itemView.mapView.getMapAsync {
+                it.setMapStyle(MapStyleOptions.loadRawResourceStyle(itemView.context, R.raw.map_style_arcab))
                 val latLng = LatLng(item.latitude!!, item.longitude!!)
                 it.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f))
                 it.addMarker(MarkerOptions().position(latLng))

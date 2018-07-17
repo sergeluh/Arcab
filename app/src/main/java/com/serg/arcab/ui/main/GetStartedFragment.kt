@@ -13,6 +13,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.serg.arcab.LocationManager
 import com.serg.arcab.R
@@ -58,6 +59,12 @@ class GetStartedFragment : BaseFragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         Timber.d("onMapReady ${googleMap.hashCode()}")
+        val success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style_arcab))
+        if (success){
+            Timber.d("Styles applied")
+        }else{
+            Timber.d("Styles are broken")
+        }
         this.googleMap = googleMap
         if (checkLocationPermissions()) {
             onPermissionLocationGranted()

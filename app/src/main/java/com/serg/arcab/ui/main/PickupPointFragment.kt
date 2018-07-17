@@ -23,6 +23,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.serg.arcab.LocationManager
 import com.serg.arcab.model.UserPoint
@@ -55,6 +56,7 @@ class PickupPointFragment : Fragment() {
         val mapFragment = childFragmentManager.findFragmentById(R.id.your_map_view) as SupportMapFragment
         mapFragment.onCreate(null)
         mapFragment.getMapAsync {
+            it.setMapStyle(MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style_arcab))
             googleMap = it
             googleMap?.setOnMapClickListener {
                 googleMap?.clear()

@@ -60,6 +60,8 @@ class PlacesManager constructor(
         }
     }
 
+    fun getPlaceById(id: String) = geoDataClient.getPlaceById(id)
+
     interface Callback {
         fun loading(isLoading: Boolean)
         fun result(result: MutableList<AutocompletePrediction>)

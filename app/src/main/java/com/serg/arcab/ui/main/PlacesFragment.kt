@@ -14,13 +14,16 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.google.android.gms.location.places.AutocompletePrediction
-import com.google.android.gms.location.places.ui.PlacePicker
+import com.google.android.gms.location.places.Place
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.maps.android.SphericalUtil
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.serg.arcab.LocationManager
 import com.serg.arcab.PlacesManager
@@ -57,9 +60,18 @@ class PlacesFragment : Fragment() {
 
     private val placePickerRequest = 1002
 
+    var pickDelegateAdapter: PickDelegateAdapter? = null
+
+    var nearByAdapter: PlaceDelegateAdapter? = null
+
+    var searchResultAdapter: PlaceDelegateAdapter? = null
+
+    var fromLatLng: LatLng? = null
+
     private var searchDisposable: Disposable? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
         return inflater.inflate(R.layout.fragment_places, container, false)
     }
 
@@ -70,16 +82,30 @@ class PlacesFragment : Fragment() {
             viewModel.onBackClicked()
         }
 
+        if (ActivityCompat.checkSelfPermission(context!!,
+                        Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            val lm = context?.getSystemService(Context.LOCATION_SERVICE) as android.location.LocationManager
+            var location = lm.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER)
+            if (location == null) {
+                location = lm.getLastKnownLocation(android.location.LocationManager.NETWORK_PROVIDER)
+            }
+            fromLatLng = LatLng(location.latitude, location.longitude)
+        }
+
+        navBar.nextBtn.text = "Confirm"
+        navBar.nextBtn.isEnabled = false
         navBar.nextBtn.setOnClickListener {
+            viewModel.onHideKeyboard()
             //Initialize common points before common points screen appears
             viewModel.commonPoints = mutableListOf()
-            FirebaseDatabase.getInstance().reference.child("common_points").
-                    addValueEventListener(object : ValueEventListener {
+            FirebaseDatabase.getInstance().reference.child("common_points")
+                    .addValueEventListener(object : ValueEventListener {
                         override fun onCancelled(p0: DatabaseError) {
 
                         }
+
                         override fun onDataChange(p0: DataSnapshot) {
-                            for (snapshot in p0.children){
+                            for (snapshot in p0.children) {
                                 viewModel.commonPoints?.add(snapshot.getValue(CommonPoint::class.java)!!)
                                 viewModel.onGoToPickupPointClicked()
                             }
@@ -88,41 +114,54 @@ class PlacesFragment : Fragment() {
                     })
         }
 
-        val pickDelegateAdapter = PickDelegateAdapter{
-            when(it.pickTextView?.text){
+        pickDelegateAdapter = PickDelegateAdapter {
+            nearByAdapter?.removeSelectedItem()
+            searchResultAdapter?.removeSelectedItem()
+            when (it.pickTextView?.text) {
                 "Current Location" -> {
-                    if (ActivityCompat.checkSelfPermission(context!!,
-                                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        val lm = context?.getSystemService(Context.LOCATION_SERVICE) as android.location.LocationManager
-                        var location = lm.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER)
-                        if (location == null) {
-                            location = lm.getLastKnownLocation(android.location.LocationManager.NETWORK_PROVIDER)
-                        }
-                        viewModel.tripOrder.currentLocation = LatLng(location.latitude, location.longitude)
-                        Timber.d("Place is ${viewModel.tripOrder.currentLocation}")
-                        changeBackground(it)
+                    viewModel.tripOrder.currentLocation = fromLatLng
+                    Timber.d("Place is ${viewModel.tripOrder.currentLocation}")
+                    if (viewModel.tripOrder.currentLocation != null){
+                        navBar.nextBtn.isEnabled = true
                     }
                 }
                 "Location on Map" -> {
-                    //Intent builder for picking places
-                    val builder = PlacePicker.IntentBuilder()
-                    startActivityForResult(builder.build(activity), placePickerRequest)
-                    changeBackground(it)
+                    val intent = Intent(context, LocationOnMapFragment::class.java)
+                    startActivityForResult(intent, placePickerRequest)
                 }
             }
         }
+
+        nearByAdapter = PlaceDelegateAdapter{
+            pickDelegateAdapter?.removeSelectedItem()
+            searchResultAdapter?.removeSelectedItem()
+            viewModel.tripOrder.currentLocation = it.latLng
+            if (viewModel.tripOrder.currentLocation != null){
+                navBar.nextBtn.isEnabled = true
+            }
+        }
+
+        searchResultAdapter = PlaceDelegateAdapter {
+            pickDelegateAdapter?.removeSelectedItem()
+            nearByAdapter?.removeSelectedItem()
+            viewModel.tripOrder.currentLocation = it.latLng
+            if (viewModel.tripOrder.currentLocation != null){
+                navBar.nextBtn.isEnabled = true
+            }
+        }
+
         adapter = SectionedCompositeAdapter.Builder()
                 .add(Section.Builder()
                         .setHeader(HeaderDelegate())
-                        .add(pickDelegateAdapter)
+                        .add(pickDelegateAdapter!!)
                         .build())
                 .add(Section.Builder()
                         .setHeader(HeaderDelegate())
-                        .add(PlaceDelegateAdapter())
+                        .add(nearByAdapter!!)
                         .build())
                 .add(Section.Builder()
                         .setHeader(HeaderDelegate())
-                        .add(PlaceDelegateAdapter())
+                        .add(searchResultAdapter!!)
                         .build())
                 .build()
 
@@ -151,10 +190,15 @@ class PlacesFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         Timber.d("Request nearby places: $requestCode, result - $resultCode")
-        if (requestCode == placePickerRequest && resultCode == RESULT_OK){
-            val place = PlacePicker.getPlace(context, data)
-            viewModel.tripOrder.currentLocation = place.latLng
-            Timber.d("Place is: ${viewModel.tripOrder.currentLocation}")
+        navBar.nextBtn.isEnabled = true
+        if (requestCode == placePickerRequest && resultCode == RESULT_OK) {
+            val latitude = data?.getDoubleExtra(LocationOnMapFragment.LATITUDE, 0.0)
+            val longitude = data?.getDoubleExtra(LocationOnMapFragment.LONGITUDE, 0.0)
+            viewModel.tripOrder.currentLocation = LatLng(latitude!!, longitude!!)
+            if (viewModel.tripOrder.currentLocation != null){
+                navBar.nextBtn.isEnabled = true
+            }
+            Timber.d("Result location: $latitude, $longitude")
         }
     }
 
@@ -163,25 +207,47 @@ class PlacesFragment : Fragment() {
             override fun loading(isLoading: Boolean) {
 
             }
+
             override fun result(result: MutableList<AutocompletePrediction>) {
-                adapter.swapDataInSection(2, result)
+                val list = mutableListOf<Place>()
+                result.forEach {
+                    var place: Place?
+                    placesManager.getPlaceById(it.placeId!!).addOnCompleteListener {
+                        place = it.result[0]
+                        list.add(place!!)
+                        if (list.size == 5){
+                            adapter.swapDataInSection(2, list)
+                        }
+                        Timber.d("Found place is ${place?.address}(${place?.latLng})")
+                    }
+                }
+
             }
         })
     }
 
-    @Suppress("DEPRECATION")
-    private fun changeBackground(v: View){
-        Timber.d("Current color = ${v.background}")
-        val backGround = v.background
-        if (backGround != null && backGround is ColorDrawable){
-            if (backGround.color == ColorDrawable(resources.getColor(R.color.colorPrimary)).color){
-                v.background = ColorDrawable(Color.TRANSPARENT)
-            }else{
-                v.background = ColorDrawable(resources.getColor(R.color.colorPrimary))
+    private fun searchNearbyPlaces(query: String) {
+        val offsetMeters = 1200.0
+        val b = LatLngBounds.Builder()
+        var offsetPoints = SphericalUtil.computeOffset(fromLatLng, offsetMeters, 0.toDouble())
+        b.include(offsetPoints)
+        offsetPoints = SphericalUtil.computeOffset(fromLatLng, offsetMeters, 90.toDouble())
+        b.include(offsetPoints)
+        offsetPoints = SphericalUtil.computeOffset(fromLatLng, offsetMeters, 180.toDouble())
+        b.include(offsetPoints)
+        offsetPoints = SphericalUtil.computeOffset(fromLatLng, offsetMeters, 270.toDouble())
+        b.include(offsetPoints)
+        placesManager.setQuery(query, b.build(), object : PlacesManager.Callback {
+            override fun loading(isLoading: Boolean) {
+
             }
-        }else{
-            v.background = ColorDrawable(resources.getColor(R.color.colorPrimary))
-        }
+
+            override fun result(result: MutableList<AutocompletePrediction>) {
+                Timber.d("Search nearby places result: $result")
+                adapter.swapDataInSection(1, result)
+            }
+
+        })
     }
 
     override fun onDestroyView() {
@@ -190,14 +256,7 @@ class PlacesFragment : Fragment() {
     }
 
 
-
-
-
-
-
-
-
-    class HeaderDelegate: BaseHeaderFooterDelegateAdapter() {
+    class HeaderDelegate : BaseHeaderFooterDelegateAdapter() {
         override fun getLayoutId(): Int {
             return R.layout.list_item_places_header
         }
@@ -208,7 +267,9 @@ class PlacesFragment : Fragment() {
         }
     }
 
-    class PickDelegateAdapter(val callback: (View) -> Unit): BaseDelegateAdapter() {
+    class PickDelegateAdapter(val callback: (View) -> Unit) : BaseDelegateAdapter() {
+
+        var selectedItem: View? = null
 
         override fun isForViewType(items: List<DataHolder>, position: Int): Boolean {
             return true
@@ -223,13 +284,42 @@ class PlacesFragment : Fragment() {
             holder.pickTextView.text = text
             holder.itemView.setOnClickListener {
                 callback(it)
+                if (selectedItem != null) {
+                    changeBackground(selectedItem!!)
+                }
+                changeBackground(it)
+                selectedItem = it
+            }
+        }
+
+        @Suppress("DEPRECATION")
+        private fun changeBackground(v: View) {
+            Timber.d("Current color = ${v.background}")
+            val backGround = v.background
+            if (backGround != null && backGround is ColorDrawable) {
+                if (backGround.color == ColorDrawable(Color.LTGRAY).color) {
+                    v.background = ColorDrawable(Color.TRANSPARENT)
+                } else {
+                    v.background = ColorDrawable(Color.LTGRAY)
+                }
+            } else {
+                v.background = ColorDrawable(Color.LTGRAY)
+            }
+        }
+
+        override fun removeSelectedItem(){
+            if (selectedItem != null){
+                selectedItem!!.background = ColorDrawable(Color.TRANSPARENT)
+                selectedItem = null
             }
         }
     }
 
-    class PlaceDelegateAdapter: BaseDelegateAdapter() {
+    class PlaceDelegateAdapter(val callback: (Place) -> Unit) : BaseDelegateAdapter() {
+        var selectedItem: View? = null
+
         override fun isForViewType(items: List<DataHolder>, position: Int): Boolean {
-            return items[position].data is AutocompletePrediction
+            return items[position].data is Place
         }
 
         override fun getLayoutId(): Int {
@@ -237,16 +327,27 @@ class PlacesFragment : Fragment() {
         }
 
         override fun bindViewHolder(holder: BaseViewHolder, dataHolder: DataHolder, position: Int) {
-            val prediction = dataHolder.data as AutocompletePrediction
-            holder.nameTextView.text = prediction.getPrimaryText(null)
-            holder.addressTextView.text = prediction.getFullText(null)
+            val prediction = dataHolder.data as Place
+            holder.nameTextView.text = prediction.name
+            holder.addressTextView.text = prediction.address
+            holder.itemView.setOnClickListener {
+                callback(prediction)
+                if (selectedItem != null){
+                    selectedItem!!.background = ColorDrawable(Color.TRANSPARENT)
+                }
+                it.background = ColorDrawable(Color.LTGRAY)
+                selectedItem = it
+                Toast.makeText(holder.itemView.context, "Position: ${prediction.latLng}", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        override fun removeSelectedItem() {
+            if (selectedItem != null){
+                selectedItem!!.background = ColorDrawable(Color.TRANSPARENT)
+                selectedItem = null
+            }
         }
     }
-
-
-
-
-
 
 
     companion object {

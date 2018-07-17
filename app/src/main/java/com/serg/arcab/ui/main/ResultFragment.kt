@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 
 import com.serg.arcab.R
@@ -32,6 +33,7 @@ class ResultFragment : BaseFragment() {
         val map = childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment
         map.onCreate(null)
         map.getMapAsync {
+            it.setMapStyle(MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style_arcab))
             val gm = it
             viewModel.tripOrder.currentLocation?.also {
                 gm.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 16f))

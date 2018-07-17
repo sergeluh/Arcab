@@ -24,8 +24,8 @@
 
     <style name="BaseButton" parent="Base.TextAppearance.AppCompat.Medium">
         <item name="android:textAllCaps">false</item>
-        <item name="android:paddingStart">24dp</item>
-        <item name="android:paddingEnd">24dp</item>
+        <item name="android:paddingStart">32dp</item>
+        <item name="android:paddingEnd">32dp</item>
         <item name="android:paddingTop">16dp</item>
         <item name="android:paddingBottom">16dp</item>
         <item name="android:layout_marginStart">@dimen/auth_screen_padding</item>
@@ -38,6 +38,8 @@
     <style name="Button" parent="BaseButton">
         <item name="android:background">@drawable/selector_btn</item>
         <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <style name="ButtonOutline" parent="BaseButton">

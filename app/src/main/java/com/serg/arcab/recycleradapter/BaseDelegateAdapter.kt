@@ -22,4 +22,6 @@ abstract class BaseDelegateAdapter: IDelegateAdapter {
     override fun onRecycled(holder: BaseViewHolder) {
         holder.onRecycled()
     }
+
+    abstract fun removeSelectedItem()
 }

@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/colorFragmentBg"
     android:clickable="true"
-    android:focusable="true"
-    xmlns:map="http://schemas.android.com/apk/res-auto">
+    android:focusable="true">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -18,9 +17,9 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context=".ui.auth.mobile.PhoneFragment"
+            android:paddingBottom="@dimen/auth_content_padding_bottom"
             android:paddingTop="@dimen/auth_screen_padding"
-            android:paddingBottom="@dimen/auth_content_padding_bottom">
+            tools:context=".ui.auth.mobile.PhoneFragment">
 
             <TextView
                 android:id="@+id/textView"
@@ -36,9 +35,9 @@
                 android:id="@+id/textView17"
                 style="@style/TextAppearanceText"
                 android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:text="@string/initial_setup_pickup_point_description"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -52,7 +51,7 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="32dp"
                 android:background="@color/colorGrayLine"
-                app:layout_constraintTop_toBottomOf="@+id/textView17"/>
+                app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/constraintLayout"
@@ -104,8 +103,7 @@
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/check_box_common_point">
-                </android.support.v7.widget.RecyclerView>
+                    app:layout_constraintTop_toBottomOf="@+id/check_box_common_point"></android.support.v7.widget.RecyclerView>
 
             </android.support.constraint.ConstraintLayout>
 
@@ -124,13 +122,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/horizontal_line_center">
+
                 <CheckBox
                     android:id="@+id/check_box_your_point"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:button="@drawable/selector_check_box"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/textView29"
@@ -165,8 +164,7 @@
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/check_box_your_point">
-                </android.support.v7.widget.RecyclerView>
+                    app:layout_constraintTop_toBottomOf="@+id/check_box_your_point"></android.support.v7.widget.RecyclerView>
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/your_container"
@@ -200,8 +198,99 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/your_address" />
+
+                    <TextView
+                        android:id="@+id/textView39"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:text="AED 9"
+                        app:layout_constraintEnd_toStartOf="@+id/view6"
+                        app:layout_constraintStart_toStartOf="@+id/your_map_view"
+                        app:layout_constraintTop_toBottomOf="@+id/your_map_view" />
+
+                    <TextView
+                        android:id="@+id/textView40"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:text="per trip"
+                        app:layout_constraintEnd_toStartOf="@+id/view6"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView39" />
+
+                    <View
+                        android:id="@+id/view6"
+                        android:layout_width="1dp"
+                        android:layout_height="50dp"
+                        android:background="@android:color/darker_gray"
+                        app:layout_constraintBottom_toBottomOf="@+id/textView40"
+                        app:layout_constraintEnd_toEndOf="@+id/your_map_view"
+                        app:layout_constraintHorizontal_bias="0.33"
+                        app:layout_constraintStart_toStartOf="@+id/your_map_view" />
+
+                    <View
+                        android:id="@+id/view7"
+                        android:layout_width="1dp"
+                        android:layout_height="50dp"
+                        android:background="@android:color/darker_gray"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.67"
+                        app:layout_constraintStart_toStartOf="@+id/your_map_view" />
+
+                    <TextView
+                        android:id="@+id/textView41"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:text="5 MIN"
+                        app:layout_constraintEnd_toStartOf="@+id/view7"
+                        app:layout_constraintHorizontal_bias="0.49"
+                        app:layout_constraintStart_toEndOf="@+id/view6"
+                        app:layout_constraintTop_toBottomOf="@+id/your_map_view" />
+
+                    <TextView
+                        android:id="@+id/textView42"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:text="walk"
+                        app:layout_constraintEnd_toStartOf="@+id/view7"
+                        app:layout_constraintStart_toEndOf="@+id/view6"
+                        app:layout_constraintTop_toBottomOf="@+id/textView41" />
+
+                    <TextView
+                        android:id="@+id/textView45"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="25 MIN"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/view7"
+                        app:layout_constraintTop_toBottomOf="@+id/your_map_view" />
+
+                    <TextView
+                        android:id="@+id/textView46"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="avg. time"
+                        app:layout_constraintEnd_toEndOf="@+id/your_map_view"
+                        app:layout_constraintStart_toEndOf="@+id/view7"
+                        app:layout_constraintTop_toBottomOf="@+id/textView45" />
+
                 </android.support.constraint.ConstraintLayout>
             </android.support.constraint.ConstraintLayout>
+
             <View
                 android:id="@+id/horizontal_line_bottom"
                 android:layout_width="match_parent"
@@ -219,6 +308,6 @@
         layout="@layout/navigation_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"/>
+        android:layout_gravity="bottom" />
 
 </FrameLayout>

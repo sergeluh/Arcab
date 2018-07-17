@@ -28,6 +28,7 @@ class MainViewModel: BaseViewModel() {
     val confirmOrder = SingleLiveEvent<Unit>()
     val goToNotAvailableFragment = SingleLiveEvent<Unit>()
     val letMeIn = SingleLiveEvent<String>()
+    val hideKeyboard = SingleLiveEvent<Unit>()
 
     fun onGoToLinkIdClicked() {
         goToLinkId.call()
@@ -71,5 +72,9 @@ class MainViewModel: BaseViewModel() {
 
     fun onLetMeInClicked(organization: String){
         letMeIn.callWithValue(organization)
+    }
+
+    fun onHideKeyboard(){
+        hideKeyboard.call()
     }
 }

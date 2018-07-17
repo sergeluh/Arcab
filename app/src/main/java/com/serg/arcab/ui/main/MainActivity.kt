@@ -2,10 +2,12 @@ package com.serg.arcab.ui.main
 
 import android.app.Activity
 import android.arch.lifecycle.Observer
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.google.firebase.database.FirebaseDatabase
 import com.serg.arcab.R
@@ -84,6 +86,10 @@ class MainActivity : BaseActivity() {
             Toast.makeText(this, messageText, Toast.LENGTH_SHORT).show()
         })
 
+        viewModel.hideKeyboard.observe(this, Observer {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+        })
     }
 
     private fun popFragment() {
