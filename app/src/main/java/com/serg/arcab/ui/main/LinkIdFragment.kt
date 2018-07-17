@@ -30,6 +30,7 @@ class LinkIdFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         navBar.nextBtn.setOnClickListener {
+            showProgressBar()
             viewModel.onHideKeyboard()
             //Add link id to model by clicking next
             viewModel.tripOrder.linkId = editText2.text.toString()
@@ -54,10 +55,11 @@ class LinkIdFragment : Fragment() {
                         Timber.d("Trips from")
                         val idsFrom = viewModel.universities?.schedule?.trips_from?.filter { it != null }?.map { it.trip_id }?.toMutableList()
                         fillTripList(idsFrom, viewModel.tripsFrom)
-
+                        hideProgressBar()
                         //Go to next string if all data filled
                         viewModel.onGoToPlacesClicked()
                     } else{
+                        hideProgressBar()
                         viewModel.onGoNotToAvailableFragmentClicked()
                     }
                 }
@@ -110,6 +112,14 @@ class LinkIdFragment : Fragment() {
                         }
                     })
         }
+    }
+
+    private fun showProgressBar(){
+        progressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideProgressBar(){
+        progressBar.visibility = View.GONE
     }
 
     //Method for email validation

@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.MapStyleOptions
 import com.serg.arcab.LocationManager
 
 import com.serg.arcab.R
+import kotlinx.android.synthetic.main.navigation_view.view.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.util.*
@@ -46,6 +47,10 @@ class LocationOnMapFragment : FragmentActivity(), LocationListener {
             resultIntent.putExtra(LATITUDE, latitude)
             resultIntent.putExtra(LONGITUDE, longtitude)
             setResult(Activity.RESULT_OK, resultIntent)
+            finish()
+        }
+
+        navBar.backBtn.setOnClickListener {
             finish()
         }
         addressView = findViewById(R.id.address)

@@ -1,6 +1,11 @@
 package com.serg.arcab.ui.main
 
+import android.graphics.Typeface
 import android.support.v7.widget.RecyclerView
+import android.text.Html
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +14,7 @@ import com.serg.arcab.R
 import com.serg.arcab.model.TimingItem
 
 
-class TimingRecyclerViewAdapter(val userList: MutableList<TimingItem>, val view: RecyclerView) : RecyclerView.Adapter<TimingRecyclerViewAdapter.ViewHolder>() {
+class TimingRecyclerViewAdapter(val userList: MutableList<TimingItem>, val view: RecyclerView, val header: String) : RecyclerView.Adapter<TimingRecyclerViewAdapter.ViewHolder>() {
 
     //this method is returning the view for each item in the list
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimingRecyclerViewAdapter.ViewHolder {
@@ -56,7 +61,10 @@ class TimingRecyclerViewAdapter(val userList: MutableList<TimingItem>, val view:
                 toggleButtonProcessing(it, position, 6)
             }
 
-            textViewAddress.text = item.time
+            val str = String.format(header, item.time)
+            val spannableString = SpannableStringBuilder(str)
+            spannableString.setSpan(StyleSpan(Typeface.BOLD), str.length - item.time.length, str.length, 0)
+            textViewAddress.text = spannableString
 
             val btnBack = itemView.findViewById(R.id.btnBack) as ImageView
             val btnNext = itemView.findViewById(R.id.btnNext) as ImageView

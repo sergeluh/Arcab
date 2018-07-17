@@ -90,6 +90,7 @@ class PlacesFragment : Fragment() {
                 location = lm.getLastKnownLocation(android.location.LocationManager.NETWORK_PROVIDER)
             }
             fromLatLng = LatLng(location.latitude, location.longitude)
+            Timber.d("Current location is: $fromLatLng")
         }
 
         navBar.nextBtn.text = "Confirm"
@@ -126,6 +127,7 @@ class PlacesFragment : Fragment() {
                     }
                 }
                 "Location on Map" -> {
+                    showProgressBar()
                     val intent = Intent(context, LocationOnMapFragment::class.java)
                     startActivityForResult(intent, placePickerRequest)
                 }
@@ -186,11 +188,16 @@ class PlacesFragment : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        searchNearbyPlaces()
+    }
+
     //Picking places processing
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         Timber.d("Request nearby places: $requestCode, result - $resultCode")
-        navBar.nextBtn.isEnabled = true
+        hideProgressBar()
         if (requestCode == placePickerRequest && resultCode == RESULT_OK) {
             val latitude = data?.getDoubleExtra(LocationOnMapFragment.LATITUDE, 0.0)
             val longitude = data?.getDoubleExtra(LocationOnMapFragment.LONGITUDE, 0.0)
@@ -203,6 +210,7 @@ class PlacesFragment : Fragment() {
     }
 
     private fun searchQuery(query: String) {
+        showProgressBar()
         placesManager.setQuery(query, null, object : PlacesManager.Callback {
             override fun loading(isLoading: Boolean) {
 
@@ -217,6 +225,7 @@ class PlacesFragment : Fragment() {
                         list.add(place!!)
                         if (list.size == 5){
                             adapter.swapDataInSection(2, list)
+                            hideProgressBar()
                         }
                         Timber.d("Found place is ${place?.address}(${place?.latLng})")
                     }
@@ -226,28 +235,52 @@ class PlacesFragment : Fragment() {
         })
     }
 
-    private fun searchNearbyPlaces(query: String) {
-        val offsetMeters = 1200.0
+    private fun searchNearbyPlaces() {
+        showProgressBar()
         val b = LatLngBounds.Builder()
-        var offsetPoints = SphericalUtil.computeOffset(fromLatLng, offsetMeters, 0.toDouble())
-        b.include(offsetPoints)
-        offsetPoints = SphericalUtil.computeOffset(fromLatLng, offsetMeters, 90.toDouble())
-        b.include(offsetPoints)
-        offsetPoints = SphericalUtil.computeOffset(fromLatLng, offsetMeters, 180.toDouble())
-        b.include(offsetPoints)
-        offsetPoints = SphericalUtil.computeOffset(fromLatLng, offsetMeters, 270.toDouble())
-        b.include(offsetPoints)
-        placesManager.setQuery(query, b.build(), object : PlacesManager.Callback {
+
+        val firstLatLng = LatLng(fromLatLng!!.latitude + 0.0045, fromLatLng!!.longitude + 0.007)
+        val secondLatLng = LatLng(fromLatLng!!.latitude - 0.0045, fromLatLng!!.longitude - 0.007)
+        val thirdLatLng = LatLng(fromLatLng!!.latitude + 0.0045, fromLatLng!!.longitude - 0.007)
+        val fourthLatLng = LatLng(fromLatLng!!.latitude - 0.0045, fromLatLng!!.longitude + 0.007)
+
+        Timber.d("Current location Bounds: $firstLatLng, $secondLatLng")
+
+        b.include(firstLatLng)
+        b.include(secondLatLng)
+        b.include(thirdLatLng)
+        b.include(fourthLatLng)
+
+        placesManager.setQuery("улица", b.build(), object : PlacesManager.Callback {
             override fun loading(isLoading: Boolean) {
 
             }
 
             override fun result(result: MutableList<AutocompletePrediction>) {
                 Timber.d("Search nearby places result: $result")
-                adapter.swapDataInSection(1, result)
+                val list = mutableListOf<Place>()
+                result.forEach {
+                    var place: Place?
+                    placesManager.getPlaceById(it.placeId!!).addOnCompleteListener {
+                        place = it.result[0]
+                        list.add(place!!)
+                        if (list.size == 5){
+                            adapter.swapDataInSection(1, list)
+                            hideProgressBar()
+                        }
+                        Timber.d("Found place is ${place?.address}(${place?.latLng})")
+                    }
+                }
             }
-
         })
+    }
+
+    private fun showProgressBar(){
+        progressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideProgressBar(){
+        progressBar.visibility = View.GONE
     }
 
     override fun onDestroyView() {
@@ -337,7 +370,6 @@ class PlacesFragment : Fragment() {
                 }
                 it.background = ColorDrawable(Color.LTGRAY)
                 selectedItem = it
-                Toast.makeText(holder.itemView.context, "Position: ${prediction.latLng}", Toast.LENGTH_SHORT).show()
             }
         }
 

@@ -89,7 +89,7 @@ class PickupTimingFragment : Fragment() {
         //Initialize data for pickMeUp recycler
         val recyclerDataPickMe = getTimingItemList(viewModel.tripsTo)
 
-        var commonAdapter = TimingRecyclerViewAdapter(recyclerDataPickMe, common_recycler_view)
+        var commonAdapter = TimingRecyclerViewAdapter(recyclerDataPickMe, common_recycler_view, resources.getString(R.string.initial_setup_pickup_timing_arrives))
 
         common_recycler_view.layoutManager = LinearLayoutManager(context, LinearLayout.HORIZONTAL, false)
         common_recycler_view.adapter = commonAdapter
@@ -98,11 +98,14 @@ class PickupTimingFragment : Fragment() {
         commonSnapHelper.attachToRecyclerView(common_recycler_view)
 
         textViewCommonPointAvailable.text = String.format(getString(R.string.initial_setup_pickup_timing_available), recyclerDataPickMe.size)
+        if (recyclerDataPickMe.size < 2){
+            textViewCommonPointAvailable.setTextColor(resources.getColor(R.color.colorPrimary))
+        }
 
         //Initialize data for dropMeOff recycler
         val recyclerDataDropMe = getTimingItemList(viewModel.tripsFrom)
 
-        var yourAdapter = TimingRecyclerViewAdapter(recyclerDataDropMe, your_recycler_view)
+        var yourAdapter = TimingRecyclerViewAdapter(recyclerDataDropMe, your_recycler_view, resources.getString(R.string.initial_setup_pickup_timing_leaves))
 
         your_recycler_view.layoutManager = LinearLayoutManager(context, LinearLayout.HORIZONTAL, false)
         your_recycler_view.adapter = yourAdapter
@@ -110,7 +113,10 @@ class PickupTimingFragment : Fragment() {
         val snapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(your_recycler_view)
 
-        textViewYourPointAvailable.text = String.format(getString(R.string.initial_setup_pickup_point_available), recyclerDataDropMe.size)
+        textViewYourPointAvailable.text = String.format(getString(R.string.initial_setup_pickup_timing_available), recyclerDataDropMe.size)
+        if (recyclerDataDropMe.size < 2){
+            textViewYourPointAvailable.setTextColor(resources.getColor(R.color.colorPrimary))
+        }
 
     }
 

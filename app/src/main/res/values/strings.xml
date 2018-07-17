@@ -29,6 +29,8 @@
     <string name="initial_setup_pickup_common_point">Common Point</string>
     <string name="initial_setup_pickup_point_available">%1$d Points Available</string>
     <string name="initial_setup_pickup_timing_available">%1$d Timings Available</string>
+    <string name="initial_setup_pickup_timing_arrives">Arrives at %s</string>
+    <string name="initial_setup_pickup_timing_leaves">Leaves at %s</string>
     <string name="initial_setup_pickup_from">From Burjuman Metro Station Bus Stop C</string>
     <string name="initial_setup_pickup_address">9th Street, Bank Road, Bur Dub…</string>
     <string name="initial_setup_pickup_pick_point">Pick Me Up At</string>
