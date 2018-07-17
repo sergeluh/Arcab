@@ -14,7 +14,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.google.android.gms.location.places.AutocompletePrediction
 import com.google.android.gms.location.places.Place
 import com.google.android.gms.maps.model.LatLng
@@ -23,7 +22,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.maps.android.SphericalUtil
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.serg.arcab.LocationManager
 import com.serg.arcab.PlacesManager
