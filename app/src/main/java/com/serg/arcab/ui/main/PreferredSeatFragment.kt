@@ -97,7 +97,7 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
                         Timber.d("Available seats result: $resultSeatsTo \n $resultSeatsFrom")
                     }
                 }
-                //Set button enabled if selected seat is free at least in one of selected days
+                //Set button enabled if selected seat is free at least at one of selected days
                 navBar.nextBtn.isEnabled = daysReserved < (reservedSeatsToMap.size + reservedSeatsFromMap.size)
             }
         }

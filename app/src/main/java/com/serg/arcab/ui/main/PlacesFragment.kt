@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.jakewharton.rxbinding2.widget.RxTextView
+import com.serg.arcab.COMMON_POINTS_FIREBASE_TABLE
 import com.serg.arcab.LocationManager
 import com.serg.arcab.PlacesManager
 import com.serg.arcab.R
@@ -83,7 +84,7 @@ class PlacesFragment : Fragment() {
             viewModel.onHideKeyboard()
             //Initialize common points before common points screen appears
             viewModel.commonPoints = mutableListOf()
-            FirebaseDatabase.getInstance().reference.child("common_points")
+            FirebaseDatabase.getInstance().reference.child(COMMON_POINTS_FIREBASE_TABLE)
                     .addValueEventListener(object : ValueEventListener {
                         override fun onCancelled(p0: DatabaseError) {
 

@@ -11,7 +11,10 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.serg.arcab.BOOKED_DAYS_FIREBASE_TABLE
 import com.serg.arcab.R
+import com.serg.arcab.SEATS_FIREBASE_TABLE
+import com.serg.arcab.TRIPS_FIREBASE_TABLE
 import com.serg.arcab.base.BaseActivity
 import com.serg.arcab.model.Seat
 import com.serg.arcab.model.UserPoint
@@ -70,16 +73,6 @@ class MainActivity : BaseActivity() {
                 resultSeatsFrom?.forEach {
                     writeSeatToDb(tripIdFrom!!, it.key, it.value, uid!!, userPoint!!)
                 }
-//                pickMeUpDays?.forEach {
-//                    if (preferredSeat != null) {
-//                        writeSeatToDb(tripIdTo!!, it, preferredSeat?.id!!)
-//                    }
-//                }
-//                dropMeOffDays?.forEach {
-//                    if (preferredSeat != null) {
-//                        writeSeatToDb(tripIdFrom!!, it, preferredSeat?.id!!)
-//                    }
-//                }
             }
             supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
             addFragment(GetStartedFragment.newInstance(), PlacesFragment.TAG)
@@ -126,11 +119,11 @@ class MainActivity : BaseActivity() {
 
     //Method wor writing preferred user seat to db in selected days
     private fun writeSeatToDb(tripId: Int, dayIndex: Int, seatId: String, uid: String, userPoint: UserPoint){
-        FirebaseDatabase.getInstance().reference.child("trips")
+        FirebaseDatabase.getInstance().reference.child(TRIPS_FIREBASE_TABLE)
                 .child(tripId.toString())
-                .child("booked_days")
+                .child(BOOKED_DAYS_FIREBASE_TABLE)
                 .child(dayIndex.toString())
-                .child("seats")
+                .child(SEATS_FIREBASE_TABLE)
                 .child(seatId)
                 .setValue(Seat(seatId, uid, userPoint))
     }

@@ -11,6 +11,9 @@ import android.view.ViewGroup
 import com.google.firebase.database.*
 
 import com.serg.arcab.R
+import com.serg.arcab.TRIPS_FIREBASE_TABLE
+import com.serg.arcab.UNIVERSITIES_FIREBASE_TABLE
+import com.serg.arcab.UNIVERSITIES_SUFIX_FIREBASE_TABLE
 import com.serg.arcab.model.Trip
 import com.serg.arcab.model.University
 import kotlinx.android.synthetic.main.fragment_link_id.*
@@ -38,7 +41,8 @@ class LinkIdFragment : Fragment() {
             val linkId = viewModel.tripOrder.linkId
             val whereClause = linkId?.substring(linkId.indexOf("@") + 1)
             Timber.d("Selection: $whereClause")
-            FirebaseDatabase.getInstance().reference.child("universities").orderByChild("sufix").equalTo(whereClause).addValueEventListener(object : ValueEventListener {
+            FirebaseDatabase.getInstance().reference.child(UNIVERSITIES_FIREBASE_TABLE)
+                    .orderByChild(UNIVERSITIES_SUFIX_FIREBASE_TABLE).equalTo(whereClause).addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
 
                 }
@@ -95,7 +99,7 @@ class LinkIdFragment : Fragment() {
     private fun fillTripList(ids: MutableList<Int?>?, trips: MutableList<Trip>) {
         ids?.forEach {
             Timber.d("Trip id: $it")
-            FirebaseDatabase.getInstance().reference.child("trips").child(it.toString())
+            FirebaseDatabase.getInstance().reference.child(TRIPS_FIREBASE_TABLE).child(it.toString())
                     .addValueEventListener(object : ValueEventListener {
                         override fun onCancelled(p0: DatabaseError) {
                             Timber.d("Trip request cancelled")
