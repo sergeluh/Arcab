@@ -75,11 +75,12 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
                     preferredSeat = seat
                     preferredSeat!!.user_id = FirebaseAuth.getInstance().uid
                     preferredSeat!!.user_point = userPoint
-                    if (daysReserved < (reservedSeatsToMap.size + reservedSeatsFromMap.size)) {
+                    if (daysReserved < (pickMeUpDays!!.size + dropMeOffDays!!.size)) {
                         for (key in resultSeatsTo!!.keys) {
                             if (reservedDaysTo.contains(weekDays[key].toString())){
                                 val seatId = getFirstAvailableSeat(key, tripIdTo!!, viewModel.tripsTo, seat.id!!)
                                 resultSeatsTo!![key] = seatId!!
+                                text_view_seat.text = text_view_seat.text.toString() + "\nRecommended seat for pickup at ${weekDays[key]} is $seatId"
                             }else{
                                 resultSeatsTo!![key] = seat.id!!
                             }
@@ -89,6 +90,7 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
                             if (reservedDaysFrom.contains(weekDays[key].toString())) {
                                 val seatId = getFirstAvailableSeat(key, tripIdFrom!!, viewModel.tripsFrom, seat.id!!)
                                 resultSeatsFrom!![key] = seatId!!
+                                text_view_seat.text = text_view_seat.text.toString() + "\nRecommended seat for dropoff at ${weekDays[key]} is $seatId"
                             }else{
                                 resultSeatsFrom!![key] = seat.id!!
                             }
@@ -98,7 +100,8 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
                     }
                 }
                 //Set button enabled if selected seat is free at least at one of selected days
-                navBar.nextBtn.isEnabled = daysReserved < (reservedSeatsToMap.size + reservedSeatsFromMap.size)
+                navBar.nextBtn.isEnabled = daysReserved < (viewModel.tripOrder.pickMeUpDays!!.size
+                        + viewModel.tripOrder.dropMeOffDays!!.size)
             }
         }
     }
