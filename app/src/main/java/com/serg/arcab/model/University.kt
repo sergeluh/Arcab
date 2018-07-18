@@ -3,7 +3,7 @@ package com.serg.arcab.model
 import com.google.gson.annotations.SerializedName
 
 /**
- * Data class for storing data about universities from database
+ * Data class for storing data about university from database
  */
 data class University(
         @SerializedName("id")

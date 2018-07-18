@@ -16,10 +16,6 @@ data class TripOrder(
 
         var address: String? = null,
 
-        var dayIndexesTo: MutableList<Int>? = null,
-
-        var dayIndexesFrom: MutableList<Int>? = null,
-
         var pickMeUpAt: TimingItem? = null,
 
         var pickMeUpAtIndex: Int? = null,

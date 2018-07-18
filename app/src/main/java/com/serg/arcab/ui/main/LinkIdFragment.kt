@@ -37,27 +37,28 @@ class LinkIdFragment : Fragment() {
             viewModel.onHideKeyboard()
             //Add link id to model by clicking next
             viewModel.tripOrder.linkId = editText2.text.toString()
-            //Read universities from database
+            //Read university from database
             val linkId = viewModel.tripOrder.linkId
             val whereClause = linkId?.substring(linkId.indexOf("@") + 1)
             Timber.d("Selection: $whereClause")
             FirebaseDatabase.getInstance().reference.child(UNIVERSITIES_FIREBASE_TABLE)
                     .orderByChild(UNIVERSITIES_SUFIX_FIREBASE_TABLE).equalTo(whereClause).addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
-
+                    hideProgressBar()
                 }
 
+                @Suppress("SENSELESS_COMPARISON")
                 override fun onDataChange(p0: DataSnapshot) {
                     for (snapshot in p0.children){
                         Timber.d("Trip request snapshot $snapshot")
-                        viewModel.universities = snapshot.getValue(University::class.java)
+                        viewModel.university = snapshot.getValue(University::class.java)
                     }
-                    if (viewModel.universities != null){
+                    if (viewModel.university != null){
                         Timber.d("Trips to")
-                        val idsTo = viewModel.universities?.schedule?.trips_to?.filter { it != null }?.map { it.trip_id }?.toMutableList()
+                        val idsTo = viewModel.university?.schedule?.trips_to?.filter { it != null }?.map { it.trip_id }?.toMutableList()
                         fillTripList(idsTo, viewModel.tripsTo)
                         Timber.d("Trips from")
-                        val idsFrom = viewModel.universities?.schedule?.trips_from?.filter { it != null }?.map { it.trip_id }?.toMutableList()
+                        val idsFrom = viewModel.university?.schedule?.trips_from?.filter { it != null }?.map { it.trip_id }?.toMutableList()
                         fillTripList(idsFrom, viewModel.tripsFrom)
                         hideProgressBar()
                         //Go to next string if all data filled
@@ -119,11 +120,11 @@ class LinkIdFragment : Fragment() {
     }
 
     private fun showProgressBar(){
-        progressBar.visibility = View.VISIBLE
+        progressBar?.visibility = View.VISIBLE
     }
 
     private fun hideProgressBar(){
-        progressBar.visibility = View.GONE
+        progressBar?.visibility = View.GONE
     }
 
     //Method for email validation

@@ -38,7 +38,11 @@ class PlacesManager constructor(
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
                 .build())
         if (results != null) {
-            Tasks.await(results, 30, TimeUnit.SECONDS)
+            try {
+                Tasks.await(results, 30, TimeUnit.SECONDS)
+            }catch (e: Exception){
+                Timber.d(e.message)
+            }
             DataBufferUtils.freezeAndClose(results.result)
         } else {
             mutableListOf<AutocompletePrediction>()

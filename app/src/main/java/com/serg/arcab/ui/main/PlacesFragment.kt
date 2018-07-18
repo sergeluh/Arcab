@@ -14,16 +14,12 @@ import android.view.ViewGroup
 import com.google.android.gms.location.places.AutocompletePrediction
 import com.google.android.gms.location.places.Place
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.jakewharton.rxbinding2.widget.RxTextView
-import com.serg.arcab.COMMON_POINTS_FIREBASE_TABLE
-import com.serg.arcab.LocationManager
-import com.serg.arcab.PlacesManager
-import com.serg.arcab.R
+import com.serg.arcab.*
 import com.serg.arcab.model.CommonPoint
 import com.serg.arcab.recycleradapter.BaseDelegateAdapter
 import com.serg.arcab.recycleradapter.BaseViewHolder
@@ -107,7 +103,7 @@ class PlacesFragment : Fragment() {
                 "Current Location" -> {
                     viewModel.tripOrder.currentLocation = fromLatLng
                     Timber.d("Place is ${viewModel.tripOrder.currentLocation}")
-                    if (viewModel.tripOrder.currentLocation != null){
+                    if (viewModel.tripOrder.currentLocation != null) {
                         navBar.nextBtn.isEnabled = true
                     }
                 }
@@ -119,11 +115,11 @@ class PlacesFragment : Fragment() {
             }
         }
 
-        nearByAdapter = PlaceDelegateAdapter{
+        nearByAdapter = PlaceDelegateAdapter {
             pickDelegateAdapter?.removeSelectedItem()
             searchResultAdapter?.removeSelectedItem()
             viewModel.tripOrder.currentLocation = it.latLng
-            if (viewModel.tripOrder.currentLocation != null){
+            if (viewModel.tripOrder.currentLocation != null) {
                 navBar.nextBtn.isEnabled = true
             }
         }
@@ -132,7 +128,7 @@ class PlacesFragment : Fragment() {
             pickDelegateAdapter?.removeSelectedItem()
             nearByAdapter?.removeSelectedItem()
             viewModel.tripOrder.currentLocation = it.latLng
-            if (viewModel.tripOrder.currentLocation != null){
+            if (viewModel.tripOrder.currentLocation != null) {
                 navBar.nextBtn.isEnabled = true
             }
         }
@@ -175,7 +171,7 @@ class PlacesFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        locationManager.requestLastLocation(object : LocationManager.LastLocationCallback(){
+        locationManager.requestLastLocation(object : LocationManager.LastLocationCallback() {
             override fun onSuccess(location: Location?) {
                 super.onSuccess(location)
                 location?.also {
@@ -196,7 +192,7 @@ class PlacesFragment : Fragment() {
             val latitude = data?.getDoubleExtra(LocationOnMapFragment.LATITUDE, 0.0)
             val longitude = data?.getDoubleExtra(LocationOnMapFragment.LONGITUDE, 0.0)
             viewModel.tripOrder.currentLocation = LatLng(latitude!!, longitude!!)
-            if (viewModel.tripOrder.currentLocation != null){
+            if (viewModel.tripOrder.currentLocation != null) {
                 navBar.nextBtn.isEnabled = true
             }
             Timber.d("Result location: $latitude, $longitude")
@@ -217,7 +213,7 @@ class PlacesFragment : Fragment() {
                     placesManager.getPlaceById(it.placeId!!).addOnCompleteListener {
                         place = it.result[0]
                         list.add(place!!)
-                        if (list.size == 5){
+                        if (list.size == 5) {
                             adapter.swapDataInSection(2, list)
                             hideProgressBar()
                         }
@@ -231,22 +227,8 @@ class PlacesFragment : Fragment() {
 
     private fun searchNearbyPlaces() {
         showProgressBar()
-        val b = LatLngBounds.Builder()
-
-        val firstLatLng = LatLng(fromLatLng!!.latitude + 0.0045, fromLatLng!!.longitude + 0.007)
-        val secondLatLng = LatLng(fromLatLng!!.latitude - 0.0045, fromLatLng!!.longitude - 0.007)
-        val thirdLatLng = LatLng(fromLatLng!!.latitude + 0.0045, fromLatLng!!.longitude - 0.007)
-        val fourthLatLng = LatLng(fromLatLng!!.latitude - 0.0045, fromLatLng!!.longitude + 0.007)
-
-        Timber.d("Current location Bounds: $firstLatLng, $secondLatLng")
-
-        b.include(firstLatLng)
-        b.include(secondLatLng)
-        b.include(thirdLatLng)
-        b.include(fourthLatLng)
-
         Timber.d("Launching query")
-        placesManager.setQuery("улица", b.build(), object : PlacesManager.Callback {
+        placesManager.setQuery("улица", fromLatLng?.getBounds(500), object : PlacesManager.Callback {
             override fun loading(isLoading: Boolean) {
                 Timber.d("Loading: $isLoading")
             }
@@ -259,7 +241,7 @@ class PlacesFragment : Fragment() {
                     placesManager.getPlaceById(it.placeId!!).addOnCompleteListener {
                         place = it.result[0]
                         list.add(place!!)
-                        if (list.size == 5){
+                        if (list.size == 5) {
                             adapter.swapDataInSection(1, list)
                             hideProgressBar()
                         }
@@ -274,12 +256,12 @@ class PlacesFragment : Fragment() {
         })
     }
 
-    private fun showProgressBar(){
-        progressBar.visibility = View.VISIBLE
+    private fun showProgressBar() {
+        progressBar?.visibility = View.VISIBLE
     }
 
-    private fun hideProgressBar(){
-        progressBar.visibility = View.GONE
+    private fun hideProgressBar() {
+        progressBar?.visibility = View.GONE
     }
 
     override fun onDestroyView() {
@@ -339,8 +321,8 @@ class PlacesFragment : Fragment() {
             }
         }
 
-        override fun removeSelectedItem(){
-            if (selectedItem != null){
+        override fun removeSelectedItem() {
+            if (selectedItem != null) {
                 selectedItem!!.background = ColorDrawable(Color.TRANSPARENT)
                 selectedItem = null
             }
@@ -364,7 +346,7 @@ class PlacesFragment : Fragment() {
             holder.addressTextView.text = prediction.address
             holder.itemView.setOnClickListener {
                 callback(prediction)
-                if (selectedItem != null){
+                if (selectedItem != null) {
                     selectedItem!!.background = ColorDrawable(Color.TRANSPARENT)
                 }
                 it.background = ColorDrawable(Color.LTGRAY)
@@ -373,7 +355,7 @@ class PlacesFragment : Fragment() {
         }
 
         override fun removeSelectedItem() {
-            if (selectedItem != null){
+            if (selectedItem != null) {
                 selectedItem!!.background = ColorDrawable(Color.TRANSPARENT)
                 selectedItem = null
             }

@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.FragmentActivity
 import android.widget.TextView
-import com.google.android.gms.location.LocationListener
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -18,7 +17,6 @@ import com.serg.arcab.LocationManager
 import com.serg.arcab.R
 import kotlinx.android.synthetic.main.navigation_view.view.*
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 import java.util.*
 
 class LocationOnMapFragment : FragmentActivity(){

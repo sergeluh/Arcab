@@ -10,12 +10,12 @@ import com.serg.arcab.utils.SingleLiveEvent
 class MainViewModel: BaseViewModel() {
 
     //Trip model that stores data about trips
-    val tripsTo = mutableListOf<Trip>()
-    val tripsFrom = mutableListOf<Trip>()
+    var tripsTo = mutableListOf<Trip>()
+    var tripsFrom = mutableListOf<Trip>()
     var commonPoints: MutableList<CommonPoint>? = null
-    var universities: University? = null
+    var university: University? = null
     //Trip order model for storing data about the trip
-    val tripOrder = TripOrder()
+    var tripOrder = TripOrder()
 
     val backAction = SingleLiveEvent<Unit>()
     val goToLinkId = SingleLiveEvent<Unit>()

@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.serg.arcab.LocationManager
 import com.serg.arcab.R
 import com.serg.arcab.base.BaseFragment
+import com.serg.arcab.model.TripOrder
 import com.serg.arcab.ui.splash.SplashActivity
 import kotlinx.android.synthetic.main.fragment_get_started.*
 import kotlinx.android.synthetic.main.navigation_view.view.*
@@ -55,6 +56,16 @@ class GetStartedFragment : BaseFragment(), OnMapReadyCallback {
             startActivity(Intent(context, SplashActivity::class.java))
             activity!!.finish()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //Reset viewModel data
+        viewModel.tripsTo = mutableListOf()
+        viewModel.tripsFrom = mutableListOf()
+        viewModel.commonPoints = null
+        viewModel.university = null
+        viewModel.tripOrder = TripOrder()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
