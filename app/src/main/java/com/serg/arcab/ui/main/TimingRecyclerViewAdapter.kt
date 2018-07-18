@@ -12,7 +12,8 @@ import com.serg.arcab.R
 import com.serg.arcab.model.TimingItem
 
 
-class TimingRecyclerViewAdapter(private val userList: MutableList<TimingItem>, val view: RecyclerView, val header: String) : RecyclerView.Adapter<TimingRecyclerViewAdapter.ViewHolder>() {
+class TimingRecyclerViewAdapter(private val userList: MutableList<TimingItem>,
+                                val view: RecyclerView, val header: String, val listener: (TimingItem) -> Unit) : RecyclerView.Adapter<TimingRecyclerViewAdapter.ViewHolder>() {
 
     //this method is returning the view for each item in the list
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimingRecyclerViewAdapter.ViewHolder {
@@ -91,6 +92,7 @@ class TimingRecyclerViewAdapter(private val userList: MutableList<TimingItem>, v
         button.isChecked = userList[position].daysChecked[buttonIndex]
         button.setOnCheckedChangeListener{_, isChecked ->
             userList[position].daysChecked[buttonIndex] = isChecked
+            listener(userList[position])
         }
     }
 

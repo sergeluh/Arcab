@@ -1,5 +1,6 @@
 package com.serg.arcab.ui.main
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.*
@@ -30,6 +31,7 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
             Pair(7, "Saturday"))
     private val seats = mutableListOf<Seat>()
 
+    @SuppressLint("SetTextI18n")
     override fun checkedChange(seat: Seat?) {
         if (seat == null) {
             navBar.nextBtn.isEnabled = false

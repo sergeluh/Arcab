@@ -245,9 +245,10 @@ class PlacesFragment : Fragment() {
         b.include(thirdLatLng)
         b.include(fourthLatLng)
 
+        Timber.d("Launching query")
         placesManager.setQuery("улица", b.build(), object : PlacesManager.Callback {
             override fun loading(isLoading: Boolean) {
-
+                Timber.d("Loading: $isLoading")
             }
 
             override fun result(result: MutableList<AutocompletePrediction>) {
@@ -263,6 +264,10 @@ class PlacesFragment : Fragment() {
                             hideProgressBar()
                         }
                         Timber.d("Found place is ${place?.address}(${place?.latLng})")
+                    }.addOnFailureListener {
+                        hideProgressBar()
+                    }.addOnCanceledListener {
+                        hideProgressBar()
                     }
                 }
             }

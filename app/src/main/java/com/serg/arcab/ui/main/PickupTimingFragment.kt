@@ -22,6 +22,8 @@ import timber.log.Timber
 class PickupTimingFragment : Fragment() {
 
     private val viewModel by sharedViewModel<MainViewModel>()
+    private var isPickupTimingSelected = false
+    private var isDropoffTimingSelected = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_pickup_timing, container, false)
@@ -78,18 +80,20 @@ class PickupTimingFragment : Fragment() {
 
         check_box_common_point.setOnClickListener {
             setVisibility(common_recycler_view, check_box_common_point.isChecked)
-            checkSelected()
         }
 
         check_box_your_point.setOnClickListener {
             setVisibility(your_recycler_view, check_box_your_point.isChecked)
-            checkSelected()
         }
 
         //Initialize data for pickMeUp recycler
         val recyclerDataPickMe = getTimingItemList(viewModel.tripsTo)
 
-        val commonAdapter = TimingRecyclerViewAdapter(recyclerDataPickMe, common_recycler_view, resources.getString(R.string.initial_setup_pickup_timing_arrives))
+        val commonAdapter = TimingRecyclerViewAdapter(recyclerDataPickMe, common_recycler_view,
+                resources.getString(R.string.initial_setup_pickup_timing_arrives)){
+            isPickupTimingSelected = it.daysChecked.contains(true)
+            checkSelected()
+        }
 
         common_recycler_view.layoutManager = LinearLayoutManager(context, LinearLayout.HORIZONTAL, false)
         common_recycler_view.adapter = commonAdapter
@@ -106,7 +110,11 @@ class PickupTimingFragment : Fragment() {
         //Initialize data for dropMeOff recycler
         val recyclerDataDropMe = getTimingItemList(viewModel.tripsFrom)
 
-        val yourAdapter = TimingRecyclerViewAdapter(recyclerDataDropMe, your_recycler_view, resources.getString(R.string.initial_setup_pickup_timing_leaves))
+        val yourAdapter = TimingRecyclerViewAdapter(recyclerDataDropMe, your_recycler_view,
+                resources.getString(R.string.initial_setup_pickup_timing_leaves)){
+            isDropoffTimingSelected = it.daysChecked.contains(true)
+            checkSelected()
+        }
 
         your_recycler_view.layoutManager = LinearLayoutManager(context, LinearLayout.HORIZONTAL, false)
         your_recycler_view.adapter = yourAdapter
@@ -137,7 +145,7 @@ class PickupTimingFragment : Fragment() {
     }
 
     private fun checkSelected() {
-        navBar.nextBtn.isEnabled = check_box_common_point.isChecked || check_box_your_point.isChecked
+        navBar.nextBtn.isEnabled = isPickupTimingSelected || isDropoffTimingSelected
     }
 
     private fun setVisibility(view: RecyclerView, isVisible: Boolean = false) {
