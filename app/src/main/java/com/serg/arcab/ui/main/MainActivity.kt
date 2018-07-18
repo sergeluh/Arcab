@@ -9,11 +9,13 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.serg.arcab.R
 import com.serg.arcab.base.BaseActivity
+import com.serg.arcab.model.Seat
+import com.serg.arcab.model.UserPoint
 import org.koin.android.architecture.ext.viewModel
-import timber.log.Timber
 
 class MainActivity : BaseActivity() {
 
@@ -60,17 +62,24 @@ class MainActivity : BaseActivity() {
         })
 
         viewModel.confirmOrder.observe(this, Observer {
+            val uid = FirebaseAuth.getInstance().uid
             with(viewModel.tripOrder){
-                pickMeUpDays?.forEach {
-                    if (preferredSeat != null) {
-                        writeSeatToDb(tripIdTo!!, it, preferredSeat?.id!!)
-                    }
+                resultSeatsTo?.forEach {
+                    writeSeatToDb(tripIdTo!!, it.key, it.value, uid!!, userPoint!!)
                 }
-                dropMeOffDays?.forEach {
-                    if (preferredSeat != null) {
-                        writeSeatToDb(tripIdFrom!!, it, preferredSeat?.id!!)
-                    }
+                resultSeatsFrom?.forEach {
+                    writeSeatToDb(tripIdFrom!!, it.key, it.value, uid!!, userPoint!!)
                 }
+//                pickMeUpDays?.forEach {
+//                    if (preferredSeat != null) {
+//                        writeSeatToDb(tripIdTo!!, it, preferredSeat?.id!!)
+//                    }
+//                }
+//                dropMeOffDays?.forEach {
+//                    if (preferredSeat != null) {
+//                        writeSeatToDb(tripIdFrom!!, it, preferredSeat?.id!!)
+//                    }
+//                }
             }
             supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
             addFragment(GetStartedFragment.newInstance(), PlacesFragment.TAG)
@@ -116,13 +125,13 @@ class MainActivity : BaseActivity() {
     }
 
     //Method wor writing preferred user seat to db in selected days
-    private fun writeSeatToDb(tripId: Int, dayIndex: Int, seatId: String){
+    private fun writeSeatToDb(tripId: Int, dayIndex: Int, seatId: String, uid: String, userPoint: UserPoint){
         FirebaseDatabase.getInstance().reference.child("trips")
                 .child(tripId.toString())
                 .child("booked_days")
                 .child(dayIndex.toString())
                 .child("seats")
                 .child(seatId)
-                .setValue(viewModel.tripOrder.preferredSeat)
+                .setValue(Seat(seatId, uid, userPoint))
     }
 }

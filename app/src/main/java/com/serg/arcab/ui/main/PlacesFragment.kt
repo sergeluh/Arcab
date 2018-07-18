@@ -1,14 +1,11 @@
 package com.serg.arcab.ui.main
 
-import android.Manifest
 import android.app.Activity.RESULT_OK
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.location.Location
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -58,13 +55,13 @@ class PlacesFragment : Fragment() {
 
     private val placePickerRequest = 1002
 
-    var pickDelegateAdapter: PickDelegateAdapter? = null
+    private var pickDelegateAdapter: PickDelegateAdapter? = null
 
-    var nearByAdapter: PlaceDelegateAdapter? = null
+    private var nearByAdapter: PlaceDelegateAdapter? = null
 
-    var searchResultAdapter: PlaceDelegateAdapter? = null
+    private var searchResultAdapter: PlaceDelegateAdapter? = null
 
-    var fromLatLng: LatLng? = null
+    private var fromLatLng: LatLng? = null
 
     private var searchDisposable: Disposable? = null
 
@@ -80,18 +77,7 @@ class PlacesFragment : Fragment() {
             viewModel.onBackClicked()
         }
 
-        if (ActivityCompat.checkSelfPermission(context!!,
-                        Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            val lm = context?.getSystemService(Context.LOCATION_SERVICE) as android.location.LocationManager
-            var location = lm.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER)
-            if (location == null) {
-                location = lm.getLastKnownLocation(android.location.LocationManager.NETWORK_PROVIDER)
-            }
-            fromLatLng = LatLng(location.latitude, location.longitude)
-            Timber.d("Current location is: $fromLatLng")
-        }
-
-        navBar.nextBtn.text = "Confirm"
+        navBar.nextBtn.text = resources.getString(R.string.button_continue)
         navBar.nextBtn.isEnabled = false
         navBar.nextBtn.setOnClickListener {
             viewModel.onHideKeyboard()
@@ -188,7 +174,16 @@ class PlacesFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        searchNearbyPlaces()
+        locationManager.requestLastLocation(object : LocationManager.LastLocationCallback(){
+            override fun onSuccess(location: Location?) {
+                super.onSuccess(location)
+                location?.also {
+                    fromLatLng = LatLng(it.latitude, it.longitude)
+                    Timber.d("Current location from location manager is: $fromLatLng")
+                    searchNearbyPlaces()
+                }
+            }
+        })
     }
 
     //Picking places processing
@@ -300,7 +295,7 @@ class PlacesFragment : Fragment() {
 
     class PickDelegateAdapter(val callback: (View) -> Unit) : BaseDelegateAdapter() {
 
-        var selectedItem: View? = null
+        private var selectedItem: View? = null
 
         override fun isForViewType(items: List<DataHolder>, position: Int): Boolean {
             return true
@@ -347,7 +342,7 @@ class PlacesFragment : Fragment() {
     }
 
     class PlaceDelegateAdapter(val callback: (Place) -> Unit) : BaseDelegateAdapter() {
-        var selectedItem: View? = null
+        private var selectedItem: View? = null
 
         override fun isForViewType(items: List<DataHolder>, position: Int): Boolean {
             return items[position].data is Place

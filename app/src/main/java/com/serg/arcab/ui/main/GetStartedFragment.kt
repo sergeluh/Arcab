@@ -96,9 +96,6 @@ class GetStartedFragment : BaseFragment(), OnMapReadyCallback {
                 }
             }
         })
-//        val sydney = LatLng(-34.0, 151.0)
-//        googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-//        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 
     companion object {

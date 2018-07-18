@@ -36,6 +36,10 @@ data class TripOrder(
 
         var preferredSeat: Seat? = null,
 
+        var resultSeatsTo: MutableMap<Int, String>? = null,
+
+        var resultSeatsFrom: MutableMap<Int, String>? = null,
+
         var resultMessage: String? = null,
 
         var pickupMessage: String? = null

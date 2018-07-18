@@ -33,19 +33,19 @@ class PaymentPlanFragment : Fragment() {
 
         navBar.nextBtn.isEnabled = false
 
-        check_box_common_point.setOnClickListener(View.OnClickListener {
+        check_box_common_point.setOnClickListener{
             if(check_box_your_point.isChecked) {
                 check_box_your_point.isChecked = false
             }
             checkSelected()
-        })
+        }
 
-        check_box_your_point.setOnClickListener(View.OnClickListener {
+        check_box_your_point.setOnClickListener{
             if(check_box_common_point.isChecked) {
                 check_box_common_point.isChecked = false
             }
             checkSelected()
-        })
+        }
 
     }
 

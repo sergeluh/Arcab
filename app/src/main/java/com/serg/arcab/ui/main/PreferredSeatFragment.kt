@@ -28,6 +28,7 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
             Pair(5, "Thursday"),
             Pair(6, "Friday"),
             Pair(7, "Saturday"))
+    private val seats = mutableListOf<Seat>()
 
     override fun checkedChange(seat: Seat?) {
         if (seat == null) {
@@ -55,14 +56,46 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
                     preferredSeat = seat
                     preferredSeat!!.user_id = FirebaseAuth.getInstance().uid
                     preferredSeat!!.user_point = userPoint
+                    for (key in resultSeatsTo!!.keys){
+                        resultSeatsTo!![key] = seat.id!!
+                    }
+                    for (key in resultSeatsFrom!!.keys){
+                        resultSeatsFrom!![key] = seat.id!!
+                    }
+                    Timber.d("Result seat maps: $resultSeatsTo, $resultSeatsFrom")
                 }
             } else {
-                text_view_seat.text = "${seat.id} is reserved for ${if (reservedDaysTo.isNotEmpty()) "pickup at $reservedDaysTo" else ""} ${if (reservedDaysFrom.isNotEmpty()) " dropoff at $reservedDaysFrom" else ""}"
+                text_view_seat.text = String.format(
+                        resources.getString(R.string.initial_setup_preferred_seat_reserved),
+                        seat.id,
+                        if (reservedDaysTo.isNotEmpty()) " pickup at $reservedDaysTo" else "",
+                        if (reservedDaysFrom.isNotEmpty()) " dropoff at $reservedDaysFrom" else "")
                 text_view_seat.visibility = View.VISIBLE
                 with(viewModel.tripOrder) {
                     preferredSeat = seat
                     preferredSeat!!.user_id = FirebaseAuth.getInstance().uid
                     preferredSeat!!.user_point = userPoint
+                    if (daysReserved < (reservedSeatsToMap.size + reservedSeatsFromMap.size)) {
+                        for (key in resultSeatsTo!!.keys) {
+                            if (reservedDaysTo.contains(weekDays[key].toString())){
+                                val seatId = getFirstAvailableSeat(key, tripIdTo!!, viewModel.tripsTo, seat.id!!)
+                                resultSeatsTo!![key] = seatId!!
+                            }else{
+                                resultSeatsTo!![key] = seat.id!!
+                            }
+                            Timber.d("Available seat for ${weekDays[key]} is ${resultSeatsTo!![key]}")
+                        }
+                        for (key in resultSeatsFrom!!.keys) {
+                            if (reservedDaysFrom.contains(weekDays[key].toString())) {
+                                val seatId = getFirstAvailableSeat(key, tripIdFrom!!, viewModel.tripsFrom, seat.id!!)
+                                resultSeatsFrom!![key] = seatId!!
+                            }else{
+                                resultSeatsFrom!![key] = seat.id!!
+                            }
+                            Timber.d("Available seat for ${weekDays[key]} is ${resultSeatsTo!![key]}")
+                        }
+                        Timber.d("Available seats result: $resultSeatsTo \n $resultSeatsFrom")
+                    }
                 }
                 //Set button enabled if selected seat is free at least in one of selected days
                 navBar.nextBtn.isEnabled = daysReserved < (reservedSeatsToMap.size + reservedSeatsFromMap.size)
@@ -103,12 +136,10 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
 
         navBar.nextBtn.isEnabled = false
 
-
-        var seats = mutableListOf<Seat>()
         val seatCodes = arrayOf("D", "C", "B", "A")
         for (i in 4 downTo 1) {
             for (code in seatCodes.iterator()) {
-                var seatId = "$i$code"
+                val seatId = "$i$code"
                 seats.add(Seat(seatId))
             }
         }
@@ -123,6 +154,14 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
 
     override fun onResume() {
         super.onResume()
+        viewModel.tripOrder.resultSeatsTo = mutableMapOf()
+        viewModel.tripOrder.pickMeUpDays?.forEach {
+            viewModel.tripOrder.resultSeatsTo!![it] = ""
+        }
+        viewModel.tripOrder.resultSeatsFrom = mutableMapOf()
+        viewModel.tripOrder.dropMeOffDays?.forEach {
+            viewModel.tripOrder.resultSeatsFrom!![it] = ""
+        }
         //Show text_view_seat and populate it with user seats data when user comes back from on of the other fragments
         if (viewModel.tripOrder.preferredSeat != null) {
             text_view_seat.visibility = View.VISIBLE
@@ -136,13 +175,23 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
         val tempTrips = trips.filter { it.id == id }
         if (tempTrips.isNotEmpty()) {
             val trip = trips[0]
-            trip.booked_days?.filter { it != null }?.forEach {
+            trip.booked_days?.filter {
+                @Suppress("SENSELESS_COMPARISON")
+                it != null
+            }?.forEach {
                 Timber.d("Current booked day $it")
                 if (selectedDays?.contains(it.index)!! && it.seats != null) {
                     target[it.index!!] = it.seats?.values!!.toMutableList()
                 }
             }
         }
+    }
+
+    //Method that returns seat id if its available for selected day
+    private fun getFirstAvailableSeat(dayIndex: Int, tripId: Int, trips: MutableList<Trip>, seatId: String): String?{
+        val tripSeats = trips.first { it.id == tripId }.booked_days!![dayIndex].seats?.values?.map { it.id }
+        Timber.d("Trip seats: $tripSeats")
+        return seats.first{ !tripSeats!!.contains(it.id) && it.id != seatId}.id
     }
 
     companion object {

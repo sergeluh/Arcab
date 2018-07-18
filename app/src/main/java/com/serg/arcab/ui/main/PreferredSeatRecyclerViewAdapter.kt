@@ -9,7 +9,7 @@ import com.serg.arcab.R
 import com.serg.arcab.model.Seat
 
 
-class PreferredSeatRecyclerViewAdapter(val callback: Callback, val seatList: MutableList<Seat>, val selectedSeatId: String?) : RecyclerView.Adapter<PreferredSeatRecyclerViewAdapter.ViewHolder>() {
+class PreferredSeatRecyclerViewAdapter(val callback: Callback, private val seatList: MutableList<Seat>, val selectedSeatId: String?) : RecyclerView.Adapter<PreferredSeatRecyclerViewAdapter.ViewHolder>() {
 
     private var currentCheckedItem: CompoundButton? = null
 

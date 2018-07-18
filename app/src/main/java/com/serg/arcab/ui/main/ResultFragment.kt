@@ -28,7 +28,7 @@ class ResultFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        navBar.nextBtn.text = "Confirm"
+        navBar.nextBtn.text = resources.getString(R.string.button_confirm)
 
         val map = childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment
         map.onCreate(null)
@@ -45,7 +45,8 @@ class ResultFragment : BaseFragment() {
 
         pickup_text.text = viewModel.tripOrder.pickupMessage
 
-        address.text = "From ${viewModel.tripOrder.address}"
+        address.text = String.format(resources.getString(R.string.initial_setup_pickup_point_from),
+                viewModel.tripOrder.address)
 
         navBar.nextBtn.setOnClickListener{
             viewModel.onConfirmOrderClicked()
@@ -57,6 +58,7 @@ class ResultFragment : BaseFragment() {
     }
 
     companion object {
+        @JvmStatic
         fun newInstance() = ResultFragment()
     }
 }

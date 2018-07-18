@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
@@ -16,7 +15,7 @@ import com.serg.arcab.model.CommonPoint
 import kotlinx.android.synthetic.main.item_pickup_point.view.*
 
 
-class PointRecyclerViewAdapter(val userList: MutableList<CommonPoint>, val view: RecyclerView) : RecyclerView.Adapter<PointRecyclerViewAdapter.ViewHolder>() {
+class PointRecyclerViewAdapter(private val userList: MutableList<CommonPoint>, val view: RecyclerView) : RecyclerView.Adapter<PointRecyclerViewAdapter.ViewHolder>() {
 
     //this method is returning the view for each item in the list
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PointRecyclerViewAdapter.ViewHolder {
@@ -35,7 +34,7 @@ class PointRecyclerViewAdapter(val userList: MutableList<CommonPoint>, val view:
         return userList.size
     }
 
-    //the class is hodling the list view
+    //the class is holding the list view
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bindItems(item: CommonPoint) {
@@ -57,17 +56,17 @@ class PointRecyclerViewAdapter(val userList: MutableList<CommonPoint>, val view:
                 btnNext.visibility = View.INVISIBLE
             }
 
-            btnBack.setOnClickListener(View.OnClickListener {
+            btnBack.setOnClickListener{
                 if(adapterPosition > 0)
                     view.smoothScrollToPosition(adapterPosition - 1)
-            })
-            btnNext.setOnClickListener(View.OnClickListener {
-                if(adapterPosition < getItemCount() - 1)
+            }
+            btnNext.setOnClickListener{
+                if(adapterPosition < itemCount - 1)
                     view.smoothScrollToPosition(adapterPosition + 1)
-            })
+            }
 
         }
     }
 
-    fun getItem(position: Int) = LatLng(userList[position].latitude!!, userList[position].longitude!!)
+//    fun getItem(position: Int) = LatLng(userList[position].latitude!!, userList[position].longitude!!)
 }

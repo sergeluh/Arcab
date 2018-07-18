@@ -2,8 +2,6 @@ package com.serg.arcab.ui.main
 
 import android.graphics.Typeface
 import android.support.v7.widget.RecyclerView
-import android.text.Html
-import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.view.LayoutInflater
@@ -14,7 +12,7 @@ import com.serg.arcab.R
 import com.serg.arcab.model.TimingItem
 
 
-class TimingRecyclerViewAdapter(val userList: MutableList<TimingItem>, val view: RecyclerView, val header: String) : RecyclerView.Adapter<TimingRecyclerViewAdapter.ViewHolder>() {
+class TimingRecyclerViewAdapter(private val userList: MutableList<TimingItem>, val view: RecyclerView, val header: String) : RecyclerView.Adapter<TimingRecyclerViewAdapter.ViewHolder>() {
 
     //this method is returning the view for each item in the list
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimingRecyclerViewAdapter.ViewHolder {
@@ -32,7 +30,7 @@ class TimingRecyclerViewAdapter(val userList: MutableList<TimingItem>, val view:
         return userList.size
     }
 
-    //the class is hodling the list view
+    //the class is holding the list view
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bindItems(item: TimingItem, position: Int) {
@@ -75,14 +73,14 @@ class TimingRecyclerViewAdapter(val userList: MutableList<TimingItem>, val view:
                 btnNext.visibility = View.INVISIBLE
             }
 
-            btnBack.setOnClickListener(View.OnClickListener {
+            btnBack.setOnClickListener{
                 if(adapterPosition > 0)
                     view.smoothScrollToPosition(adapterPosition - 1)
-            })
-            btnNext.setOnClickListener(View.OnClickListener {
-                if(adapterPosition < getItemCount() - 1)
+            }
+            btnNext.setOnClickListener{
+                if(adapterPosition < itemCount - 1)
                     view.smoothScrollToPosition(adapterPosition + 1)
-            })
+            }
 
         }
     }

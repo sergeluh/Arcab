@@ -63,7 +63,9 @@ class PickupPointFragment : Fragment() {
                 googleMap?.addMarker(MarkerOptions().position(it))
                 address = geocoder!!.getFromLocation(it.latitude, it.longitude, 1)[0]
                         .getAddressLine(0)
-                addressView!!.text = "From $address"
+//                addressView!!.text = "From $address"
+                addressView!!.text = String.format(
+                        resources.getString(R.string.initial_setup_pickup_point_from), address)
             }
             viewModel.tripOrder.currentLocation?.also {
                 googleMap?.addMarker(MarkerOptions().position(it))
@@ -102,23 +104,23 @@ class PickupPointFragment : Fragment() {
 
         navBar.nextBtn.isEnabled = false
 
-        check_box_common_point.setOnClickListener(View.OnClickListener {
+        check_box_common_point.setOnClickListener{
             setVisibility(common_recycler_view, check_box_common_point.isChecked)
             if (check_box_your_point.isChecked) {
                 check_box_your_point.isChecked = false
                 setVisibility(your_container)
             }
             checkSelected()
-        })
+        }
 
-        check_box_your_point.setOnClickListener(View.OnClickListener {
+        check_box_your_point.setOnClickListener{
             setVisibility(your_container, check_box_your_point.isChecked)
             if (check_box_common_point.isChecked) {
                 check_box_common_point.isChecked = false
                 setVisibility(common_recycler_view)
             }
             checkSelected()
-        })
+        }
 
         textViewCommonPointAvailable.text = String.format(
                 getString(R.string.initial_setup_pickup_point_available), viewModel.commonPoints?.size)
@@ -192,7 +194,9 @@ class PickupPointFragment : Fragment() {
                 .getFromLocation(latitude, longitude,
                         1)[0]
         address = myAddress.getAddressLine(0)
-        addressView?.text = "From $address"
+//        addressView?.text = "From $address"
+        addressView?.text = String.format(
+                resources.getString(R.string.initial_setup_pickup_point_from), address)
         fromLatLng = LatLng(latitude, longitude)
     }
 
