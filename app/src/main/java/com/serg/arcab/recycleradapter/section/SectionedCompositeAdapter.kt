@@ -130,6 +130,11 @@ private constructor(private val sectionList: List<Section>): RecyclerView.Adapte
         }
     }
 
+    fun clearDataInSection(sectionPosition: Int){
+        sectionList[sectionPosition].clearData()
+        notifyDataSetChanged()
+    }
+
     fun setHeaderDataInSection(sectionPosition: Int, data: Any?) {
         if (sectionList[sectionPosition].setHeaderData(data)) {
             notifyDataSetChanged()

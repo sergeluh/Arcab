@@ -159,7 +159,7 @@ class PlacesFragment : Fragment() {
 
         searchDisposable = RxTextView.textChanges(editText)
                 .skipInitialValue()
-                .debounce(300, TimeUnit.MILLISECONDS)
+                .debounce(350, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     searchQuery(it.toString())
@@ -201,28 +201,39 @@ class PlacesFragment : Fragment() {
 
     private fun searchQuery(query: String) {
         showProgressBar()
-        placesManager.setQuery(query, null, object : PlacesManager.Callback {
-            override fun loading(isLoading: Boolean) {
+        if(query.isNotEmpty()){
+            placesManager.setQuery(query, null, object : PlacesManager.Callback {
+                override fun loading(isLoading: Boolean) {
 
-            }
-
-            override fun result(result: MutableList<AutocompletePrediction>) {
-                val list = mutableListOf<Place>()
-                result.forEach {
-                    var place: Place?
-                    placesManager.getPlaceById(it.placeId!!).addOnCompleteListener {
-                        place = it.result[0]
-                        list.add(place!!)
-                        if (list.size == 5) {
-                            adapter.swapDataInSection(2, list)
-                            hideProgressBar()
-                        }
-                        Timber.d("Found place is ${place?.address}(${place?.latLng})")
-                    }
                 }
 
-            }
-        })
+                override fun result(result: MutableList<AutocompletePrediction>) {
+                    val list = mutableListOf<Place>()
+                    result.forEach {
+                        var place: Place?
+                        placesManager.getPlaceById(it.placeId!!).addOnCompleteListener {
+                            place = it.result[0]
+                            list.add(place!!)
+                            if (list.size == 5) {
+                                adapter.swapDataInSection(2, list)
+                                recyclerView.smoothScrollToPosition(adapter.itemCount)
+                                hideProgressBar()
+                            }
+                            Timber.d("Found place is ${place?.address}(${place?.latLng})")
+                        }
+                    }
+
+                }
+
+                override fun emptyResult() {
+                    adapter.clearDataInSection(2)
+                    hideProgressBar()
+                }
+            })
+        }else{
+            adapter.clearDataInSection(2)
+            hideProgressBar()
+        }
     }
 
     private fun searchNearbyPlaces() {
@@ -252,6 +263,11 @@ class PlacesFragment : Fragment() {
                         hideProgressBar()
                     }
                 }
+            }
+
+            override fun emptyResult() {
+                adapter.clearDataInSection(1)
+                hideProgressBar()
             }
         })
     }

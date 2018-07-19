@@ -146,6 +146,10 @@ open class Section(private val delegateAdapters: SparseArray<IDelegateAdapter>,
         }
     }
 
+    fun clearData(){
+        data.clear()
+    }
+
 
     class Builder {
 

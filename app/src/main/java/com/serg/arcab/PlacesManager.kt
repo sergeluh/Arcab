@@ -29,7 +29,11 @@ class PlacesManager constructor(
         val deferred = search(query, latLngBounds)
         job = deferred
         val list = deferred.await()
-        callback.result(list)
+        if (list.isNotEmpty()) {
+            callback.result(list)
+        }else{
+            callback.emptyResult()
+        }
     }
 
 
@@ -69,5 +73,6 @@ class PlacesManager constructor(
     interface Callback {
         fun loading(isLoading: Boolean)
         fun result(result: MutableList<AutocompletePrediction>)
+        fun emptyResult()
     }
 }

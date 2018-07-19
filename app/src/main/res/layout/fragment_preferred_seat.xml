@@ -91,6 +91,7 @@
                     android:layout_marginTop="8dp"
                     android:text="TextView"
                     android:visibility="invisible"
+                    android:gravity="center_horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/horizontal_line" />
