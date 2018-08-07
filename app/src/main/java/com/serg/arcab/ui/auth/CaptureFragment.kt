@@ -96,6 +96,7 @@ class CaptureFragment : Fragment() {
                         }
                         if (result.contains("ID") && result.contains("ARE")){
                             textRecognizer.release()
+
                             Timber.d("TEXTRECOGNITION result: $result")
                             val id = result.substring(result.indexOf("IDARE"), result.indexOf("<")).replace(" ", "")
                             Timber.d("TEXTRECOGNITION id: $id")
@@ -103,6 +104,7 @@ class CaptureFragment : Fragment() {
                             Handler(activity!!.mainLooper).post {
                                 viewModel.emiratesId.value = id
                                 cameraSource?.takePicture({ }, {
+                                    cameraSource?.release()
                                     var bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
                                     val matrix = Matrix()
                                     matrix.postRotate(90f)
@@ -112,8 +114,9 @@ class CaptureFragment : Fragment() {
                                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
                                     viewModel.backCapture = stream.toByteArray()
                                     bitmap.recycle()
-
                                     cameraSource?.stop()
+                                    cameraSource = null
+
                                     viewModel.onBackClicked()
                                 })
                             }
@@ -155,8 +158,10 @@ class CaptureFragment : Fragment() {
             detector.setProcessor(LargestFaceFocusingProcessor(detector, object : Tracker<Face>() {
                 override fun onNewItem(p0: Int, p1: Face?) {
                     super.onNewItem(p0, p1)
+                    detector.release()
                     Handler(activity!!.mainLooper).post {
                         cameraSource?.takePicture({ }, {
+                            cameraSource?.release()
                             var bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
                             val matrix = Matrix()
                             matrix.postRotate(90f)
@@ -166,8 +171,9 @@ class CaptureFragment : Fragment() {
                             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
                             viewModel.frontCapture = stream.toByteArray()
                             bitmap.recycle()
-
                             cameraSource?.stop()
+                            cameraSource = null
+
                             viewModel.onBackClicked()
                         })
                     }

@@ -30,81 +30,95 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <RadioGroup
-                android:id="@+id/genderRadioGroup"
+            <HorizontalScrollView
+                android:id="@+id/genderRadioGroupContainer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/auth_header_margin_bottom"
-                android:orientation="horizontal"
+                android:layout_marginEnd="@dimen/auth_screen_padding"
+                android:layout_marginStart="@dimen/auth_screen_padding"
+                android:scrollbars="none"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView"
-                android:layout_marginStart="@dimen/auth_screen_padding"
-                android:layout_marginEnd="@dimen/auth_screen_padding"
-                android:gravity="center">
+                app:layout_constraintTop_toBottomOf="@+id/textView">
 
-                <RadioButton
-                    android:id="@+id/female"
-                    android:layout_width="wrap_content"
+                <RadioGroup
+                    android:id="@+id/genderRadioGroup"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:button="@null"
-                    android:background="@android:color/transparent"
-                    android:text="@string/female"
-                    android:textColor="@drawable/selector_text"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+                    android:layout_marginTop="@dimen/auth_header_margin_bottom"
+                    android:gravity="center"
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                    android:text=" / "/>
+                    android:orientation="horizontal">
 
-                <RadioButton
-                    android:id="@+id/male"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:button="@android:color/transparent"
-                    android:text="@string/male"
-                    android:textColor="@drawable/selector_text"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+                    <RadioButton
+                        android:id="@+id/female"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:button="@null"
+                        android:maxLines="1"
+                        android:text="@string/female"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                        android:textColor="@drawable/selector_text" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                    android:text=" / "/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:text=" / "
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
 
-                <RadioButton
-                    android:id="@+id/unspecified"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:button="@android:color/transparent"
-                    android:text="@string/unspecified"
-                    android:textColor="@drawable/selector_text"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+                    <RadioButton
+                        android:id="@+id/male"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:button="@android:color/transparent"
+                        android:maxLines="1"
+                        android:text="@string/male"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                        android:textColor="@drawable/selector_text" />
 
-            </RadioGroup>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:text=" / "
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+
+                    <RadioButton
+                        android:id="@+id/unspecified"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:button="@android:color/transparent"
+                        android:maxLines="1"
+                        android:text="@string/unspecified"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                        android:textColor="@drawable/selector_text" />
+
+                </RadioGroup>
+            </HorizontalScrollView>
+
 
             <View
                 android:id="@+id/textView10"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                app:layout_constraintEnd_toEndOf="@+id/genderRadioGroup"
-                app:layout_constraintStart_toStartOf="@+id/genderRadioGroup"
-                app:layout_constraintTop_toBottomOf="@+id/genderRadioGroup"
+                app:layout_constraintEnd_toEndOf="@+id/genderRadioGroupContainer"
+                app:layout_constraintStart_toStartOf="@+id/genderRadioGroupContainer"
+                app:layout_constraintTop_toBottomOf="@+id/genderRadioGroupContainer"
                 android:background="@color/colorDisabled"/>
 
             <TextView
                 android:id="@+id/textView11"
-                android:layout_width="56dp"
-                android:layout_height="17dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:text="@string/gender"
                 android:textAllCaps="true"
                 android:textStyle="bold"
-                android:layout_marginTop="4dp"
-                app:layout_constraintStart_toStartOf="@+id/genderRadioGroup"
+                app:layout_constraintStart_toStartOf="@+id/genderRadioGroupContainer"
                 app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
             <TextView
@@ -138,25 +152,30 @@
 
             <TextView
                 android:id="@+id/textView15"
+                style="@style/TextAppearanceText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="@string/auth_footer_birth"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                app:layout_constraintBottom_toTopOf="@+id/datePicker"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                style="@style/TextAppearanceText"/>
+                app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
             <DatePicker
                 android:id="@+id/datePicker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="32dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:calendarViewShown="false"
                 android:datePickerMode="spinner"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView15" />
 
         </android.support.constraint.ConstraintLayout>
 

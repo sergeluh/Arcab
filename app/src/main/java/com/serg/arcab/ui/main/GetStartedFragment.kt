@@ -55,7 +55,7 @@ class GetStartedFragment : BaseFragment(), OnMapReadyCallback {
                     val upNextFragment = UpNextFragment()
                     upNextFragment.setFields("Rate your ride.", "How was your trip? Rate the driver and give us your feedback.")
                     upNextFragment.dismissListener = object : UpNextFragment.DismissListener {
-                        override fun onDismess() {
+                        override fun onDismiss() {
                             val alert = AlertFragment()
                             alert.setHeaderAndMessage("Oops, your balance is low.", "Looks like you`re running low! You should top up your account to continue using arcab.")
                             alert.dismissListener = object : AlertFragment.DismissListener {

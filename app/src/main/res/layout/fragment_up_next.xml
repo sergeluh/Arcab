@@ -4,10 +4,10 @@
     android:id="@+id/root"
     android:layout_width="328dp"
     android:layout_height="wrap_content"
-    android:animateLayoutChanges="true"
     android:orientation="vertical"
     android:background="@drawable/dialog_background"
     android:padding="24dp"
+    android:animateLayoutChanges="true"
     tools:context=".ui.main.dialogs.UpNextFragment">
 
 <TextView
@@ -42,6 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:animateLayoutChanges="true"
         android:orientation="vertical"/>
 
     <ImageButton

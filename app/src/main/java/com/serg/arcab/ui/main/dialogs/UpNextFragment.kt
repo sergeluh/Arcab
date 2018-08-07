@@ -11,7 +11,6 @@ import android.support.v7.app.AlertDialog
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.RatingBar
 
 import com.serg.arcab.R
 import kotlinx.android.synthetic.main.fragment_up_next.view.*
@@ -37,14 +36,18 @@ class UpNextFragment : DialogFragment() {
 
         val ratingContainer = View.inflate(context, R.layout.rating_layout, null)
 
-        (v.root as ViewGroup).layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
-
+        (v.container as ViewGroup).layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
+        val transition = LayoutTransition()
+//        transition.setDuration(1500)
+        v.container.layoutTransition = transition
         v.button_open_close.setOnClickListener {
             isOpen = if (isOpen){
-                v.container.removeAllViews()
+                v.container.removeViewAt(0)
+                v.button_open_close.setImageResource(R.drawable.icon_arrow_down)
                 false
             }else{
-                v.container.addView(ratingContainer)
+                v.container.addView(ratingContainer, 0)
+                v.button_open_close.setImageResource(R.drawable.icon_arrow_up)
                 true
             }
         }
@@ -57,7 +60,7 @@ class UpNextFragment : DialogFragment() {
 
     override fun onDismiss(dialog: DialogInterface?) {
         super.onDismiss(dialog)
-        dismissListener?.onDismess()
+        dismissListener?.onDismiss()
     }
 
     fun setFields(header: String, message: String){
@@ -66,6 +69,6 @@ class UpNextFragment : DialogFragment() {
     }
 
     interface DismissListener{
-        fun onDismess()
+        fun onDismiss()
     }
 }
