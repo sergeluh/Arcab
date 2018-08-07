@@ -135,12 +135,13 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
         }
 
         navBar.nextBtn.setOnClickListener {
-            viewModel.onGoToPaymentPlanClicked()
             Timber.d("Preferred seats selected: ${viewModel.tripOrder}")
+            viewModel.onGoToPaymentPlanClicked()
         }
 
         navBar.nextBtn.isEnabled = false
 
+        seats.clear()
         val seatCodes = arrayOf("D", "C", "B", "A")
         for (i in 4 downTo 1) {
             for (code in seatCodes.iterator()) {

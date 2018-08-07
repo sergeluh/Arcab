@@ -45,6 +45,8 @@ class AuthFragment : BaseFragment() {
         viewModel.goToSocialLogin.observe(viewLifecycleOwner, Observer {
             callback.goToSocial()
         })
+
+//        viewModel.onGoToScanClicked()
     }
 
     companion object {

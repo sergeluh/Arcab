@@ -5,8 +5,10 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 
 import com.serg.arcab.R
+import com.serg.arcab.ui.main.dialogs.AlertFragment
 import kotlinx.android.synthetic.main.fragment_pickup_point.*
 import kotlinx.android.synthetic.main.navigation_view.view.*
 import org.koin.android.architecture.ext.sharedViewModel
@@ -28,7 +30,14 @@ class PaymentPlanFragment : Fragment() {
         }
 
         navBar.nextBtn.setOnClickListener {
-            viewModel.onGoToResultClicked()
+            val fragment = PaymentFragment()
+            fragment.tokenSuccessListener = object : PaymentFragment.TokenSuccessListener{
+                override fun onTokenSuccess(tokenId: String) {
+                    Toast.makeText(context, "Received token: $tokenId", Toast.LENGTH_SHORT).show()
+                    viewModel.onGoToResultClicked()
+                }
+            }
+            fragment.show(childFragmentManager, "fragment")
         }
 
         navBar.nextBtn.isEnabled = false

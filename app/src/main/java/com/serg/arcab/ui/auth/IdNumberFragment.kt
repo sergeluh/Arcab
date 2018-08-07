@@ -39,13 +39,29 @@ class IdNumberFragment : BaseFragment() {
             viewModel.onBackClicked()
         }
 
+        button.setOnClickListener {
+            viewModel.onGoToScanClicked()
+        }
+
         viewModel.goToRules.observe(viewLifecycleOwner, Observer {
             callback.goToRules()
         })
+
+        viewModel.goToScan.observe(viewLifecycleOwner, Observer {
+            callback.goToScan()
+        })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (viewModel.emiratesId.value != null){
+            editText2.setText(viewModel.emiratesId.value)
+        }
     }
 
     interface Callback {
         fun goToRules()
+        fun goToScan()
     }
 
     companion object {

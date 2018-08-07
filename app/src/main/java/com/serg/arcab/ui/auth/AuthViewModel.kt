@@ -22,11 +22,16 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
     val goToBirthInput = SingleLiveEvent<Unit>()
     val goToIdInput = SingleLiveEvent<Unit>()
     val goToRules = SingleLiveEvent<Unit>()
+    val goToScan = SingleLiveEvent<Unit>()
+    val goToCapture = SingleLiveEvent<Unit>()
     val goToFillInfoFromSocial = SingleLiveEvent<Unit>()
     val backAction = SingleLiveEvent<Unit>()
 
     val phoneNumber = MutableLiveData<String>()
     var verificationCode: String? = null
+    var captureMode: CaptureMode? = null
+    var frontCapture: ByteArray? = null
+    var backCapture: ByteArray? = null
     val name = MutableLiveData<Pair<String?, String?>>().apply {
         value = Pair(null, null)
     }
@@ -90,6 +95,14 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
 
     fun onGoToRulesScreenClicked() {
         goToRules.call()
+    }
+
+    fun onGoToScanClicked(){
+        goToScan.call()
+    }
+
+    fun onGoToCaptureClicked(){
+        goToCapture.call()
     }
 
 
@@ -293,5 +306,7 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
         authDataManager.getStarted()
     }
 
-
+    enum class CaptureMode{
+        FRONT, BACK
+    }
 }

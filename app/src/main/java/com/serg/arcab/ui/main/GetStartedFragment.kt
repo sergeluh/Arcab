@@ -19,6 +19,9 @@ import com.serg.arcab.LocationManager
 import com.serg.arcab.R
 import com.serg.arcab.base.BaseFragment
 import com.serg.arcab.model.TripOrder
+import com.serg.arcab.ui.main.dialogs.AchievementFragment
+import com.serg.arcab.ui.main.dialogs.AlertFragment
+import com.serg.arcab.ui.main.dialogs.UpNextFragment
 import com.serg.arcab.ui.splash.SplashActivity
 import kotlinx.android.synthetic.main.fragment_get_started.*
 import kotlinx.android.synthetic.main.navigation_view.view.*
@@ -46,7 +49,33 @@ class GetStartedFragment : BaseFragment(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
         navBar.nextBtn.setOnClickListener {
-            viewModel.onGoToLinkIdClicked()
+            val fragment = AchievementFragment()
+            fragment.dismissListener = object : AchievementFragment.DismissListener {
+                override fun onDismess() {
+                    val upNextFragment = UpNextFragment()
+                    upNextFragment.setFields("Rate your ride.", "How was your trip? Rate the driver and give us your feedback.")
+                    upNextFragment.dismissListener = object : UpNextFragment.DismissListener {
+                        override fun onDismess() {
+                            val alert = AlertFragment()
+                            alert.setHeaderAndMessage("Oops, your balance is low.", "Looks like you`re running low! You should top up your account to continue using arcab.")
+                            alert.dismissListener = object : AlertFragment.DismissListener {
+                                override fun onDismess() {
+                                    viewModel.onGoToLinkIdClicked()
+                                }
+                            }
+                            alert.show(childFragmentManager, AlertFragment.TAG)
+                        }
+                    }
+                    upNextFragment.show(childFragmentManager, UpNextFragment.TAG)
+                }
+            }
+            fragment.setFields("Hatttrick",
+                    R.drawable.ic_confetti,
+                    "You`ve taken an arcab 3 days in a row.",
+                    3,
+                    R.drawable.ic_cup,
+                    "You`ve earnt a badge as an honor from the arcab family. We appreciate you!")
+            fragment.show(childFragmentManager, AchievementFragment.TAG)
         }
 
         navBar.backBtn.visibility = View.GONE
@@ -71,9 +100,9 @@ class GetStartedFragment : BaseFragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         Timber.d("onMapReady ${googleMap.hashCode()}")
         val success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style_arcab))
-        if (success){
+        if (success) {
             Timber.d("Styles applied")
-        }else{
+        } else {
             Timber.d("Styles are broken")
         }
         this.googleMap = googleMap

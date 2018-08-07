@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context=".ui.auth.ScanFragment">
+
+
+    <include
+        android:id="@+id/navBar"
+        layout="@layout/navigation_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/emirates_id_front"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/emirates_id_front"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.33"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/emirates_id_back"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintHeight_percent="0.33"
+        android:src="@drawable/emirates_id_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emirates_id_front" />
+
+    <TextView
+        android:id="@+id/front_hint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:fontFamily="@font/colfax_medium"
+        android:text="Tap image to capture front side of the card"
+        android:textColor="@color/colorGrayText"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/emirates_id_front"
+        app:layout_constraintEnd_toEndOf="@+id/emirates_id_front"
+        app:layout_constraintStart_toStartOf="@+id/emirates_id_front"
+        app:layout_constraintTop_toTopOf="@+id/emirates_id_front" />
+
+    <TextView
+        android:id="@+id/back_hint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/colorGrayText"
+        android:textSize="16sp"
+        android:fontFamily="@font/colfax_medium"
+        android:gravity="center"
+        android:text="Tap image to capture back side of the card"
+        app:layout_constraintBottom_toBottomOf="@+id/emirates_id_back"
+        app:layout_constraintEnd_toEndOf="@+id/emirates_id_back"
+        app:layout_constraintStart_toStartOf="@+id/emirates_id_back"
+        app:layout_constraintTop_toTopOf="@+id/emirates_id_back" />
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

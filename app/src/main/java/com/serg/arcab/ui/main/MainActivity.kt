@@ -18,6 +18,7 @@ import com.serg.arcab.TRIPS_FIREBASE_TABLE
 import com.serg.arcab.base.BaseActivity
 import com.serg.arcab.model.Seat
 import com.serg.arcab.model.UserPoint
+import com.serg.arcab.utils.ResultFragment
 import org.koin.android.architecture.ext.viewModel
 
 class MainActivity : BaseActivity() {
@@ -106,6 +107,8 @@ class MainActivity : BaseActivity() {
 
     private fun addFragment(fragment: Fragment, tag: String) {
         supportFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.show_fragment, R.anim.hide_fragment,
+                        R.anim.pop_enter_fragment, R.anim.pop_exit_fragment)
                 .replace(R.id.container, fragment, tag)
                 .addToBackStack("my_stack")
                 .commit()

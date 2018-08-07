@@ -1,4 +1,4 @@
-package com.serg.arcab.ui.main
+package com.serg.arcab.utils
 
 
 import android.os.Bundle
@@ -12,6 +12,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 
 import com.serg.arcab.R
 import com.serg.arcab.base.BaseFragment
+import com.serg.arcab.ui.main.MainViewModel
 import kotlinx.android.synthetic.main.fragment_result.*
 import kotlinx.android.synthetic.main.navigation_view.view.*
 import org.koin.android.architecture.ext.sharedViewModel

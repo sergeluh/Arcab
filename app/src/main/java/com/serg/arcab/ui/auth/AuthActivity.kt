@@ -24,8 +24,7 @@ class AuthActivity : BaseActivity(),
         IdNumberFragment.Callback,
         RulesFragment.Callback,
         SocialFragment.Callback,
-        FromSocialFragment.Callback
-{
+        FromSocialFragment.Callback {
 
 
     private val viewModel by viewModel<AuthViewModel>()
@@ -41,10 +40,21 @@ class AuthActivity : BaseActivity(),
         viewModel.backAction.observe(this, Observer {
             popFragment()
         })
+
+        viewModel.goToScan.observe(this, Observer {
+            addFragment(ScanFragment.newInstance(), ScanFragment.TAG)
+        })
+
+        viewModel.goToCapture.observe(this, Observer {
+            addFragment(CaptureFragment.newInstance(), CaptureFragment.TAG)
+        })
     }
 
+
     private fun popFragment() {
+//        v6
         supportFragmentManager.popBackStack()
+//        transaction.commit()
     }
 
     private fun replaceFragment(fragment: Fragment, tag: String) {
@@ -55,13 +65,12 @@ class AuthActivity : BaseActivity(),
 
     private fun addFragment(fragment: Fragment, tag: String) {
         supportFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.show_fragment, R.anim.hide_fragment,
+                        R.anim.pop_enter_fragment, R.anim.pop_exit_fragment)
                 .replace(R.id.container, fragment, tag)
                 .addToBackStack("my_stack")
                 .commit()
     }
-
-
-
 
 
     override fun goToMobileNumberInput(action: String) {
@@ -99,6 +108,10 @@ class AuthActivity : BaseActivity(),
 
     override fun goToRules() {
         addFragment(RulesFragment.newInstance(), RulesFragment.TAG)
+    }
+
+    override fun goToScan() {
+        addFragment(ScanFragment.newInstance(), ScanFragment.TAG)
     }
 
     override fun goToSocial() {
