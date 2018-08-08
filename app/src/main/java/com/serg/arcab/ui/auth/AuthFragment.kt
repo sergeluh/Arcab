@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.serg.arcab.ACTION_MOBILE
 import com.serg.arcab.R
 import com.serg.arcab.base.BaseFragment
+import com.serg.arcab.ui.auth.mobile.PhoneFragment
 import kotlinx.android.synthetic.main.fragment_auth.*
 import org.koin.android.architecture.ext.sharedViewModel
 
@@ -30,7 +31,8 @@ class AuthFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mobileBtn.setOnClickListener {
-            viewModel.onEnterWithMobileClicked()
+//            viewModel.onEnterWithMobileClicked()
+            (activity as PhoneFragment.Callback).goToBirth()
         }
 
         socialBtn.setOnClickListener {
@@ -45,7 +47,6 @@ class AuthFragment : BaseFragment() {
             callback.goToSocial()
         })
 
-//        viewModel.onGoToScanClicked()
     }
 
     companion object {

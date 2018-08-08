@@ -15,6 +15,7 @@ import timber.log.Timber
 class ScanFragment : BaseFragment() {
 
     private val viewModel by sharedViewModel<AuthViewModel>()
+//    private var returning = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -25,6 +26,7 @@ class ScanFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
 
         navBar.nextBtn.setOnClickListener {
+//            returning = true
             viewModel.onBackClicked()
         }
 
@@ -33,6 +35,7 @@ class ScanFragment : BaseFragment() {
         navBar.backBtn.setOnClickListener {
             viewModel.backCapture = null
             viewModel.frontCapture = null
+            viewModel.emiratesId.value = null
             viewModel.onBackClicked()
         }
 
@@ -51,23 +54,25 @@ class ScanFragment : BaseFragment() {
         super.onResume()
         Timber.d("EMIRATESID: ${viewModel.frontCapture == null}, ${viewModel.backCapture == null}")
 
-        if (viewModel.frontCapture != null){
-            front_hint.visibility = View.GONE
-            Timber.d("EMIRATESID: set front")
-            emirates_id_front.setImageBitmap(BitmapFactory.decodeByteArray(viewModel.frontCapture,
-                    0, viewModel.frontCapture!!.size))
-        }
+            if (viewModel.frontCapture != null){
+                front_hint.visibility = View.GONE
+                Timber.d("EMIRATESID: set front")
+                emirates_id_front.setImageBitmap(BitmapFactory.decodeByteArray(viewModel.frontCapture,
+                        0, viewModel.frontCapture!!.size))
+            }
 
-        if (viewModel.backCapture != null){
-            back_hint.visibility = View.GONE
-            Timber.d("EMIRATESID: set back")
-            emirates_id_back.setImageBitmap(BitmapFactory.decodeByteArray(viewModel.backCapture,
-                    0, viewModel.backCapture!!.size))
-        }
+            if (viewModel.backCapture != null){
+                back_hint.visibility = View.GONE
+                Timber.d("EMIRATESID: set back")
+                val bitmap = BitmapFactory.decodeByteArray(viewModel.backCapture,
+                        0, viewModel.backCapture!!.size)
+                emirates_id_back.setImageBitmap(bitmap)
+            }
 
-        if (viewModel.frontCapture != null && viewModel.backCapture != null){
-            navBar.nextBtn.isEnabled = true
-        }
+            if (viewModel.frontCapture != null && viewModel.backCapture != null){
+                navBar.nextBtn.isEnabled = true
+            }
+
     }
 
     companion object {
