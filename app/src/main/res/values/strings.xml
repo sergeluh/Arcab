@@ -5,7 +5,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="next">Next</string>
     <string name="mobile_number_explanation">Your mobile number is only used for authentication and will not be shared with anyone.</string>
-    <string name="mobile_number_hint">Mobile number</string>
+    <string name="mobile_number_hint">Phone number</string>
     <string name="get_started">Get Started</string>
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
@@ -78,6 +78,7 @@
     <string name="auth_header_verify_phone">Verify</string>
     <string name="auth_verify_phone_code_hint">Code</string>
     <string name="edit_mobile_number">Edit mobile number</string>
+    <string name="resend_sms">Resend SMS</string>
     <string name="auth_header_birth">And?</string>
     <string name="auth_footer_birth">You must be at least 18 years old for arcab. We don\'t share this with anyone.</string>
     <string name="auth_header">Move\nTogether.</string>
@@ -96,4 +97,29 @@
     <string name="capture_emirates_id">Capture Emirates ID</string>
     <string name="auth_footer_verify_id">In order to build trust in the real world, we ask everyone to verify they official identity. This info is strictly for verification and will never be shared publicly. You may also verify later within 7 days.</string>
 
+    <!--Rules section-->
+    <string name="header_privacy">Privacy</string>
+    <string name="content_privacy">At arcab we value our privacy above everything else. We are
+        upfront about protecting your information and allow you to choose what you share. You may
+        control your preferences in settings.</string>
+    <string name="header_safety">Safety</string>
+    <string name="content_safety">We\'re committed to building a community that is safe for
+        everyone to move together. You will be asked to verify your official government ID later on.
+    \n\n
+    Knowing that everyone is on board with our mission helps us achieve what we set out for - building a platform based on communities.</string>
+    <string name="agree_text">I agree treat everyone in the arcab community with respect an without bias.
+    \n\n
+    I agree to accept the arcab <a href="">Terms of Use Privacy ans Safety Policy</a> and <a href="">Payments Policy</a></string>
+    <string name="decline_text">Decline</string>
+    <string name="accept_text">Accept</string>
+
+    <!--Cancel sign up section-->
+    <string name="cancel_header">Cancel Sign Up?</string>
+    <string name="cancel_message">You will not be able to create an arcab account if you choose to
+        decline the set terms mentioned before.
+    \n\n
+    In case you change your mind you can always sign up again, provided you accept the set terms.
+    \n\n
+    Got questions? <a href="">Ask us anything</a>.</string>
+    <string name="go_back_text">Go back</string>
 </resources>

@@ -30,9 +30,12 @@ class AuthFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        viewModel.useEmailInstead = false
+
         mobileBtn.setOnClickListener {
-//            viewModel.onEnterWithMobileClicked()
-            (activity as PhoneFragment.Callback).goToBirth()
+            viewModel.onEnterWithMobileClicked()
+//            (activity as PhoneFragment.Callback).goToBirth()
         }
 
         socialBtn.setOnClickListener {

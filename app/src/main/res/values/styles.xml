@@ -52,7 +52,7 @@
         <item name="android:layout_marginStart">@dimen/auth_screen_padding</item>
         <item name="android:layout_marginTop">@dimen/auth_edit_text_margin</item>
         <item name="android:layout_marginEnd">@dimen/auth_screen_padding</item>
-        <item name="android:layout_marginBottom">@dimen/auth_edit_text_margin</item>
+        <item name="android:layout_marginBottom">10dp</item>
     </style>
 
 

@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.text.TextUtils
 import android.util.Patterns
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.serg.arcab.Result
 import com.serg.arcab.User
 import com.serg.arcab.base.BaseViewModel
 import com.serg.arcab.datamanager.AuthDataManager
@@ -26,12 +27,19 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
     val goToCapture = SingleLiveEvent<Unit>()
     val goToFillInfoFromSocial = SingleLiveEvent<Unit>()
     val backAction = SingleLiveEvent<Unit>()
+    val goToPassword = SingleLiveEvent<Unit>()
+    val goToName = SingleLiveEvent<Unit>()
+    val goToDecline = SingleLiveEvent<Unit>()
+    val goToGender = SingleLiveEvent<Unit>()
+    val goToForgotPassword = SingleLiveEvent<Unit>()
 
     val phoneNumber = MutableLiveData<String>()
     var verificationCode: String? = null
     var captureMode: CaptureMode? = null
     var frontCapture: ByteArray? = null
     var backCapture: ByteArray? = null
+    var useEmailInstead = false
+
     val name = MutableLiveData<Pair<String?, String?>>().apply {
         value = Pair(null, null)
     }
@@ -66,6 +74,10 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
 
     val user = authDataManager.getUser()
 
+    val emailVerificationProgress = authDataManager.getEmailVerificationProgress()
+
+    val passwordResetProgress = authDataManager.getResetPaswordProgress()
+
 
 
 
@@ -84,6 +96,22 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
 
 
 
+    fun onGoToPasswordClicked(){
+        Timber.d("NEWLINE go to password view model called")
+        goToPassword.call()
+    }
+
+    fun onGoToDeclineClicked(){
+        goToDecline.call()
+    }
+
+    fun sendPasswordResetRequest(email: String?){
+        if (!email.isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            authDataManager.resetPassword(email!!)
+        }else{
+            passwordResetProgress.value = Result.error("Invalid email address.")
+        }
+    }
 
 
 
@@ -105,6 +133,15 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
         goToCapture.call()
     }
 
+    fun onGoToForgotPasswordClicked(){
+        goToForgotPassword.call()
+    }
+
+
+
+    fun onGoToName(){
+        goToName.call()
+    }
 
 
 
@@ -132,17 +169,22 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
 
     fun signIn() {
         user.value?.phone_number = phoneNumber.value
+        Timber.d("VERIFICATIONCODE $verificationCode")
         authDataManager.signInWithCode(verificationCode)
     }
 
-    fun verifyPhoneNumber() {
-        authDataManager.verifyPhoneNumber(phoneNumber.value)
+    fun verifyPhoneNumber(goForth: Boolean) {
+        authDataManager.verifyPhoneNumber(phoneNumber.value, goForth)
     }
 
     fun saveName() {
         user.value?.first_name = name.value?.first
         user.value?.last_name = name.value?.second
-        goToEmailInput.call()
+        if (useEmailInstead){
+            goToGender.call()
+        }else {
+            goToEmailInput.call()
+        }
     }
 
     fun saveEmail() {
@@ -175,6 +217,12 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
     fun checkPassword() {
         if (validatePassword()) {
             authDataManager.checkPassword(password.value)
+        }
+    }
+
+    fun loginWithEmail(){
+        if (validatePassword()){
+            authDataManager.signInWithEmail()
         }
     }
 
@@ -229,25 +277,25 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
 
     fun onFirstNameInputChanged(firstName: String) {
         user.value?.first_name = firstName
-        name.value = name.value?.let {
-            Pair(firstName, it.second)
-        }
+        Timber.d("MYUSER name ${user.value?.first_name}")
+        name.value = Pair(firstName, name.value?.second)
     }
 
     fun onLastNameInputChanged(lastName: String) {
         user.value?.last_name = lastName
-        name.value = name.value?.let {
-            Pair(it.first, lastName)
-        }
+        Timber.d("MYUSER last name: ${user.value?.last_name}")
+        name.value = Pair(name.value?.first, lastName)
     }
 
     fun onEmailInputChanged(value: String) {
         user.value?.email = value
+        Timber.d("MYUSER email ${user.value?.email}")
         email.value = value
     }
 
     fun onPasswordInputChanged(value: String) {
         user.value?.password = value
+        Timber.d("PASSWORD changed ${user.value?.password}")
         password.value = value
     }
 

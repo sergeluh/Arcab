@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
+import com.serg.arcab.ACTION_NEW_USER
 import com.serg.arcab.ACTION_OLD_USER
 import com.serg.arcab.R
 import com.serg.arcab.Result
@@ -15,6 +16,7 @@ import com.serg.arcab.ui.auth.AuthViewModel
 import kotlinx.android.synthetic.main.fragment_verify_number.*
 import kotlinx.android.synthetic.main.navigation_view.view.*
 import org.koin.android.architecture.ext.sharedViewModel
+import timber.log.Timber
 
 class VerifyNumberFragment : BaseFragment() {
 
@@ -43,14 +45,37 @@ class VerifyNumberFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        Timber.d("OLDNEWUSER action: $action")
+
         navBar.nextBtn.setOnClickListener {
             viewModel.signIn()
+        }
+
+        if (action == ACTION_OLD_USER){
+            textView.text = "Welcome back"
+            resendSmsBtn.text = "Use password instead"
+            resendSmsBtn.setOnClickListener {
+                Timber.d("NEWLINE go to password clicked")
+                viewModel.onGoToPasswordClicked()
+            }
+        }else{
+            resendSmsBtn.setOnClickListener {
+                viewModel.verifyPhoneNumber(false)
+            }
         }
 
         viewModel.codeVerificationProgress.observe(viewLifecycleOwner, Observer {
             when(it?.status) {
                 Result.Status.SUCCESS -> {
                     hideLoading()
+                    if (action == ACTION_OLD_USER){
+                        callback.goToMain()
+                        Timber.d("NEWLINE phone successfull verified")
+                    }else{
+                        Timber.d("GOING FORTH to password. new user")
+//                        callback.goToPassword(ACTION_NEW_USER)
+                        callback.goToName()
+                    }
                 }
                 Result.Status.ERROR -> {
                     hideLoading()
@@ -72,10 +97,6 @@ class VerifyNumberFragment : BaseFragment() {
             viewModel.onBackClicked()
         }
 
-        editNumberBtn.setOnClickListener {
-            viewModel.onBackClicked()
-        }
-
         viewModel.user.observe(viewLifecycleOwner, Observer {
             it?.also {  user ->
                 explainTextView.text = String.format(getString(R.string.auth_verify_number_explanation), user.phone_number)
@@ -88,7 +109,8 @@ class VerifyNumberFragment : BaseFragment() {
                     if (it == null) {
                         callback.goToName()
                     } else {
-                        callback.goToPassword(ACTION_OLD_USER)
+                        callback.goToMain()
+//                        callback.goToPassword(ACTION_OLD_USER)
                     }
                 }
                 com.serg.arcab.ACTION_SOCIAL -> {

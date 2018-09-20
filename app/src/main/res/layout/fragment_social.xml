@@ -27,6 +27,38 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <FrameLayout
+            android:id="@+id/facebookBtn"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="@dimen/auth_screen_padding"
+            android:layout_marginStart="@dimen/auth_screen_padding"
+            app:layout_constraintBottom_toTopOf="@+id/googleBtn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="Google"
+            android:background="@drawable/bg_btn_outline">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_facebook"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="24dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Facebook"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+
+        </FrameLayout>
+
+        <FrameLayout
             android:id="@+id/googleBtn"
             android:layout_width="0dp"
             android:layout_height="56dp"
@@ -37,14 +69,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:text="Google"
-            style="@style/Button">
+            android:background="@drawable/bg_btn_outline">
 
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/google"
+                android:src="@drawable/ic_google"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="16dp"/>
+                android:layout_marginStart="24dp"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -52,7 +84,8 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="Google"
-                android:textColor="#ffffff"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
 
         </FrameLayout>

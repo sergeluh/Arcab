@@ -11,15 +11,14 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import com.serg.arcab.BOOKED_DAYS_FIREBASE_TABLE
-import com.serg.arcab.R
-import com.serg.arcab.SEATS_FIREBASE_TABLE
-import com.serg.arcab.TRIPS_FIREBASE_TABLE
+import com.serg.arcab.*
 import com.serg.arcab.base.BaseActivity
 import com.serg.arcab.model.Seat
 import com.serg.arcab.model.UserPoint
+import com.serg.arcab.ui.auth.CaptureFragment
 import com.serg.arcab.utils.ResultFragment
 import org.koin.android.architecture.ext.viewModel
+import timber.log.Timber
 
 class MainActivity : BaseActivity() {
 
@@ -31,6 +30,11 @@ class MainActivity : BaseActivity() {
 
         if (savedInstanceState == null) {
             replaceFragment(GetStartedFragment.newInstance(), GetStartedFragment.TAG)
+        }
+
+        if (intent.extras != null){
+            viewModel.user.value = intent.getParcelableExtra(USER_KEY)
+            Timber.d("MYUSER name: ${viewModel.user.value?.first_name}, last name: ${viewModel.user.value?.last_name}, phone: ${viewModel.user.value?.phone_number}, email: ${viewModel.user.value?.email}, password: ${viewModel.user.value?.password}")
         }
 
         viewModel.backAction.observe(this, Observer {
@@ -63,6 +67,10 @@ class MainActivity : BaseActivity() {
 
         viewModel.goToResult.observe(this, Observer {
             addFragment(ResultFragment.newInstance(), PlacesFragment.TAG)
+        })
+
+        viewModel.goToScan.observe(this, Observer {
+            addFragment(CaptureFragment.newInstance(), CaptureFragment.TAG)
         })
 
         viewModel.confirmOrder.observe(this, Observer {
@@ -115,8 +123,12 @@ class MainActivity : BaseActivity() {
     }
 
     companion object {
-        fun start(activity: Activity) {
-            activity.startActivity(Intent(activity, MainActivity::class.java))
+        const val USER_KEY = "user key"
+
+        fun start(activity: Activity, user: User?) {
+            val intent = Intent(activity, MainActivity::class.java)
+            intent.putExtra(USER_KEY, user)
+            activity.startActivity(intent)
         }
     }
 

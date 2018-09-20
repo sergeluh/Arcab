@@ -54,6 +54,7 @@ class SocialFragment : BaseFragment() {
         navBar.backBtn.setOnClickListener {
             viewModel.onBackClicked()
         }
+        navBar.backBtn.setImageResource(R.drawable.ic_close_red_24dp)
         navBar.nextBtn.visibility = View.GONE
         googleBtn.setOnClickListener {
             val account = GoogleSignIn.getLastSignedInAccount(context)

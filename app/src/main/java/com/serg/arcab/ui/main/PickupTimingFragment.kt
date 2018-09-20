@@ -10,12 +10,12 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 
 import com.serg.arcab.R
-import kotlinx.android.synthetic.main.fragment_pickup_point.*
 import kotlinx.android.synthetic.main.navigation_view.view.*
 import org.koin.android.architecture.ext.sharedViewModel
 import android.support.v7.widget.PagerSnapHelper
 import com.serg.arcab.model.TimingItem
 import com.serg.arcab.model.Trip
+import kotlinx.android.synthetic.main.fragment_pickup_timing.*
 import timber.log.Timber
 
 
@@ -75,6 +75,9 @@ class PickupTimingFragment : Fragment() {
             setTimingItem(common_recycler_view, your_recycler_view)
             Timber.d("Trip order at now is: ${viewModel.tripOrder}")
         }
+
+        switch5.isChecked = viewModel.getReschedule()
+        switch5.setOnCheckedChangeListener { _, isChecked -> viewModel.setReschedule(isChecked) }
 
         navBar.nextBtn.isEnabled = false
 

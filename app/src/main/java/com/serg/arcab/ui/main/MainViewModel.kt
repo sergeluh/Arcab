@@ -1,13 +1,16 @@
 package com.serg.arcab.ui.main
 
+import android.arch.lifecycle.MutableLiveData
+import com.serg.arcab.User
 import com.serg.arcab.model.Trip
 import com.serg.arcab.model.TripOrder
 import com.serg.arcab.base.BaseViewModel
+import com.serg.arcab.data.PrefsManager
 import com.serg.arcab.model.CommonPoint
 import com.serg.arcab.model.University
 import com.serg.arcab.utils.SingleLiveEvent
 
-class MainViewModel: BaseViewModel() {
+class MainViewModel(private val prefsManager: PrefsManager): BaseViewModel() {
 
     //Trip model that stores data about trips
     var tripsTo = mutableListOf<Trip>()
@@ -29,6 +32,9 @@ class MainViewModel: BaseViewModel() {
     val goToNotAvailableFragment = SingleLiveEvent<Unit>()
     val letMeIn = SingleLiveEvent<String>()
     val hideKeyboard = SingleLiveEvent<Unit>()
+    val goToScan = SingleLiveEvent<Unit>()
+
+    val user = MutableLiveData<User>()
 
     fun onGoToLinkIdClicked() {
         goToLinkId.call()
@@ -76,5 +82,25 @@ class MainViewModel: BaseViewModel() {
 
     fun onHideKeyboard(){
         hideKeyboard.call()
+    }
+
+    fun wasAppOpened(): Boolean{
+        return prefsManager.wasAppOpen()
+    }
+
+    fun setAppOpened(wasOpened: Boolean){
+        prefsManager.setAppWasOpen(wasOpened)
+    }
+
+    fun getReschedule(): Boolean{
+        return prefsManager.getRescheduleTimings()
+    }
+
+    fun setReschedule(reschedule: Boolean){
+        prefsManager.setRescheduleTimings(reschedule)
+    }
+
+    fun onGoToScanClicked(){
+        goToScan.call()
     }
 }

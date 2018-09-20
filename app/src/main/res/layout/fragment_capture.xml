@@ -11,7 +11,7 @@
         android:id="@+id/camera"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/navBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,7 +27,7 @@
         android:background="@drawable/recognition_bounds"
         app:layout_constraintBottom_toBottomOf="@+id/camera"
         app:layout_constraintDimensionRatio="9:7"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/camera"
         app:layout_constraintStart_toStartOf="@+id/camera"
         app:layout_constraintTop_toTopOf="@+id/camera" />
 
@@ -36,17 +36,16 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/colfax_medium"
-        android:text="Put front side of your id card in the frame"
-        android:textColor="@color/colorGrayText"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/view5"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/colfax_regular"
+        android:gravity="center"
+        android:text="Step 1 of 2 - Please scan the front side"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/navBar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/camera" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <View
         android:id="@+id/photo_splash"
@@ -54,9 +53,33 @@
         android:layout_height="0dp"
         android:background="@android:color/white"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/camera"
+        app:layout_constraintEnd_toEndOf="@id/camera"
+        app:layout_constraintStart_toStartOf="@id/camera"
+        app:layout_constraintTop_toTopOf="@id/camera" />
+
+    <include
+        android:id="@+id/navBar"
+        layout="@layout/navigation_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView44"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/colfax_regular"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:text="Place your Emirates ID in the frame"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/camera" />
 
 </android.support.constraint.ConstraintLayout>

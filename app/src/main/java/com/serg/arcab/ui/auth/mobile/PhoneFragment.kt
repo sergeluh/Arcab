@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.firebase.auth.FirebaseAuth
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.serg.arcab.*
 
@@ -41,9 +42,23 @@ class PhoneFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         navBar.nextBtn.setOnClickListener {
-            viewModel.verifyPhoneNumber()
+            viewModel.verifyPhoneNumber(true)
+//            viewModel.onGoToName()
         }
 
+        use_password_instead.setOnClickListener {
+            callback.useEmailIntead()
+            viewModel.useEmailInstead = true
+        }
+
+//        if (viewModel.user.value != null && viewModel.user.value!!.email != null){
+//            use_password_instead.visibility = View.GONE
+//        }
+        if (viewModel.useEmailInstead){
+            use_password_instead.visibility = View.GONE
+        }
+
+        navBar.backBtn.setImageResource(R.drawable.ic_close_red_24dp)
         navBar.backBtn.setOnClickListener {
             viewModel.onBackClicked()
         }
@@ -114,5 +129,6 @@ class PhoneFragment : BaseFragment() {
         fun goToBirth()
         fun goToMain()
         fun goToName()
+        fun useEmailIntead()
     }
 }

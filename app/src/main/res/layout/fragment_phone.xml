@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.constraint.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -10,15 +10,18 @@
     android:focusable="true">
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@+id/navBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context=".ui.auth.mobile.PhoneFragment"
-            android:paddingBottom="@dimen/auth_content_padding_bottom">
+            tools:context=".ui.auth.mobile.PhoneFragment">
 
             <TextView
                 android:id="@+id/textView"
@@ -32,55 +35,71 @@
 
             <EditText
                 android:id="@+id/phoneEditText"
+                style="@style/EditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/auth_header_margin_top"
                 android:inputType="phone"
-                style="@style/EditText"
                 android:paddingStart="108dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                android:textColor="@color/colorGrayText"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                android:textStyle="bold"
-                android:textColor="@color/colorGrayText"/>
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
 
             <TextView
                 android:id="@+id/textView8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
                 android:text="AE +971 |"
-                android:layout_marginStart="8dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                android:textColor="@color/colorDisabled"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/phoneEditText"
                 app:layout_constraintStart_toStartOf="@+id/phoneEditText"
-                app:layout_constraintTop_toTopOf="@+id/phoneEditText"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                app:layout_constraintTop_toTopOf="@+id/phoneEditText" />
+
+            <TextView
+                android:id="@+id/use_password_instead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="Use password \ninstead"
                 android:textStyle="bold"
-                android:textColor="@color/colorDisabled"/>
+                android:textColor="@color/colorAccent"
+                android:textAllCaps="true"
+                android:textSize="14sp"
+                app:layout_constraintTop_toTopOf="@id/textView4"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginRight="36dp"/>
 
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
                 android:text="@string/mobile_number_hint"
                 android:textAllCaps="true"
+                android:textColor="@color/colorGrayText"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/phoneEditText"
                 app:layout_constraintTop_toBottomOf="@+id/phoneEditText" />
 
             <TextView
                 android:id="@+id/textView5"
+                style="@style/TextAppearanceText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                style="@style/TextAppearanceText"
+                android:layout_marginBottom="8dp"
                 android:text="@string/mobile_number_explanation"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView4"
-                app:layout_constraintVertical_bias="1"
-                android:layout_marginBottom="@dimen/auth_screen_padding"/>
+                app:layout_constraintVertical_bias="1" />
 
         </android.support.constraint.ConstraintLayout>
 
@@ -91,6 +110,6 @@
         layout="@layout/navigation_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"/>
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>

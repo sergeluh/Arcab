@@ -4,6 +4,7 @@ package com.serg.arcab.ui.auth.mobile
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,10 +53,19 @@ class EmailFragment : BaseFragment() {
 
         viewModel.user.observe(viewLifecycleOwner, Observer {
             it?.also { user ->
-                titleTextView.text = String.format(getString(R.string.auth_email_title), user.first_name)
+                if (!viewModel.useEmailInstead) {
+                    titleTextView.text = String.format(getString(R.string.auth_email_title), user.first_name)
+                }
                 emailEditText.setText(user.email)
             }
         })
+
+        viewModel.user.value?.also {
+            if (viewModel.useEmailInstead) {
+                titleTextView.text = "Enter email"
+                textView9.text = "Enter your email"
+            }
+        }
 
         viewModel.emailValidation.observe(viewLifecycleOwner, Observer {
             showMessage(it)
@@ -64,6 +74,14 @@ class EmailFragment : BaseFragment() {
         viewModel.goToPasswordInput.observe(viewLifecycleOwner, Observer {
             callback.goToPassword(ACTION_NEW_USER)
         })
+
+        if (!viewModel.useEmailInstead) {
+            val emailSuffixes = mutableListOf("@gmail.com", "@icloud.com", "@outlook.com", "@hotmail.com", "@yahoo.com")
+            emailSuffixList.adapter = EmailSuffixAdapter(emailSuffixes) {
+                emailEditText.text.append(it)
+            }
+            emailSuffixList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        }
     }
 
     interface Callback {

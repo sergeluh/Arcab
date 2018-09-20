@@ -3,10 +3,10 @@ package com.serg.arcab.ui.auth
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.firebase.auth.FirebaseAuth
 
 import com.serg.arcab.R
 import com.serg.arcab.base.BaseFragment
@@ -40,11 +40,12 @@ class IdNumberFragment : BaseFragment() {
         }
 
         button.setOnClickListener {
-            viewModel.onGoToScanClicked()
+//            viewModel.onGoToScanClicked()
+            viewModel.onGoToCaptureClicked()
         }
 
         viewModel.goToRules.observe(viewLifecycleOwner, Observer {
-            callback.goToRules()
+//            callback.goToRules()
         })
 
         viewModel.goToScan.observe(viewLifecycleOwner, Observer {
@@ -60,7 +61,7 @@ class IdNumberFragment : BaseFragment() {
     }
 
     interface Callback {
-        fun goToRules()
+//        fun goToRules()
         fun goToScan()
     }
 

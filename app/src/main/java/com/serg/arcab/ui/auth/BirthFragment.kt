@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.aigestudio.wheelpicker.WheelPicker
 
 import com.serg.arcab.R
 import com.serg.arcab.base.BaseFragment
@@ -41,27 +42,61 @@ class BirthFragment : BaseFragment() {
             viewModel.onBackClicked()
         }
 
-        genderRadioGroup.setOnCheckedChangeListener { _, checkedId ->
-            when(checkedId) {
-                R.id.female -> viewModel.onGenderInputChanged(1)
-                R.id.male -> viewModel.onGenderInputChanged(2)
-                R.id.unspecified -> viewModel.onGenderInputChanged(3)
-            }
-        }
+//        genderRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+//            when(checkedId) {
+//                R.id.female -> viewModel.onGenderInputChanged(1)
+//                R.id.male -> viewModel.onGenderInputChanged(2)
+//                R.id.unspecified -> viewModel.onGenderInputChanged(3)
+//            }
+//        }
 
         viewModel.user.observe(viewLifecycleOwner, Observer {
             it?.also { user ->
                 Timber.d("user ${user.gender}, ${user.birth_date}")
                 when(user.gender) {
-                    1 -> genderRadioGroup.check(R.id.female)
-                    2 -> genderRadioGroup.check(R.id.male)
-                    3 -> genderRadioGroup.check(R.id.unspecified)
-                    null -> genderRadioGroup.check(0)
+//                    1 -> genderRadioGroup.check(R.id.female)
+//                    2 -> genderRadioGroup.check(R.id.male)
+//                    3 -> genderRadioGroup.check(R.id.unspecified)
+//                    null -> genderRadioGroup.check(0)
                 }
                 initDatePicker(user.birth_date)
             }
         })
 
+        date_contaner.setOnClickListener {
+            if (genderPicker.visibility == View.VISIBLE){
+                genderPicker.visibility = View.GONE
+            }
+            if (datePicker.visibility != View.VISIBLE){
+                datePicker.visibility = View.VISIBLE
+            }else{
+                datePicker.visibility = View.GONE
+            }
+        }
+
+        gender_container.setOnClickListener {
+            if (datePicker.visibility == View.VISIBLE){
+                datePicker.visibility = View.GONE
+            }
+            if (genderPicker.visibility != View.VISIBLE){
+                genderPicker.visibility = View.VISIBLE
+            }else{
+                genderPicker.visibility = View.GONE
+            }
+        }
+
+        genderPicker.minValue = 1
+        genderPicker.maxValue = 3
+        genderPicker.displayedValues = arrayOf("Not Specified", "Male", "Female")
+        genderPicker.setOnValueChangedListener { picker, oldVal, newVal ->
+            run {
+                Timber.d("GENDERPICKER new value: $newVal")
+                selectedGender.text = genderPicker.displayedValues[newVal-1]
+                viewModel.onGenderInputChanged(newVal)
+            }
+        }
+        genderPicker.isClickable = false
+        genderPicker.dividerPadding = 40
         viewModel.birth.observe(viewLifecycleOwner, Observer {
             Timber.d("birth $it")
             navBar.nextBtn.isEnabled = it?.first != null && it.second != null
@@ -72,7 +107,7 @@ class BirthFragment : BaseFragment() {
         })
 
         viewModel.goToIdInput.observe(viewLifecycleOwner, Observer {
-            callback.goToEmiratesId()
+            callback.goToRules()
         })
     }
 
@@ -102,6 +137,7 @@ class BirthFragment : BaseFragment() {
 
     interface Callback {
         fun goToEmiratesId()
+        fun goToRules()
     }
 
     companion object {

@@ -16,6 +16,7 @@ import com.serg.arcab.Sha1
 import com.serg.arcab.USERS_FIREBASE_TABLE
 import com.serg.arcab.User
 import com.serg.arcab.data.AppExecutors
+import com.serg.arcab.data.PrefsManager
 import com.serg.arcab.ui.auth.FirebaseAuthModel
 import com.serg.arcab.utils.SingleLiveEvent
 import timber.log.Timber
@@ -23,7 +24,7 @@ import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 
 interface AuthDataManager {
-    fun verifyPhoneNumber(phone: String?)
+    fun verifyPhoneNumber(phone: String?, goForth: Boolean)
     fun signInWithCode(code: String?)
     fun getStarted()
     fun checkPassword(password: String?)
@@ -37,11 +38,17 @@ interface AuthDataManager {
     fun getProfileUploadedAction(): SingleLiveEvent<Unit>
     fun getUser(): MutableLiveData<User>
 
+    fun signInWithEmail()
+    fun getEmailVerificationProgress(): MutableLiveData<Result<Unit>>
+
     fun getCheckPasswordProgress(): MutableLiveData<Result<Unit>>
     fun getPasswordCheckedAction(): SingleLiveEvent<Unit>
+
+    fun resetPassword(email: String)
+    fun getResetPaswordProgress(): MutableLiveData<Result<Unit>>
 }
 
-class AuthDataManagerImpl constructor(val appExecutors: AppExecutors): AuthDataManager {
+class AuthDataManagerImpl constructor(val appExecutors: AppExecutors, val prefsManager: PrefsManager) : AuthDataManager {
 
     private var verificationId: String? = null
 
@@ -57,12 +64,18 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors): AuthDataM
     private val checkPasswordProgress = MutableLiveData<Result<Unit>>()
     private val passwordCheckedAction = SingleLiveEvent<Unit>()
 
+    private val emailVerificationProgress = MutableLiveData<Result<Unit>>()
+
+    private val resetPasswordProgress = MutableLiveData<Result<Unit>>()
+
     private val user = MutableLiveData<User>().apply {
         value = User()
     }
 
     override fun getPhoneVerificationProgress() = phoneVerificationProgress
     override fun getOnCodeSentAction() = codeSentAction
+
+    override fun getEmailVerificationProgress() = emailVerificationProgress
 
     override fun getCodeVerificationProgress() = codeVerificationProgress
     override fun getSignedInAction() = signedInAction
@@ -73,9 +86,11 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors): AuthDataM
     override fun getCheckPasswordProgress() = checkPasswordProgress
     override fun getPasswordCheckedAction() = passwordCheckedAction
 
+    override fun getResetPaswordProgress() = resetPasswordProgress
+
     override fun getUser() = user
 
-    override fun verifyPhoneNumber(phone: String?) {
+    override fun verifyPhoneNumber(phone: String?, goForth: Boolean) {
 
         if (phone == null || phone.isBlank()) {
             phoneVerificationProgress.value = Result.error("Invalid phone number")
@@ -143,6 +158,7 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors): AuthDataM
                     override fun onCancelled(error: DatabaseError) {
                         phoneVerificationProgress.value = Result.error(error.message)
                     }
+
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         val u = dataSnapshot.getValue(User::class.java)
                         Timber.d("user from db: $u")
@@ -153,20 +169,17 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors): AuthDataM
     }
 
 
-
-
-
-
-
-
-
     override fun signInWithCode(code: String?) {
+        Timber.d("Sign in with code")
         val vId = verificationId
         if (code == null || code.isBlank() || code.length != 6) {
+            Timber.d("co null or blank or to short")
             codeVerificationProgress.value = Result.error("Input verification code")
         } else if (vId != null) {
+            Timber.d("vid !null")
             signInWithPhoneAuthCredential(PhoneAuthProvider.getCredential(vId, code))
         } else {
+            Timber.d("else in signInWithCode")
             codeVerificationProgress.value = Result.error("Input verification code")
         }
     }
@@ -203,6 +216,7 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors): AuthDataM
                     override fun onCancelled(error: DatabaseError) {
                         codeVerificationProgress.value = Result.error(error.message)
                     }
+
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         val u = dataSnapshot.getValue(User::class.java)
                         Timber.d("user from db: $u")
@@ -211,11 +225,6 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors): AuthDataM
                     }
                 })
     }
-
-
-
-
-
 
 
     override fun getStarted() {
@@ -230,10 +239,24 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors): AuthDataM
         user?.password = Sha1.getHash(user?.password)
         user?.phone_number = getValidPhoneNumber(user?.phone_number)
 
+        Timber.d("WRITING USER, ${getUser().value?.email}, ${getUser().value?.password}")
         val firebaseUser = FirebaseAuth.getInstance().currentUser
-        firebaseUser?.uid?.also {  uid ->
+        firebaseUser?.uid?.also { uid ->
             myRef.child(USERS_FIREBASE_TABLE).child(uid).setValue(user)
                     .addOnSuccessListener {
+                        user?.also {
+                            Timber.d("User writed: ${it.first_name}, ${it.last_name}, ${it.email}, ${it.phone_number}")
+                            prefsManager.saveUser(it)
+                            if (it.email != null && it.password != null) {
+                                val emailCredentials = EmailAuthProvider.getCredential(it.email!!, it.password!!)
+                                FirebaseAuth.getInstance().currentUser?.linkWithCredential(emailCredentials)?.addOnSuccessListener {
+                                    Timber.d("MYLINKCREDS success linking with credentials")
+                                }?.addOnFailureListener {
+                                    Timber.d("MYLINKCREDS failure: ${it.message}")
+                                }
+                            }
+                        }
+
                         profileUploadProgress.value = Result.success(Unit)
                         profileUploadedAction.call()
                     }
@@ -241,6 +264,23 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors): AuthDataM
                         Timber.e(it)
                         profileUploadProgress.value = Result.error(it.message)
                     }
+        }
+    }
+
+    override fun signInWithEmail() {
+        emailVerificationProgress.value = Result.loading()
+        if (user.value != null && user.value!!.email != null && user.value!!.password != null) {
+            Timber.d("MYUSER ${user.value!!.email}, ${user.value!!.password}")
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(user.value!!.email!!, Sha1.getHash(user.value!!.password!!))
+                    .addOnSuccessListener {
+                        Timber.d("MYUSER auth with email success")
+                        emailVerificationProgress.value = Result.success(Unit)
+                    }.addOnFailureListener {
+                        Timber.d("MYUSER auth with email failure: ${it.message}")
+                        emailVerificationProgress.value = Result.error(it.message)
+                    }
+        }else{
+            emailVerificationProgress.value = Result.error("User data is empty")
         }
     }
 
@@ -263,13 +303,14 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors): AuthDataM
                         override fun onCancelled(error: DatabaseError) {
                             checkPasswordProgress.value = Result.error(error.message)
                         }
+
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
                             val u = dataSnapshot.getValue(User::class.java)
                             Timber.d("checkPassword: $u")
                             val existingPasswordHash = u?.password
                             val currentPasswordHash = Sha1.getHash(password)
                             Timber.d("password: $existingPasswordHash, $currentPasswordHash")
-                            if(existingPasswordHash?.toLowerCase().equals(currentPasswordHash?.toLowerCase())) {
+                            if (existingPasswordHash?.toLowerCase().equals(currentPasswordHash?.toLowerCase())) {
                                 checkPasswordProgress.value = Result.success(Unit)
                                 passwordCheckedAction.call()
                             } else {
@@ -282,8 +323,16 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors): AuthDataM
         }
     }
 
-
-
+    override fun resetPassword(email: String) {
+        resetPasswordProgress.value = Result.loading()
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email).addOnFailureListener {
+            resetPasswordProgress.value = Result.error(it.message)
+            Timber.d("MYRESETPASS failure: ${it.message}")
+        }.addOnSuccessListener {
+            resetPasswordProgress.value = Result.success(Unit)
+            Timber.d("MYRESETPASS success")
+        }
+    }
 
     private class UiThreadExecutor : Executor {
         private val mHandler = Handler(Looper.getMainLooper())
@@ -325,3 +374,4 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors): AuthDataM
       }
   }
 }*/
+

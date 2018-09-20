@@ -2,16 +2,20 @@ package com.serg.arcab.ui.auth
 
 import android.app.Activity
 import android.arch.lifecycle.Observer
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import com.serg.arcab.R
+import android.view.inputmethod.InputMethodManager
+import com.google.firebase.auth.FirebaseAuth
+import com.serg.arcab.*
 import com.serg.arcab.base.BaseActivity
 import com.serg.arcab.ui.main.MainActivity
 import com.serg.arcab.ui.auth.mobile.*
 import com.serg.arcab.ui.auth.social.FromSocialFragment
 import com.serg.arcab.ui.auth.social.SocialFragment
 import org.koin.android.architecture.ext.viewModel
+import timber.log.Timber
 
 class AuthActivity : BaseActivity(),
         AuthFragment.Callback,
@@ -24,7 +28,8 @@ class AuthActivity : BaseActivity(),
         IdNumberFragment.Callback,
         RulesFragment.Callback,
         SocialFragment.Callback,
-        FromSocialFragment.Callback {
+        FromSocialFragment.Callback,
+        DeclineFragment.Callback {
 
 
     private val viewModel by viewModel<AuthViewModel>()
@@ -48,6 +53,27 @@ class AuthActivity : BaseActivity(),
         viewModel.goToCapture.observe(this, Observer {
             addFragment(CaptureFragment.newInstance(), CaptureFragment.TAG)
         })
+
+        viewModel.goToPassword.observe(this, Observer {
+            Timber.d("NEWLINE go to password activity called")
+            addFragment(PasswordFragment.newInstance(ACTION_OLD_USER), PasswordFragment.TAG)
+        })
+
+        viewModel.goToName.observe(this, Observer {
+            goToName()
+        })
+
+        viewModel.goToDecline.observe(this, Observer {
+            addFragment(DeclineFragment.newInstance(), DeclineFragment.TAG)
+        })
+
+        viewModel.goToGender.observe(this, Observer {
+            addFragment(BirthFragment.newInstance(), BirthFragment.TAG)
+        })
+
+        viewModel.goToForgotPassword.observe(this, Observer{
+            addFragment(ForgotPasswordFragment.newInstance(), ForgotPasswordFragment.TAG)
+        })
     }
 
 
@@ -58,18 +84,25 @@ class AuthActivity : BaseActivity(),
     }
 
     private fun replaceFragment(fragment: Fragment, tag: String) {
+        hideKeyboard()
         supportFragmentManager.beginTransaction()
                 .replace(R.id.container, fragment, tag)
                 .commit()
     }
 
     private fun addFragment(fragment: Fragment, tag: String) {
+        hideKeyboard()
         supportFragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.show_fragment, R.anim.hide_fragment,
                         R.anim.pop_enter_fragment, R.anim.pop_exit_fragment)
                 .replace(R.id.container, fragment, tag)
                 .addToBackStack("my_stack")
                 .commit()
+    }
+
+    private fun hideKeyboard() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
     }
 
 
@@ -90,7 +123,7 @@ class AuthActivity : BaseActivity(),
     }
 
     override fun goToMain() {
-        MainActivity.start(this)
+        MainActivity.start(this, viewModel.user.value)
         finish()
     }
 
@@ -122,6 +155,18 @@ class AuthActivity : BaseActivity(),
         addFragment(FromSocialFragment.newInstance(), FromSocialFragment.TAG)
     }
 
+    override fun useEmailIntead() {
+        addFragment(EmailFragment.newInstance(), EmailFragment.TAG)
+    }
+
+    override fun goToPhone() {
+        addFragment(PhoneFragment.newInstance(ACTION_MOBILE), PhoneFragment.TAG)
+    }
+
+    override fun goToBegin() {
+        start(this)
+        finish()
+    }
 
     companion object {
         fun start(activity: Activity) {

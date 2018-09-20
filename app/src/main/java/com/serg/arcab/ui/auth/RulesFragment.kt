@@ -33,7 +33,6 @@ class RulesFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        navBar.nextBtn.text = getString(R.string.get_started)
         navBar.nextBtn.setOnClickListener {
             viewModel.onGetStartedClicked()
         }
@@ -42,41 +41,48 @@ class RulesFragment : BaseFragment() {
             viewModel.onBackClicked()
         }
 
-        switch1.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.setDirectlyContact(isChecked)
+        navBar.backBtn.setImageResource(R.drawable.ic_close_red_24dp)
+        navBar.nextBtn.text = resources.getString(R.string.accept_text)
+
+        decline_button.setOnClickListener {
+            viewModel.onGoToDeclineClicked()
         }
 
-        switch2.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.setSearchAds(isChecked)
-        }
-
-        switch3.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.setUsageData(isChecked)
-        }
-
-        switch4.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.setUsageStats(isChecked)
-        }
-
-        termsAgreementCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            Timber.d("setOnCheckedChangeListener $isChecked")
-            viewModel.setTermsAgreement(isChecked)
-        }
-
-        viewModel.termsValidation.observe(viewLifecycleOwner, Observer {
-            Timber.d("termsValidation $it")
-            navBar.nextBtn.isEnabled = it != null && it
-            termsAgreementCheckBox.isChecked = it != null && it
-        })
-
-        viewModel.user.observe(viewLifecycleOwner, Observer {
-            it?.also { user ->
-                switch1.isChecked = user.terms.directly_contact
-                switch2.isChecked = user.terms.search_ads
-                switch3.isChecked = user.terms.usage_data
-                switch4.isChecked = user.terms.usage_stats
-            }
-        })
+//        switch1.setOnCheckedChangeListener { _, isChecked ->
+//            viewModel.setDirectlyContact(isChecked)
+//        }
+//
+//        switch2.setOnCheckedChangeListener { _, isChecked ->
+//            viewModel.setSearchAds(isChecked)
+//        }
+//
+//        switch3.setOnCheckedChangeListener { _, isChecked ->
+//            viewModel.setUsageData(isChecked)
+//        }
+//
+//        switch4.setOnCheckedChangeListener { _, isChecked ->
+//            viewModel.setUsageStats(isChecked)
+//        }
+//
+//        termsAgreementCheckBox.setOnCheckedChangeListener { _, isChecked ->
+//            Timber.d("setOnCheckedChangeListener $isChecked")
+//            viewModel.setTermsAgreement(isChecked)
+//        }
+//
+//        viewModel.termsValidation.observe(viewLifecycleOwner, Observer {
+//            Timber.d("termsValidation $it")
+//            navBar.nextBtn.isEnabled = it != null && it
+//            termsAgreementCheckBox.isChecked = it != null && it
+//        })
+//
+//        viewModel.user.observe(viewLifecycleOwner, Observer {
+//            it?.also { user ->
+//                switch1.isChecked = user.terms.directly_contact
+//                switch2.isChecked = user.terms.search_ads
+//                switch3.isChecked = user.terms.usage_data
+//                switch4.isChecked = user.terms.usage_stats
+//            }
+//        })
 
         viewModel.profileUploadProgress.observe(viewLifecycleOwner, Observer {
             when(it?.status) {

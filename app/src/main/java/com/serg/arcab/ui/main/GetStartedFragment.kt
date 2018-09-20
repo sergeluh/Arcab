@@ -14,20 +14,26 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.serg.arcab.LocationManager
 import com.serg.arcab.R
+import com.serg.arcab.USERS_FIREBASE_TABLE
+import com.serg.arcab.User
 import com.serg.arcab.base.BaseFragment
 import com.serg.arcab.model.TripOrder
-import com.serg.arcab.ui.main.dialogs.AchievementFragment
-import com.serg.arcab.ui.main.dialogs.AlertFragment
-import com.serg.arcab.ui.main.dialogs.UpNextFragment
+import com.serg.arcab.ui.main.dialogs.UtilFragment
 import com.serg.arcab.ui.splash.SplashActivity
 import kotlinx.android.synthetic.main.fragment_get_started.*
 import kotlinx.android.synthetic.main.navigation_view.view.*
 import org.koin.android.architecture.ext.sharedViewModel
 import org.koin.android.ext.android.inject
 import timber.log.Timber
+import java.util.*
 
 class GetStartedFragment : BaseFragment(), OnMapReadyCallback {
 
@@ -47,38 +53,113 @@ class GetStartedFragment : BaseFragment(), OnMapReadyCallback {
         val mapFragment = childFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+//        FirebaseAuth.getInstance().currentUser?.uid?.also {
+//            FirebaseDatabase.getInstance().reference.child(USERS_FIREBASE_TABLE).child(it).addListenerForSingleValueEvent(object : ValueEventListener{
+//                override fun onCancelled(p0: DatabaseError) {
+//                    Timber.d("MYUSER on canceled")
+//                }
+//
+//                override fun onDataChange(p0: DataSnapshot) {
+//                    Timber.d("MYUSER onDataChange")
+//                    viewModel.user.value = p0.getValue(User::class.java)
+//                    if (viewModel.user.value != null) {
+//                        FirebaseAuth.getInstance().currentUser?.providers?.also {
+//                            if (!it.contains("password")) {
+//                                Timber.d("MYUSER adding auth provider")
+//                                FirebaseAuth.getInstance().currentUser?.linkWithCredential(
+//                                        EmailAuthProvider.getCredential(
+//                                                viewModel.user.value!!.email!!,
+//                                                viewModel.user.value!!.password!!))
+//                            }
+//                        }
+//                    }
+//                }
+//            })
+//        }
+
+        viewModel.user.observe(viewLifecycleOwner, android.arch.lifecycle.Observer {
+            Timber.d("MYUSER current name: ${it?.first_name}, last name: ${it?.last_name}, phone number: ${it?.phone_number}, email: ${it?.email}, password: ${it?.password}")
+        })
+
+
+        FirebaseAuth.getInstance().currentUser?.providers?.forEach {
+            Timber.d("MYPROVIDER $it")
+        }
 
         navBar.nextBtn.setOnClickListener {
-            val fragment = AchievementFragment()
-            fragment.dismissListener = object : AchievementFragment.DismissListener {
-                override fun onDismess() {
-                    val upNextFragment = UpNextFragment()
-                    upNextFragment.setFields("Rate your ride.", "How was your trip? Rate the driver and give us your feedback.")
-                    upNextFragment.dismissListener = object : UpNextFragment.DismissListener {
-                        override fun onDismiss() {
-                            val alert = AlertFragment()
-                            alert.setHeaderAndMessage("Oops, your balance is low.", "Looks like you`re running low! You should top up your account to continue using arcab.")
-                            alert.dismissListener = object : AlertFragment.DismissListener {
-                                override fun onDismess() {
-                                    viewModel.onGoToLinkIdClicked()
-                                }
-                            }
-                            alert.show(childFragmentManager, AlertFragment.TAG)
-                        }
-                    }
-                    upNextFragment.show(childFragmentManager, UpNextFragment.TAG)
-                }
-            }
-            fragment.setFields("Hatttrick",
-                    R.drawable.ic_confetti,
-                    "You`ve taken an arcab 3 days in a row.",
-                    3,
-                    R.drawable.ic_cup,
-                    "You`ve earnt a badge as an honor from the arcab family. We appreciate you!")
-            fragment.show(childFragmentManager, AchievementFragment.TAG)
+//            val fragment = AchievementFragment()
+//            fragment.dismissListener = object : AchievementFragment.DismissListener {
+//                override fun onDismess() {
+//                    val upNextFragment = UpNextFragment()
+//                    upNextFragment.setFields("Rate your ride.", "How was your trip? Rate the driver and give us your feedback.")
+//                    upNextFragment.dismissListener = object : UpNextFragment.DismissListener {
+//                        override fun onDismiss() {
+//                            val alert = AlertFragment()
+//                            alert.setHeaderAndMessage("Oops, your balance is low.", "Looks like you`re running low! You should top up your account to continue using arcab.")
+//                            alert.dismissListener = object : AlertFragment.DismissListener {
+//                                override fun onDismess() {
+//                                    viewModel.onGoToLinkIdClicked()
+//                                }
+//                            }
+//                            alert.show(childFragmentManager, AlertFragment.TAG)
+//                        }
+//                    }
+//                    upNextFragment.show(childFragmentManager, UpNextFragment.TAG)
+//                }
+//            }
+//            fragment.setFields("Hatttrick",
+//                    R.drawable.ic_confetti,
+//                    "You`ve taken an arcab 3 days in a row.",
+//                    3,
+//                    R.drawable.ic_cup,
+//                    "You`ve earnt a badge as an honor from the arcab family. We appreciate you!")
+//            fragment.show(childFragmentManager, AchievementFragment.TAG)
+            viewModel.onGoToLinkIdClicked()
         }
 
         navBar.backBtn.visibility = View.GONE
+
+//        if (!viewModel.wasAppOpened()){
+            FirebaseAuth.getInstance().currentUser?.also {
+
+                checkReferFriend(it.metadata?.creationTimestamp)
+                checkVerification(it.metadata?.creationTimestamp)
+
+                FirebaseDatabase.getInstance().reference.child(USERS_FIREBASE_TABLE).child(it.uid).child("first_name").addListenerForSingleValueEvent( object : ValueEventListener{
+                    override fun onCancelled(p0: DatabaseError) {
+
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        val name = p0.value as String
+                        val alert = UtilFragment()
+                        alert.header = "Welcome to arcab"
+                        alert.message = "Hi $name, tap to begin setting up your daily ride."
+                        alert.buttonText = "Get started"
+                        alert.imageResource = R.drawable.placeholder
+                        alert.callback = object : UtilFragment.Callback{
+                            override fun alertButtonClicked() {
+                                alert.dismiss()
+                            }
+
+                            override fun onDismiss() {
+                                checkReschedule()
+                            }
+                        }
+
+                        if(!isDetached) {
+                            alert.show(childFragmentManager, UtilFragment.TAG)
+                        }
+
+                        viewModel.setAppOpened(true)
+                    }
+                })
+            }
+
+
+//        }else{
+//            checkReschedule()
+//        }
 
         signOutBtn.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
@@ -136,6 +217,89 @@ class GetStartedFragment : BaseFragment(), OnMapReadyCallback {
                 }
             }
         })
+    }
+
+    //Show alert at the begining of the week if there is need to reschedule user timings
+    private fun checkReschedule(){
+        if (viewModel.getReschedule()) {
+            val calendar = Calendar.getInstance()
+            if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.TUESDAY) {
+                val alert = UtilFragment()
+                alert.header = "Update your schedule for next week."
+                alert.message = "Just a remainder, to choose your set preferences for upcoming week."
+                alert.buttonText = "Update schedule"
+                alert.callback = object : UtilFragment.Callback{
+                    override fun alertButtonClicked() {
+                        alert.dismiss()
+                    }
+
+                    override fun onDismiss() {
+
+                    }
+                }
+
+                alert.show(childFragmentManager, UtilFragment.TAG)
+            }
+        }
+    }
+
+    //Shows if user haven't verified his ID and there is less than 7 days passed from registration
+    private fun checkVerification(timestamp: Long?){
+        timestamp?.also {
+            val convertToDays = 1000 * 60 * 60 * 24
+            val currentTime = System.currentTimeMillis()
+            val difference = (currentTime - timestamp) / convertToDays
+//            if (difference < 7){
+                val alert = UtilFragment()
+                alert.header = "Verify your ID"
+                alert.message = "Scan your Emirates ID within the next ${7 - difference} days to continue using arcab"
+                alert.buttonText = "Scan now"
+                alert.imageResource = R.drawable.placeholder
+                alert.callback = object : UtilFragment.Callback{
+                    override fun alertButtonClicked() {
+                        alert.dismiss()
+                        viewModel.onGoToScanClicked()
+                    }
+
+                    override fun onDismiss() {
+
+                    }
+                }
+
+                alert.show(childFragmentManager, UtilFragment.TAG)
+//            }
+        }
+    }
+
+    //Shows only if user haven't refers his friend to arcab and there is less than 7 days passed from registration
+    private fun checkReferFriend(timestamp: Long?){
+        timestamp?.also {
+            val convertToDays = 1000 * 60 * 60 * 24
+            val currentTime = System.currentTimeMillis()
+            val difference = (currentTime - timestamp) / convertToDays
+//            if (difference < 7){
+            val alert = UtilFragment()
+            alert.header = "Free ride's on us!"
+            alert.message = "get your free ride when you refer a friend an they sign up for arcab."
+            alert.buttonText = "Refer a friend"
+            alert.imageResource = R.drawable.placeholder
+            alert.callback = object : UtilFragment.Callback{
+                override fun alertButtonClicked() {
+                    val intent = Intent(Intent.ACTION_SEND)
+                    intent.type = "text/plain"
+                    intent.putExtra(Intent.EXTRA_TEXT, "Follow this link to join the arcab: https://www.google.com/")
+                    startActivity(intent)
+                    alert.dismiss()
+                }
+
+                override fun onDismiss() {
+
+                }
+            }
+
+            alert.show(childFragmentManager, UtilFragment.TAG)
+//            }
+        }
     }
 
     companion object {

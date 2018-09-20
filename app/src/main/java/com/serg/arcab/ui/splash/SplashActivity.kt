@@ -31,7 +31,7 @@ class SplashActivity : BaseActivity() {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
                             val u = dataSnapshot.getValue(User::class.java)
                             if (u != null) {
-                                MainActivity.start(this@SplashActivity)
+                                MainActivity.start(this@SplashActivity, u)
                             } else {
                                 AuthActivity.start(this@SplashActivity)
                             }
@@ -42,7 +42,6 @@ class SplashActivity : BaseActivity() {
             AuthActivity.start(this)
             finish()
         }
-
 //        FirebaseAuth.getInstance().signOut()
 //        AuthActivity.start(this)
 //        MainActivity.start(this)
