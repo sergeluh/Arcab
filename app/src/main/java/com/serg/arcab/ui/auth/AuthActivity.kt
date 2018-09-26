@@ -1,6 +1,7 @@
 package com.serg.arcab.ui.auth
 
 import android.app.Activity
+import android.app.ActivityOptions
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
@@ -9,6 +10,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.transition.ChangeBounds
 import android.view.inputmethod.InputMethodManager
 import com.google.firebase.auth.FirebaseAuth
 import com.serg.arcab.*
@@ -45,6 +47,10 @@ class AuthActivity : BaseActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
+
+        val changedBounds = ChangeBounds()
+        changedBounds.duration = 700
+        window.sharedElementEnterTransition = changedBounds
 
         filter = IntentFilter("android.provider.Telephony.SMS_RECEIVED")
         filter.priority = 100
@@ -183,8 +189,8 @@ class AuthActivity : BaseActivity(),
         addFragment(FromSocialFragment.newInstance(), FromSocialFragment.TAG)
     }
 
-    override fun useEmailIntead() {
-        addFragment(EmailFragment.newInstance(), EmailFragment.TAG)
+    override fun useEmailInstead() {
+        addFragment(EmailFragment.newInstance(ACTION_OLD_USER), EmailFragment.TAG)
     }
 
     override fun goToPhone() {
@@ -206,8 +212,12 @@ class AuthActivity : BaseActivity(),
     }
 
     companion object {
-        fun start(activity: Activity) {
-            activity.startActivity(Intent(activity, AuthActivity::class.java))
+        fun start(activity: Activity, options: ActivityOptions? = null) {
+            if (options == null) {
+                activity.startActivity(Intent(activity, AuthActivity::class.java))
+            }else{
+                activity.startActivity(Intent(activity, AuthActivity::class.java), options.toBundle())
+            }
         }
     }
 }

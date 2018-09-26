@@ -8,3 +8,92 @@
     android:layout_height="match_parent"
     android:id="@+id/container"
     tools:context=".ui.auth.AuthActivity"/>
+<!--<ScrollView-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--tools:context=".ui.auth.AuthFragment"-->
+    <!--android:background="@color/colorFragmentBg"-->
+    <!--android:clickable="true"-->
+    <!--android:focusable="true"-->
+    <!--android:fillViewport="true">-->
+
+    <!--<android.support.constraint.ConstraintLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/textView2"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:transitionName="splashTitle"-->
+            <!--android:text="@string/auth_header"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toTopOf="parent"-->
+            <!--style="@style/TextAppearanceHeader"/>-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/imageView"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:transitionName="splashIcon"-->
+            <!--app:layout_constraintWidth_percent="0.2"-->
+            <!--android:src="@drawable/logo"-->
+            <!--android:adjustViewBounds="true"-->
+            <!--android:layout_marginTop="@dimen/auth_header_margin_top"-->
+            <!--android:layout_marginEnd="@dimen/auth_screen_padding"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/mobileBtn"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="48dp"-->
+            <!--android:text="@string/auth_enter_with_mobile_number"-->
+            <!--app:layout_constraintBottom_toTopOf="@+id/socialBtn"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--android:textAllCaps="true"-->
+            <!--android:textStyle="bold"-->
+            <!--android:textColor="@android:color/white"-->
+            <!--android:layout_marginStart="32dp"-->
+            <!--android:layout_marginEnd="32dp"-->
+            <!--android:layout_marginBottom="16dp"-->
+            <!--android:textSize="16sp"-->
+            <!--android:gravity="center"-->
+            <!--android:background="@drawable/selector_btn"/>-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/socialBtn"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="48dp"-->
+            <!--android:gravity="center"-->
+            <!--android:text="@string/auth_enter_with_social_account"-->
+            <!--app:layout_constraintBottom_toTopOf="@+id/textView3"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--android:textSize="16sp"-->
+            <!--android:textAllCaps="true"-->
+            <!--android:layout_marginStart="32dp"-->
+            <!--android:layout_marginEnd="32dp"-->
+            <!--android:textStyle="bold"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--android:background="@drawable/bg_btn_outline"-->
+            <!--android:textColor="@color/colorAccent"-->
+            <!--android:layout_marginBottom="24dp"/>-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/textView3"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/auth_footer"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--style="@style/TextAppearanceText"-->
+            <!--android:layout_marginBottom="@dimen/auth_screen_padding"/>-->
+
+    <!--</android.support.constraint.ConstraintLayout>-->
+
+<!--</ScrollView>-->

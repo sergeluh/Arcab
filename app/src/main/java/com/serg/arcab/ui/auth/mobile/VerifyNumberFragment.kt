@@ -51,18 +51,31 @@ class VerifyNumberFragment : BaseFragment() {
             viewModel.signIn()
         }
 
+        navBar.nextBtn.isEnabled = false
+
         if (action == ACTION_OLD_USER){
             textView.text = "Welcome back"
-            resendSmsBtn.text = "Use password instead"
-            resendSmsBtn.setOnClickListener {
+            use_password_instead.text = "Use password instead"
+            use_password_instead.setOnClickListener {
+                viewModel.useEmailInstead = true
                 Timber.d("NEWLINE go to password clicked")
-                viewModel.onGoToPasswordClicked()
+                callback.useEmailInstead()
             }
         }else{
-            resendSmsBtn.setOnClickListener {
+            use_password_instead.text = "Resend sms"
+            use_password_instead.setOnClickListener {
                 viewModel.verifyPhoneNumber(false)
             }
         }
+
+//        if (viewModel.useEmailInstead){
+//            use_password_instead.visibility = View.GONE
+//        }
+
+//        use_password_instead.setOnClickListener {
+//            viewModel.useEmailInstead = true
+//            callback.useEmailInstead()
+//        }
 
         SMSMonitor.verificationCode.observe(viewLifecycleOwner, Observer {
             verification_code.setText(it)
@@ -80,6 +93,7 @@ class VerifyNumberFragment : BaseFragment() {
 //                        callback.goToPassword(ACTION_NEW_USER)
                         callback.goToName()
                     }
+                    viewModel.codeVerificationProgress.value = null
                 }
                 Result.Status.ERROR -> {
                     hideLoading()
@@ -95,6 +109,7 @@ class VerifyNumberFragment : BaseFragment() {
                 .skipInitialValue()
                 .subscribe {
                     viewModel.onVerificationCodeInputChanged(it.toString())
+                    navBar.nextBtn.isEnabled = it.length == 6
                 }
 
         navBar.backBtn.setOnClickListener {
@@ -134,6 +149,7 @@ class VerifyNumberFragment : BaseFragment() {
         fun goToBirth()
         fun goToProfile()
         fun goToName()
+        fun useEmailInstead()
     }
 
     companion object {

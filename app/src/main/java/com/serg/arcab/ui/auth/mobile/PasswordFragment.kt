@@ -66,6 +66,7 @@ class PasswordFragment : BaseFragment() {
             }
         }
 
+        navBar.nextBtn.isEnabled = false
         if (viewModel.useEmailInstead){
             Timber.d("MYUSER passwordFragment auth with email")
 
@@ -117,7 +118,12 @@ class PasswordFragment : BaseFragment() {
                         bottom_notification.visibility = View.GONE
                     }
                     viewModel.onPasswordInputChanged(it.toString())
+                    navBar.nextBtn.isEnabled = viewModel.validatePassword(it.toString())
                 }
+
+        passwordEditText.transformationMethod = null
+        iconInfo.visibility = View.VISIBLE
+        showPasswordBtn.text = "Hide"
 
         showPasswordBtn.setOnClickListener {
             if (passwordEditText.transformationMethod == null){

@@ -62,7 +62,7 @@ class ForgotPasswordFragment : BaseFragment() {
             when(it?.status){
                 Result.Status.ERROR -> {
                     hideLoading()
-                    showBottomNotificationWithMessageAndIcon(it.message, R.drawable.ic_info)
+                    showBottomNotificationWithMessageAndIcon(it.message, R.drawable.ic_bottom_warning)
                 }
                 Result.Status.LOADING -> showLoading()
                 Result.Status.SUCCESS -> {

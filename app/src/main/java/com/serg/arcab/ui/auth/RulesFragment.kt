@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 
 import com.serg.arcab.R
 import com.serg.arcab.Result
@@ -41,6 +42,7 @@ class RulesFragment : BaseFragment() {
         }
 
         navBar.backBtn.setImageResource(R.drawable.ic_close_red_24dp)
+//        navBar.backBtn.scaleType = ImageView.ScaleType.CENTER_CROP
         navBar.nextBtn.text = resources.getString(R.string.accept_text)
 
         decline_button.setOnClickListener {

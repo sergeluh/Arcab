@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.text.TextUtils
 import android.util.Patterns
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.firebase.database.FirebaseDatabase
 import com.serg.arcab.Result
 import com.serg.arcab.User
 import com.serg.arcab.base.BaseViewModel
@@ -27,7 +28,7 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
     val goToCapture = SingleLiveEvent<Unit>()
     val goToFillInfoFromSocial = SingleLiveEvent<Unit>()
     val backAction = SingleLiveEvent<Unit>()
-    val goToPassword = SingleLiveEvent<Unit>()
+    val goToPassword = SingleLiveEvent<String>()
     val goToName = SingleLiveEvent<Unit>()
     val goToDecline = SingleLiveEvent<Unit>()
     val goToGender = SingleLiveEvent<Unit>()
@@ -232,14 +233,20 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
         val pass = password.value
         if (pass == null || pass.isBlank()) {
             passwordValidation.value = "Enter password"
-        } else if (pass.length < 8) {
+        } else if (pass.length < 8 || TextUtils.isDigitsOnly(pass)) {
             passwordValidation.value = "Password must include at least 8 characters"
-        } else if (TextUtils.isDigitsOnly(pass)) {
+        } else if (!pass.matches(Regex("^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[~`!@#\$%^&*()+={}\\[\\]|;:\"<>,./?-])(?=\\S+\$).{8,}\$"))) {
             passwordValidation.value = "Password must include at least one symbol"
         } else {
             return true
         }
+        return false
+    }
 
+    fun validatePassword(pass: String?): Boolean{
+        if (pass != null && !pass.isBlank() && pass.length >= 8 && !TextUtils.isDigitsOnly(pass) && pass.matches(Regex("^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[~`!@#\$%^&*()+={}\\[\\]|;:\"<>,./?-])(?=\\S+\$).{8,}\$"))) {
+            return true
+        }
         return false
     }
 

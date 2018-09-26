@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:transitionName="container"
     tools:context=".ui.auth.AuthFragment"
     android:background="@color/colorFragmentBg"
     android:clickable="true"
@@ -19,20 +20,22 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:transitionName="splashTitle"
             android:text="@string/auth_header"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            style="@style/TextAppearanceHeader"/>
+            style="@style/TextAppearanceHeader"
+            android:layout_marginLeft="40dp"/>
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintWidth_percent="0.2"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:transitionName="splashIcon"
             android:src="@drawable/logo"
             android:adjustViewBounds="true"
             android:layout_marginTop="@dimen/auth_header_margin_top"
-            android:layout_marginEnd="@dimen/auth_screen_padding"
+            android:layout_marginEnd="55dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

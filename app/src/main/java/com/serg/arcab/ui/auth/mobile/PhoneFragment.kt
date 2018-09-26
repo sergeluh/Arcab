@@ -45,24 +45,25 @@ class PhoneFragment : BaseFragment() {
         navBar.nextBtn.setOnClickListener {
             viewModel.verifyPhoneNumber(true)
         }
-
-        use_password_instead.setOnClickListener {
-            callback.useEmailIntead()
-            viewModel.useEmailInstead = true
-        }
+//
+//        use_password_instead.setOnClickListener {
+//            callback.useEmailInstead()
+//            viewModel.useEmailInstead = true
+//        }
 
 //        if (viewModel.user.value != null && viewModel.user.value!!.email != null){
 //            use_password_instead.visibility = View.GONE
 //        }
-        if (viewModel.useEmailInstead){
-            use_password_instead.visibility = View.GONE
-        }
+//        if (viewModel.useEmailInstead){
+//            use_password_instead.visibility = View.GONE
+//        }
 
         navBar.backBtn.setImageResource(R.drawable.ic_close_red_24dp)
-        navBar.backBtn.scaleType = ImageView.ScaleType.FIT_XY
         navBar.backBtn.setOnClickListener {
             viewModel.onBackClicked()
         }
+
+        navBar.nextBtn.isEnabled = false
 
         phoneEditText.addTextChangedListener(MaskWatcher.getDefault())
         RxTextView.textChanges(phoneEditText)
@@ -73,6 +74,7 @@ class PhoneFragment : BaseFragment() {
                         bottom_notification.visibility = View.GONE
                     }
                     viewModel.onPhoneInputChanged(it.toString())
+                    navBar.nextBtn.isEnabled = it.length == 11
                 }
 
         viewModel.phoneVerificationProgress.observe(viewLifecycleOwner, Observer { result ->
@@ -92,7 +94,12 @@ class PhoneFragment : BaseFragment() {
         })
 
         viewModel.codeSentAction.observe(this, Observer {
-            callback.goToCodeVerification(action)
+            Timber.d("RECEIVED action is: $it")
+            if (it != null) {
+                callback.goToCodeVerification(it)
+            }else{
+                callback.goToCodeVerification(action)
+            }
         })
 
         viewModel.signedInAction.observe(viewLifecycleOwner, Observer {
@@ -116,7 +123,7 @@ class PhoneFragment : BaseFragment() {
     }
 
     private fun showBottomNotificationWithMessage(message: String?){
-        bottom_notification.bottom_notification_icon.setImageResource(R.drawable.ic_info)
+        bottom_notification.bottom_notification_icon.setImageResource(R.drawable.ic_bottom_warning)
         bottom_notification.bottom_notification_message.text = message
         bottom_notification.visibility = View.VISIBLE
     }
@@ -140,6 +147,5 @@ class PhoneFragment : BaseFragment() {
         fun goToBirth()
         fun goToProfile()
         fun goToName()
-        fun useEmailIntead()
     }
 }

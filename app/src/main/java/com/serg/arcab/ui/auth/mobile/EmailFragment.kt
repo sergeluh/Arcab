@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.serg.arcab.ACTION_MOBILE
 import com.serg.arcab.ACTION_NEW_USER
+import com.serg.arcab.ACTION_OLD_USER
 
 import com.serg.arcab.R
 import com.serg.arcab.base.BaseFragment
@@ -70,6 +71,13 @@ class EmailFragment : BaseFragment() {
             }
         }
 
+        if (arguments != null && arguments!!.containsKey(ACTION)){
+            val action = arguments?.getString(ACTION)
+            if (action == ACTION_OLD_USER){
+                titleTextView.text = "Welcome back"
+            }
+        }
+
         viewModel.emailValidation.observe(viewLifecycleOwner, Observer {
             showMessage(it)
         })
@@ -95,7 +103,15 @@ class EmailFragment : BaseFragment() {
 
         const val TAG = "EmailFragment"
 
+        private const val ACTION = "action"
+
         @JvmStatic
-        fun newInstance() = EmailFragment()
+        fun newInstance(action: String? = null): EmailFragment{
+            val arguments = Bundle()
+            arguments.putString(ACTION, action)
+            val fragment = EmailFragment()
+            fragment.arguments = arguments
+            return fragment
+        }
     }
 }

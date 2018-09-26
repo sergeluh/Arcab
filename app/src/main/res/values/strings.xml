@@ -129,4 +129,5 @@
     <!--Profile section-->
     <string name="profile_header">Hi %s</string>
     <string name="manage_pass">Manage pass</string>
+    <string name="splash_title">Move \nTogether.</string>
 </resources>

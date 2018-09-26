@@ -57,11 +57,12 @@
                 app:layout_constraintTop_toBottomOf="@+id/verification_code" />
 
             <TextView
-                android:id="@+id/resendSmsBtn"
+                android:id="@+id/use_password_instead"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/resend_sms"
+                android:text="Use password\ninstead"
                 android:textAllCaps="true"
+                android:gravity="end"
                 android:textColor="@color/colorAccent"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="@+id/verification_code"

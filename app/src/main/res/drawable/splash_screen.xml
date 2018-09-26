@@ -2,8 +2,11 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android"
     android:opacity="opaque">
     <item>
-        <bitmap
-            android:src="@drawable/splash"/>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/colorPrimary"/>
+        </shape>
+        <!--<bitmap-->
+            <!--android:src="@drawable/splash"/>-->
     </item>
 
 </layer-list>

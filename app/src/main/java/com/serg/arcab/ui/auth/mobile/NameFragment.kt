@@ -36,6 +36,7 @@ class NameFragment : BaseFragment() {
         navBar.nextBtn.setOnClickListener {
             viewModel.saveName()
         }
+        navBar.nextBtn.isEnabled = false
 
         navBar.backBtn.setOnClickListener {
             viewModel.onBackClicked()
@@ -47,12 +48,14 @@ class NameFragment : BaseFragment() {
                 .skipInitialValue()
                 .subscribe {
                     viewModel.onFirstNameInputChanged(it.toString())
+                    navBar.nextBtn.isEnabled = it.isNotEmpty() && lastNameEditText.text.isNotEmpty()
                 }
 
         RxTextView.textChanges(lastNameEditText)
                 .skipInitialValue()
                 .subscribe {
                     viewModel.onLastNameInputChanged(it.toString())
+                    navBar.nextBtn.isEnabled = it.isNotEmpty() && firstNameEditText.text.isNotEmpty()
                 }
 
         viewModel.name.observe(viewLifecycleOwner, Observer {

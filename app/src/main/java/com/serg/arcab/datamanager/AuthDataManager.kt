@@ -11,12 +11,10 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.serg.arcab.Result
-import com.serg.arcab.Sha1
-import com.serg.arcab.USERS_FIREBASE_TABLE
-import com.serg.arcab.User
+import com.serg.arcab.*
 import com.serg.arcab.data.AppExecutors
 import com.serg.arcab.data.PrefsManager
+import com.serg.arcab.model.CheckUserModel
 import com.serg.arcab.ui.auth.FirebaseAuthModel
 import com.serg.arcab.utils.SingleLiveEvent
 import timber.log.Timber
@@ -31,7 +29,7 @@ interface AuthDataManager {
 
 
     fun getPhoneVerificationProgress(): MutableLiveData<Result<Unit>>
-    fun getOnCodeSentAction(): SingleLiveEvent<Unit>
+    fun getOnCodeSentAction(): SingleLiveEvent<String>
     fun getCodeVerificationProgress(): MutableLiveData<Result<Unit>>
     fun getSignedInAction(): SingleLiveEvent<User>
     fun getProfileUploadProgress(): MutableLiveData<Result<Unit>>
@@ -53,7 +51,7 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors, val prefsM
     private var verificationId: String? = null
 
     private val phoneVerificationProgress = MutableLiveData<Result<Unit>>()
-    private val codeSentAction = SingleLiveEvent<Unit>()
+    private val codeSentAction = SingleLiveEvent<String>()
 
     private val codeVerificationProgress = MutableLiveData<Result<Unit>>()
     private val signedInAction = SingleLiveEvent<User>()
@@ -94,7 +92,7 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors, val prefsM
 
         if (phone == null || phone.isBlank()) {
             phoneVerificationProgress.value = Result.error("Invalid phone number")
-        } else if(!(phone.startsWith("50") || phone.startsWith("52") || phone.startsWith("55") || phone.startsWith("56") || phone.startsWith("58") || phone.startsWith("66") || phone.startsWith("99") || phone.startsWith("93"))){
+        } else if (!(phone.startsWith("50") || phone.startsWith("52") || phone.startsWith("55") || phone.startsWith("56") || phone.startsWith("58") || phone.startsWith("66") || phone.startsWith("99") || phone.startsWith("93") || phone.startsWith("95"))) {
             phoneVerificationProgress.value = Result.error("Invalid operator code")
         } else {
             val validPhone = getValidPhoneNumber(phone)
@@ -120,7 +118,24 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors, val prefsM
                             Timber.d("onCodeSentAction $verificationId, token: $token")
                             this@AuthDataManagerImpl.verificationId = verificationId
                             phoneVerificationProgress.value = Result.success(Unit)
-                            codeSentAction.call()
+                            Timber.d("ENTERED NUMBER $validPhone")
+                            FirebaseDatabase.getInstance().reference.child(R_USERS_FIREBASE_TABLE).child(Sha1.getHash(validPhone)).addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onCancelled(p0: DatabaseError) {
+                                    Timber.d("ERROR when checking user: ${p0.message}")
+                                }
+
+                                override fun onDataChange(p0: DataSnapshot) {
+                                    val res = p0.getValue(CheckUserModel::class.java)
+                                    if (res == null) {
+                                        Timber.d("USERNOTREGISTERED")
+                                        codeSentAction.callWithValue(ACTION_NEW_USER)
+                                    } else {
+                                        Timber.d("USERREGISTERED")
+                                        codeSentAction.callWithValue(ACTION_OLD_USER)
+                                    }
+
+                                }
+                            })
                         }
 
                         override fun onCodeAutoRetrievalTimeOut(p0: String?) {
@@ -144,6 +159,7 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors, val prefsM
                         var message = task.exception?.message ?: "Error while sign in"
 
                         if (task.exception is FirebaseAuthInvalidCredentialsException) {
+                            Timber.d("verificationCompleted error: ${task.exception?.message}")
                             message = "Invalid credentials"
                         }
                         phoneVerificationProgress.value = Result.error(message)
@@ -247,6 +263,7 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors, val prefsM
             myRef.child(USERS_FIREBASE_TABLE).child(uid).setValue(user)
                     .addOnSuccessListener {
                         user?.also {
+                            FirebaseDatabase.getInstance().reference.child(R_USERS_FIREBASE_TABLE).child(Sha1.getHash(it.phone_number)).setValue(CheckUserModel(true))
                             Timber.d("User writed: ${it.first_name}, ${it.last_name}, ${it.email}, ${it.phone_number}")
                             prefsManager.saveUser(it)
                             if (it.email != null && it.password != null) {
@@ -281,7 +298,7 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors, val prefsM
                         Timber.d("MYUSER auth with email failure: ${it.message}")
                         emailVerificationProgress.value = Result.error(it.message)
                     }
-        }else{
+        } else {
             emailVerificationProgress.value = Result.error("User data is empty")
         }
     }

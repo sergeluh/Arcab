@@ -3,7 +3,6 @@ package com.serg.arcab.ui.auth.social
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +16,7 @@ import timber.log.Timber
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import android.content.Intent
+import android.widget.ImageView
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.common.api.ApiException
@@ -55,6 +55,7 @@ class SocialFragment : BaseFragment() {
             viewModel.onBackClicked()
         }
         navBar.backBtn.setImageResource(R.drawable.ic_close_red_24dp)
+//        navBar.backBtn.scaleType = ImageView.ScaleType.CENTER_CROP
         navBar.nextBtn.visibility = View.GONE
         googleBtn.setOnClickListener {
             val account = GoogleSignIn.getLastSignedInAccount(context)

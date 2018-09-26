@@ -8,6 +8,7 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.google.firebase.database.*
 
 import com.serg.arcab.R
@@ -74,7 +75,8 @@ class LinkIdFragment : Fragment() {
         navBar.backBtn.setOnClickListener {
             viewModel.onBackClicked()
         }
-        navBar.backBtn.setImageResource(R.drawable.ic_close_black_24dp)
+        navBar.backBtn.setImageResource(R.drawable.ic_close_red_24dp)
+//        navBar.backBtn.scaleType = ImageView.ScaleType.CENTER_CROP
 
         //Listener that sets nextBtn enabled when email text pass the validation
         editText2.addTextChangedListener(object : TextWatcher {
