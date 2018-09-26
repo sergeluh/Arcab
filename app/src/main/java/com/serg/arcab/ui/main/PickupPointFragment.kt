@@ -7,6 +7,7 @@ import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ import kotlinx.android.synthetic.main.fragment_pickup_point.*
 import kotlinx.android.synthetic.main.navigation_view.view.*
 import org.koin.android.architecture.ext.sharedViewModel
 import android.support.v7.widget.PagerSnapHelper
+import android.text.Html
 import android.widget.TextView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -52,6 +54,11 @@ class PickupPointFragment : Fragment() {
 
         addressView = your_address
 
+        context?.also {
+            collapsing_toolbar.setExpandedTitleTypeface(ResourcesCompat.getFont(it, R.font.colfax_medium))
+            collapsing_toolbar.setCollapsedTitleTypeface(ResourcesCompat.getFont(it, R.font.colfax_medium))
+        }
+
         //Initialize map view for picking custom location
         val mapFragment = childFragmentManager.findFragmentById(R.id.your_map_view) as SupportMapFragment
         mapFragment.onCreate(null)
@@ -64,8 +71,8 @@ class PickupPointFragment : Fragment() {
                 address = geocoder!!.getFromLocation(it.latitude, it.longitude, 1)[0]
                         .getAddressLine(0)
 //                addressView!!.text = "From $address"
-                addressView!!.text = String.format(
-                        resources.getString(R.string.initial_setup_pickup_point_from), address)
+                val addressText = "From <b>$address</b>"
+                addressView!!.text = Html.fromHtml(addressText)
             }
             viewModel.tripOrder.currentLocation?.also {
                 googleMap?.addMarker(MarkerOptions().position(it))
@@ -195,8 +202,8 @@ class PickupPointFragment : Fragment() {
                         1)[0]
         address = myAddress.getAddressLine(0)
 //        addressView?.text = "From $address"
-        addressView?.text = String.format(
-                resources.getString(R.string.initial_setup_pickup_point_from), address)
+        val addressText = "From <b>$address</b>"
+        addressView?.text = Html.fromHtml(addressText)
         fromLatLng = LatLng(latitude, longitude)
     }
 

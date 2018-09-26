@@ -1,6 +1,9 @@
 package com.serg.arcab.ui.main
 
 import android.support.v7.widget.RecyclerView
+import android.text.Html
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,7 +48,8 @@ class PointRecyclerViewAdapter(private val userList: MutableList<CommonPoint>, v
                 it.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f))
                 it.addMarker(MarkerOptions().position(latLng))
             }
-            textViewAddress.text = "From ${item.title}\n${item.address}"
+            val addressText = "From <b>${item.title}\n${item.address}</b>"
+            textViewAddress.text = Html.fromHtml(addressText)
 
             val btnBack = itemView.findViewById(R.id.btnBack) as ImageView
             val btnNext = itemView.findViewById(R.id.btnNext) as ImageView

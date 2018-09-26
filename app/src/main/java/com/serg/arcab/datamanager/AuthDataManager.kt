@@ -94,6 +94,8 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors, val prefsM
 
         if (phone == null || phone.isBlank()) {
             phoneVerificationProgress.value = Result.error("Invalid phone number")
+        } else if(!(phone.startsWith("50") || phone.startsWith("52") || phone.startsWith("55") || phone.startsWith("56") || phone.startsWith("58") || phone.startsWith("66") || phone.startsWith("99") || phone.startsWith("93"))){
+            phoneVerificationProgress.value = Result.error("Invalid operator code")
         } else {
             val validPhone = getValidPhoneNumber(phone)
             Timber.d("validPhone $validPhone")

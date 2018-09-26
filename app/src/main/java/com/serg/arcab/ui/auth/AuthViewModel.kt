@@ -226,6 +226,8 @@ class AuthViewModel constructor(private val authDataManager: AuthDataManager): B
         }
     }
 
+    fun validateEmail(email: String) = Patterns.EMAIL_ADDRESS.matcher(email).matches()
+
     private fun validatePassword(): Boolean {
         val pass = password.value
         if (pass == null || pass.isBlank()) {

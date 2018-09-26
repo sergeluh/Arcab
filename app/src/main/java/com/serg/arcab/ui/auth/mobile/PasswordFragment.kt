@@ -4,9 +4,7 @@ package com.serg.arcab.ui.auth.mobile
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.text.method.PasswordTransformationMethod
-import android.text.method.SingleLineTransformationMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -96,7 +94,7 @@ class PasswordFragment : BaseFragment() {
                     }
                     Result.Status.SUCCESS -> {
                         hideLoading()
-                        callback.goToMain()
+                        callback.goToProfile()
                     }
                     Result.Status.LOADING -> {
                         showLoading()
@@ -151,7 +149,7 @@ class PasswordFragment : BaseFragment() {
                 }
                 Result.Status.SUCCESS -> {
                     hideLoading()
-                    callback.goToMain()
+                    callback.goToProfile()
                 }
                 Result.Status.LOADING -> {
                     showLoading()
@@ -160,7 +158,7 @@ class PasswordFragment : BaseFragment() {
         })
 
         viewModel.passwordCheckedAction.observe(viewLifecycleOwner, Observer {
-            callback.goToMain()
+            callback.goToProfile()
         })
 
         viewModel.goToBirthInput.observe(viewLifecycleOwner, Observer {
@@ -176,7 +174,7 @@ class PasswordFragment : BaseFragment() {
 
     interface Callback {
         fun goToBirth()
-        fun goToMain()
+        fun goToProfile()
         fun goToPhone()
     }
 

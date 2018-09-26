@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.*
 import com.serg.arcab.R
 import com.serg.arcab.model.TimingItem
+import kotlinx.android.synthetic.main.item_pickup_timing.view.*
 
 
 class TimingRecyclerViewAdapter(private val userList: MutableList<TimingItem>,
@@ -39,27 +40,30 @@ class TimingRecyclerViewAdapter(private val userList: MutableList<TimingItem>,
         fun bindItems(item: TimingItem, position: Int) {
             val textViewAddress = itemView.findViewById(R.id.textViewAddress) as TextView
 
+            val buttons = mutableListOf(itemView.tog_sunday, itemView.tog_monday,
+                    itemView.tog_tuesday, itemView.tog_wednesday, itemView.tog_thursday,
+                    itemView.tog_friday, itemView.tog_saturday)
             //Block that populates data of every week day button and binds it data to the TimingItem list that stores in trip model
             itemView.findViewById<ToggleButton>(R.id.tog_sunday).also {
-                toggleButtonProcessing(it, position, 0)
+                toggleButtonProcessing(it, position, 0, buttons)
             }
             itemView.findViewById<ToggleButton>(R.id.tog_monday).also {
-                toggleButtonProcessing(it, position, 1)
+                toggleButtonProcessing(it, position, 1, buttons)
             }
             itemView.findViewById<ToggleButton>(R.id.tog_tuesday).also {
-                toggleButtonProcessing(it, position, 2)
+                toggleButtonProcessing(it, position, 2, buttons)
             }
             itemView.findViewById<ToggleButton>(R.id.tog_wednesday).also {
-                toggleButtonProcessing(it, position, 3)
+                toggleButtonProcessing(it, position, 3, buttons)
             }
             itemView.findViewById<ToggleButton>(R.id.tog_thursday).also {
-                toggleButtonProcessing(it, position, 4)
+                toggleButtonProcessing(it, position, 4, buttons)
             }
             itemView.findViewById<ToggleButton>(R.id.tog_friday).also {
-                toggleButtonProcessing(it, position, 5)
+                toggleButtonProcessing(it, position, 5, buttons)
             }
             itemView.findViewById<ToggleButton>(R.id.tog_saturday).also {
-                toggleButtonProcessing(it, position, 6)
+                toggleButtonProcessing(it, position, 6, buttons)
             }
 
             val str = String.format(header, item.time)
@@ -89,11 +93,16 @@ class TimingRecyclerViewAdapter(private val userList: MutableList<TimingItem>,
     }
 
     //Method for populating data of week day button and binds it data to the TimingItem list that stores in trip model
-    private fun toggleButtonProcessing(button: ToggleButton, position: Int, buttonIndex: Int){
+    private fun toggleButtonProcessing(button: ToggleButton, position: Int, buttonIndex: Int, buttonList: MutableList<ToggleButton>){
         button.isEnabled = userList[position].daysEnabled[buttonIndex]
         button.isChecked = userList[position].daysChecked[buttonIndex]
         button.setOnCheckedChangeListener{_, isChecked ->
             userList[position].daysChecked[buttonIndex] = isChecked
+            if (userList[position].daysChecked.filter { it }.size == 2){
+                buttonList.forEach { it.isEnabled = it.isChecked }
+            }else{
+                buttonList.forEachIndexed { index, toggleButton -> toggleButton.isEnabled = userList[position].daysEnabled[index] }
+            }
             listener(userList[position])
         }
     }

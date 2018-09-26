@@ -6,12 +6,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.firebase.auth.FirebaseAuth
+import android.widget.ImageView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.serg.arcab.*
 
 import com.serg.arcab.base.BaseFragment
 import com.serg.arcab.ui.auth.AuthViewModel
+import kotlinx.android.synthetic.main.bottom_notification.view.*
 import kotlinx.android.synthetic.main.navigation_view.view.*
 import kotlinx.android.synthetic.main.fragment_phone.*
 import org.koin.android.architecture.ext.sharedViewModel
@@ -43,7 +44,6 @@ class PhoneFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         navBar.nextBtn.setOnClickListener {
             viewModel.verifyPhoneNumber(true)
-//            viewModel.onGoToName()
         }
 
         use_password_instead.setOnClickListener {
@@ -59,6 +59,7 @@ class PhoneFragment : BaseFragment() {
         }
 
         navBar.backBtn.setImageResource(R.drawable.ic_close_red_24dp)
+        navBar.backBtn.scaleType = ImageView.ScaleType.FIT_XY
         navBar.backBtn.setOnClickListener {
             viewModel.onBackClicked()
         }
@@ -68,6 +69,9 @@ class PhoneFragment : BaseFragment() {
                 .skipInitialValue()
                 .subscribe {
                     Timber.d("phone $it")
+                    if (bottom_notification.visibility == View.VISIBLE){
+                        bottom_notification.visibility = View.GONE
+                    }
                     viewModel.onPhoneInputChanged(it.toString())
                 }
 
@@ -75,7 +79,8 @@ class PhoneFragment : BaseFragment() {
             when(result?.status) {
                 Result.Status.ERROR -> {
                     hideLoading()
-                    showMessage(result.message)
+                    showBottomNotificationWithMessage(result.message)
+//                    showMessage(result.message)
                 }
                 Result.Status.SUCCESS -> {
                     hideLoading()
@@ -103,11 +108,17 @@ class PhoneFragment : BaseFragment() {
                     if (it == null) {
                         callback.goToBirth()
                     } else {
-                        callback.goToMain()
+                        callback.goToProfile()
                     }
                 }
             }
         })
+    }
+
+    private fun showBottomNotificationWithMessage(message: String?){
+        bottom_notification.bottom_notification_icon.setImageResource(R.drawable.ic_info)
+        bottom_notification.bottom_notification_message.text = message
+        bottom_notification.visibility = View.VISIBLE
     }
 
     companion object {
@@ -127,7 +138,7 @@ class PhoneFragment : BaseFragment() {
         fun goToCodeVerification(action: String)
         fun goToPassword(action: String)
         fun goToBirth()
-        fun goToMain()
+        fun goToProfile()
         fun goToName()
         fun useEmailIntead()
     }

@@ -8,6 +8,7 @@ import android.location.Location
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,6 +33,7 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_places.*
 import kotlinx.android.synthetic.main.list_item_places_address.*
 import kotlinx.android.synthetic.main.list_item_places_header.*
+import kotlinx.android.synthetic.main.list_item_places_header.view.*
 import kotlinx.android.synthetic.main.list_item_places_pick.*
 import kotlinx.android.synthetic.main.list_item_places_pick.view.*
 import kotlinx.android.synthetic.main.navigation_view.view.*
@@ -43,23 +45,14 @@ import java.util.concurrent.TimeUnit
 class PlacesFragment : Fragment() {
 
     private val viewModel by sharedViewModel<MainViewModel>()
-
     private val placesManager by inject<PlacesManager>()
-
     private val locationManager by inject<LocationManager>()
-
     private lateinit var adapter: SectionedCompositeAdapter
-
     private val placePickerRequest = 1002
-
     private var pickDelegateAdapter: PickDelegateAdapter? = null
-
     private var nearByAdapter: PlaceDelegateAdapter? = null
-
     private var searchResultAdapter: PlaceDelegateAdapter? = null
-
     private var fromLatLng: LatLng? = null
-
     private var searchDisposable: Disposable? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -78,19 +71,21 @@ class PlacesFragment : Fragment() {
         navBar.nextBtn.isEnabled = false
         navBar.nextBtn.setOnClickListener {
             viewModel.onHideKeyboard()
-            //Initialize common points before common points screen appears
+            showProgressBar()
+//            Initialize common points before common points screen appears
             viewModel.commonPoints = mutableListOf()
             FirebaseDatabase.getInstance().reference.child(COMMON_POINTS_FIREBASE_TABLE)
                     .addValueEventListener(object : ValueEventListener {
                         override fun onCancelled(p0: DatabaseError) {
-
+                            hideProgressBar()
                         }
 
                         override fun onDataChange(p0: DataSnapshot) {
                             for (snapshot in p0.children) {
                                 viewModel.commonPoints?.add(snapshot.getValue(CommonPoint::class.java)!!)
-                                viewModel.onGoToPickupPointClicked()
                             }
+                            hideProgressBar()
+                            viewModel.onGoToPickupPointClicked()
                         }
 
                     })
@@ -108,9 +103,7 @@ class PlacesFragment : Fragment() {
                     }
                 }
                 "Location on Map" -> {
-                    showProgressBar()
-                    val intent = Intent(context, LocationOnMapFragment::class.java)
-                    startActivityForResult(intent, placePickerRequest)
+                    viewModel.onGoToLocationOnMapClicked()
                 }
             }
         }
@@ -148,8 +141,48 @@ class PlacesFragment : Fragment() {
                         .build())
                 .build()
 
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        val lm = LinearLayoutManager(context)
+        recyclerView.layoutManager = lm
         recyclerView.adapter = adapter
+
+        var twoElementsContainerBottom = 0
+        val xy = IntArray(2)
+        val xy2 = IntArray(2)
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                lm.findViewByPosition(9)?.getLocationOnScreen(xy)
+                if (sticky_header_container.childCount <= 2){
+                    sticky_header_container.getLocationOnScreen(xy2)
+                    twoElementsContainerBottom = xy2[1] + sticky_header_container.height
+                }
+                if  (dy > 0) {
+                    if (lm.findFirstVisibleItemPosition() == 0 && sticky_header_container.childCount == 0) {
+                        val v = View.inflate(context, R.layout.list_item_places_header, null)
+                        v.hearedText.text = getString(R.string.initial_setup_places_fragment_header_pick)
+                        sticky_header_container.addView(v)
+                    } else if (lm.findFirstVisibleItemPosition() == 2 && sticky_header_container.childCount == 1) {
+                        val v = View.inflate(context, R.layout.list_item_places_header, null)
+                        v.hearedText.text = getString(R.string.initial_setup_places_fragment_header_nearby)
+                        sticky_header_container.addView(v)
+                    }
+                    if (xy[1] in 1..twoElementsContainerBottom && sticky_header_container.childCount == 2){
+                        val v = View.inflate(context, R.layout.list_item_places_header, null)
+                        v.hearedText.text = getString(R.string.initial_setup_places_fragment_header_search_result)
+                        sticky_header_container.addView(v)
+                    }
+                }else {
+                    if (lm.findFirstCompletelyVisibleItemPosition() == 0 && sticky_header_container.childCount == 1) {
+                        sticky_header_container.removeViewAt(0)
+                    } else if (lm.findFirstCompletelyVisibleItemPosition() == 2 && sticky_header_container.childCount == 2) {
+                        sticky_header_container.removeViewAt(1)
+                        twoElementsContainerBottom = 0
+                    } else if (xy[1] >= twoElementsContainerBottom && sticky_header_container.childCount == 3){
+                        sticky_header_container.removeViewAt(2)
+                    }
+                }
+            }
+        })
 
         adapter.setHeaderDataInSection(0, getString(R.string.initial_setup_places_fragment_header_pick))
         adapter.setHeaderDataInSection(1, getString(R.string.initial_setup_places_fragment_header_nearby))
@@ -183,21 +216,21 @@ class PlacesFragment : Fragment() {
         })
     }
 
-    //Picking places processing
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        Timber.d("Request nearby places: $requestCode, result - $resultCode")
-        hideProgressBar()
-        if (requestCode == placePickerRequest && resultCode == RESULT_OK) {
-            val latitude = data?.getDoubleExtra(LocationOnMapFragment.LATITUDE, 0.0)
-            val longitude = data?.getDoubleExtra(LocationOnMapFragment.LONGITUDE, 0.0)
-            viewModel.tripOrder.currentLocation = LatLng(latitude!!, longitude!!)
-            if (viewModel.tripOrder.currentLocation != null) {
-                navBar.nextBtn.isEnabled = true
-            }
-            Timber.d("Result location: $latitude, $longitude")
-        }
-    }
+//    //Picking places processing
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        Timber.d("Request nearby places: $requestCode, result - $resultCode")
+//        hideProgressBar()
+//        if (requestCode == placePickerRequest && resultCode == RESULT_OK) {
+//            val latitude = data?.getDoubleExtra(LocationOnMapFragment.LATITUDE, 0.0)
+//            val longitude = data?.getDoubleExtra(LocationOnMapFragment.LONGITUDE, 0.0)
+//            viewModel.tripOrder.currentLocation = LatLng(latitude!!, longitude!!)
+//            if (viewModel.tripOrder.currentLocation != null) {
+//                navBar.nextBtn.isEnabled = true
+//            }
+//            Timber.d("Result location: $latitude, $longitude")
+//        }
+//    }
 
     private fun searchQuery(query: String) {
         showProgressBar()
@@ -216,7 +249,7 @@ class PlacesFragment : Fragment() {
                             list.add(place!!)
                             if (list.size == 5) {
                                 adapter.swapDataInSection(2, list)
-                                recyclerView.smoothScrollToPosition(adapter.itemCount)
+//                                recyclerView.smoothScrollToPosition(adapter.itemCount)
                                 hideProgressBar()
                             }
                             Timber.d("Found place is ${place?.address}(${place?.latLng})")

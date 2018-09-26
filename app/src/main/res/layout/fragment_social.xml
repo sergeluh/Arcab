@@ -36,7 +36,6 @@
             app:layout_constraintBottom_toTopOf="@+id/googleBtn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:text="Google"
             android:background="@drawable/bg_btn_outline">
 
             <ImageView

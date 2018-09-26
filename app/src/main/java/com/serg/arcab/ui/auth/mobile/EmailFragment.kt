@@ -45,10 +45,13 @@ class EmailFragment : BaseFragment() {
             viewModel.onBackClicked()
         }
 
+        navBar.nextBtn.isEnabled = false
+
         RxTextView.textChanges(emailEditText)
                 .skipInitialValue()
                 .subscribe {
                     viewModel.onEmailInputChanged(it.toString())
+                    navBar.nextBtn.isEnabled = viewModel.validateEmail(it.toString())
                 }
 
         viewModel.user.observe(viewLifecycleOwner, Observer {

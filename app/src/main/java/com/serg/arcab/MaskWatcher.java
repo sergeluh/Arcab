@@ -13,7 +13,7 @@ public class MaskWatcher implements TextWatcher {
     }
 
     public static MaskWatcher getDefault() {
-        return new MaskWatcher("### ### ####");
+        return new MaskWatcher("## ### ####");
     }
 
     @Override

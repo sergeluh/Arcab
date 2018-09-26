@@ -30,7 +30,7 @@
                 style="@style/TextAppearanceHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/initial_setup_pickup_title"
+                android:text="@string/initial_setup_preferred_seat_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -84,16 +84,14 @@
 
                 <TextView
                     android:id="@+id/text_view_seat"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:text="TextView"
                     android:visibility="invisible"
                     android:gravity="center_horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/horizontal_line"
+                    app:layout_constraintStart_toStartOf="@id/horizontal_line"
                     app:layout_constraintTop_toTopOf="@+id/horizontal_line" />
 
                 <TextView

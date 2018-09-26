@@ -4,7 +4,10 @@ import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.view.inputmethod.InputMethodManager
 import com.google.firebase.auth.FirebaseAuth
@@ -14,6 +17,8 @@ import com.serg.arcab.ui.main.MainActivity
 import com.serg.arcab.ui.auth.mobile.*
 import com.serg.arcab.ui.auth.social.FromSocialFragment
 import com.serg.arcab.ui.auth.social.SocialFragment
+import com.serg.arcab.ui.profile.ProfileActivity
+import com.serg.arcab.utils.SMSMonitor
 import org.koin.android.architecture.ext.viewModel
 import timber.log.Timber
 
@@ -34,9 +39,16 @@ class AuthActivity : BaseActivity(),
 
     private val viewModel by viewModel<AuthViewModel>()
 
+    private lateinit var smsReceiver: SMSMonitor
+    private lateinit var filter: IntentFilter
+    private val receiveSMSRquest = 1212
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
+
+        filter = IntentFilter("android.provider.Telephony.SMS_RECEIVED")
+        filter.priority = 100
+        smsReceiver = SMSMonitor()
 
         if (savedInstanceState == null) {
             replaceFragment(AuthFragment.newInstance(), AuthFragment.TAG)
@@ -74,6 +86,22 @@ class AuthActivity : BaseActivity(),
         viewModel.goToForgotPassword.observe(this, Observer{
             addFragment(ForgotPasswordFragment.newInstance(), ForgotPasswordFragment.TAG)
         })
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED){
+            Timber.d("SMSMONITOR permissions granted. Register receiver")
+            registerReceiver(smsReceiver, filter)
+        }else{
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.RECEIVE_SMS), receiveSMSRquest)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Timber.d("SMSMONITOR onActivityResult")
+        if (requestCode == receiveSMSRquest && resultCode == PackageManager.PERMISSION_GRANTED){
+            Timber.d("SMSMONITOR onActivityResult registering")
+            registerReceiver(smsReceiver, filter)
+        }
     }
 
 
@@ -122,8 +150,8 @@ class AuthActivity : BaseActivity(),
         addFragment(BirthFragment.newInstance(), BirthFragment.TAG)
     }
 
-    override fun goToMain() {
-        MainActivity.start(this, viewModel.user.value)
+    override fun goToProfile() {
+        ProfileActivity.start(this, viewModel.user.value)
         finish()
     }
 
@@ -166,6 +194,15 @@ class AuthActivity : BaseActivity(),
     override fun goToBegin() {
         start(this)
         finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (SMSMonitor.isRegistered) {
+            Timber.d("SMSMONITOR unregistering")
+            unregisterReceiver(smsReceiver)
+            SMSMonitor.isRegistered = false
+        }
     }
 
     companion object {

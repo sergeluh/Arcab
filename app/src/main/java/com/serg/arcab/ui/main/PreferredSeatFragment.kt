@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.*
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,7 +52,7 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
             reservedSeatsFromMap.values.forEach { it.forEach { if (it.id == seat.id) daysReserved++ } }
             if (reservedDaysTo.isEmpty() && reservedDaysFrom.isEmpty()) {
                 navBar.nextBtn.isEnabled = true
-                text_view_seat.text = seat.id
+                text_view_seat.text = Html.fromHtml("<b>${seat.id}</b>")
                 text_view_seat.visibility = View.VISIBLE
                 //Set user selected seats when new seats selected
                 with(viewModel.tripOrder) {
@@ -67,11 +68,8 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
                     Timber.d("Result seat maps: $resultSeatsTo, $resultSeatsFrom")
                 }
             } else {
-                text_view_seat.text = String.format(
-                        resources.getString(R.string.initial_setup_preferred_seat_reserved),
-                        seat.id,
-                        if (reservedDaysTo.isNotEmpty()) " pickup at $reservedDaysTo" else "",
-                        if (reservedDaysFrom.isNotEmpty()) " dropoff at $reservedDaysFrom" else "")
+                var seatText = ""
+                text_view_seat.text = seatText
                 text_view_seat.visibility = View.VISIBLE
                 with(viewModel.tripOrder) {
                     preferredSeat = seat
@@ -98,8 +96,15 @@ class PreferredSeatFragment : Fragment(), PreferredSeatRecyclerViewAdapter.Callb
                             }
                             Timber.d("Available seat for ${weekDays[key]} is ${resultSeatsTo!![key]}")
                         }
+
                         Timber.d("Available seats result: $resultSeatsTo \n $resultSeatsFrom")
                     }
+                    seatText =String.format(
+                            resources.getString(R.string.initial_setup_preferred_seat_reserved),
+                            "<b>${seat.id}</b>",
+                            if (reservedDaysTo.isNotEmpty()) " pickup at $reservedDaysTo" else "",
+                            if (reservedDaysFrom.isNotEmpty()) " dropoff at $reservedDaysFrom" else "") + text_view_seat.text
+                    text_view_seat.text = Html.fromHtml(seatText)
                 }
                 //Set button enabled if selected seat is free at least at one of selected days
                 navBar.nextBtn.isEnabled = daysReserved < (viewModel.tripOrder.pickMeUpDays!!.size

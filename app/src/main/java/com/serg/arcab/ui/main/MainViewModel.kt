@@ -33,6 +33,7 @@ class MainViewModel(private val prefsManager: PrefsManager): BaseViewModel() {
     val letMeIn = SingleLiveEvent<String>()
     val hideKeyboard = SingleLiveEvent<Unit>()
     val goToScan = SingleLiveEvent<Unit>()
+    val goToLocationOnMap = SingleLiveEvent<Unit>()
 
     val user = MutableLiveData<User>()
 
@@ -102,5 +103,9 @@ class MainViewModel(private val prefsManager: PrefsManager): BaseViewModel() {
 
     fun onGoToScanClicked(){
         goToScan.call()
+    }
+
+    fun onGoToLocationOnMapClicked(){
+        goToLocationOnMap.call()
     }
 }

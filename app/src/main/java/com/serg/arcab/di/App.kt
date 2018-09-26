@@ -12,8 +12,11 @@ import com.serg.arcab.data.PrefsManager
 import com.serg.arcab.data.PrefsManagerImpl
 import com.serg.arcab.datamanager.AuthDataManager
 import com.serg.arcab.datamanager.AuthDataManagerImpl
+import com.serg.arcab.datamanager.ProfileDataManagerImpl
+import com.serg.arcab.datamanager.ProfileDatamanager
 import com.serg.arcab.ui.auth.AuthViewModel
 import com.serg.arcab.ui.main.MainViewModel
+import com.serg.arcab.ui.profile.ProfileViewModel
 import org.koin.android.architecture.ext.viewModel
 import org.koin.dsl.module.applicationContext
 
@@ -25,10 +28,12 @@ private val appModule = applicationContext {
 private val viewModelModule = applicationContext {
     viewModel { AuthViewModel(get()) }
     viewModel { MainViewModel(get()) }
+    viewModel { ProfileViewModel(get()) }
 }
 
 private val dataManagerModule = applicationContext {
     bean { AuthDataManagerImpl(get(), get()) as AuthDataManager }
+    bean { ProfileDataManagerImpl() as ProfileDatamanager }
     bean { PrefsManagerImpl(get()) as PrefsManager }
 }
 

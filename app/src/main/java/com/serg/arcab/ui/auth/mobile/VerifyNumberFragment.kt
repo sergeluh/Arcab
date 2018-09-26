@@ -7,12 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
-import com.serg.arcab.ACTION_NEW_USER
 import com.serg.arcab.ACTION_OLD_USER
 import com.serg.arcab.R
 import com.serg.arcab.Result
 import com.serg.arcab.base.BaseFragment
 import com.serg.arcab.ui.auth.AuthViewModel
+import com.serg.arcab.utils.SMSMonitor
 import kotlinx.android.synthetic.main.fragment_verify_number.*
 import kotlinx.android.synthetic.main.navigation_view.view.*
 import org.koin.android.architecture.ext.sharedViewModel
@@ -64,12 +64,16 @@ class VerifyNumberFragment : BaseFragment() {
             }
         }
 
+        SMSMonitor.verificationCode.observe(viewLifecycleOwner, Observer {
+            verification_code.setText(it)
+        })
+
         viewModel.codeVerificationProgress.observe(viewLifecycleOwner, Observer {
             when(it?.status) {
                 Result.Status.SUCCESS -> {
                     hideLoading()
                     if (action == ACTION_OLD_USER){
-                        callback.goToMain()
+                        callback.goToProfile()
                         Timber.d("NEWLINE phone successfull verified")
                     }else{
                         Timber.d("GOING FORTH to password. new user")
@@ -109,7 +113,7 @@ class VerifyNumberFragment : BaseFragment() {
                     if (it == null) {
                         callback.goToName()
                     } else {
-                        callback.goToMain()
+                        callback.goToProfile()
 //                        callback.goToPassword(ACTION_OLD_USER)
                     }
                 }
@@ -117,7 +121,7 @@ class VerifyNumberFragment : BaseFragment() {
                     if (it == null) {
                         callback.goToBirth()
                     } else {
-                        callback.goToMain()
+                        callback.goToProfile()
                     }
                 }
             }
@@ -128,7 +132,7 @@ class VerifyNumberFragment : BaseFragment() {
     interface Callback {
         fun goToPassword(action: String)
         fun goToBirth()
-        fun goToMain()
+        fun goToProfile()
         fun goToName()
     }
 

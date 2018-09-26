@@ -26,6 +26,15 @@
         android:layout_above="@id/navBar"
         android:clipToPadding="false"/>
 
+    <LinearLayout
+        android:id="@+id/sticky_header_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_alignTop="@id/recyclerView"/>
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:indeterminateDrawable="@drawable/progress_bar_style"

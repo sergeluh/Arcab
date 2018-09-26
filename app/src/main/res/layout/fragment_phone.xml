@@ -40,10 +40,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/auth_header_margin_top"
                 android:inputType="phone"
-                android:paddingStart="108dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                 android:textColor="@color/colorGrayText"
                 android:textStyle="bold"
+                android:maxLength="11"
+                tools:text="123456"
+                android:paddingStart="102dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -66,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:text="Use password \ninstead"
+                android:text="Use password\ninstead"
                 android:textStyle="bold"
                 android:textColor="@color/colorAccent"
                 android:textAllCaps="true"
@@ -111,5 +113,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <include
+        android:id="@+id/bottom_notification"
+        layout="@layout/bottom_notification"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:visibility="gone"
+        android:layout_marginBottom="16dp"/>
 
 </android.support.constraint.ConstraintLayout>

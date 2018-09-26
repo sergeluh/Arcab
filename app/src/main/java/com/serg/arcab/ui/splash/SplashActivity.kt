@@ -11,6 +11,7 @@ import com.serg.arcab.User
 import com.serg.arcab.base.BaseActivity
 import com.serg.arcab.ui.auth.AuthActivity
 import com.serg.arcab.ui.main.MainActivity
+import com.serg.arcab.ui.profile.ProfileActivity
 
 class SplashActivity : BaseActivity() {
 
@@ -31,7 +32,7 @@ class SplashActivity : BaseActivity() {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
                             val u = dataSnapshot.getValue(User::class.java)
                             if (u != null) {
-                                MainActivity.start(this@SplashActivity, u)
+                                ProfileActivity.start(this@SplashActivity, u)
                             } else {
                                 AuthActivity.start(this@SplashActivity)
                             }

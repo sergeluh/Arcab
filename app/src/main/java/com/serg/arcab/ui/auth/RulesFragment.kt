@@ -13,7 +13,6 @@ import com.serg.arcab.base.BaseFragment
 import kotlinx.android.synthetic.main.navigation_view.view.*
 import kotlinx.android.synthetic.main.fragment_rules.*
 import org.koin.android.architecture.ext.sharedViewModel
-import timber.log.Timber
 
 class RulesFragment : BaseFragment() {
 
@@ -100,12 +99,12 @@ class RulesFragment : BaseFragment() {
         })
 
         viewModel.profileUploadedAction.observe(viewLifecycleOwner, Observer {
-            callback.goToMain()
+            callback.goToProfile()
         })
     }
 
     interface Callback {
-        fun goToMain()
+        fun goToProfile()
     }
 
     companion object {

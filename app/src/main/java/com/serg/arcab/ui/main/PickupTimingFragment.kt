@@ -1,7 +1,9 @@
 package com.serg.arcab.ui.main
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -32,6 +34,10 @@ class PickupTimingFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        context?.also {
+            collapsing_toolbar.setCollapsedTitleTypeface(ResourcesCompat.getFont(it, R.font.colfax_medium))
+            collapsing_toolbar.setExpandedTitleTypeface(ResourcesCompat.getFont(it, R.font.colfax_medium))
+        }
         navBar.backBtn.setOnClickListener {
             viewModel.onBackClicked()
         }

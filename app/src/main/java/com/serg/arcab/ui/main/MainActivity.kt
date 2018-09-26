@@ -4,6 +4,7 @@ import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -17,6 +18,7 @@ import com.serg.arcab.model.Seat
 import com.serg.arcab.model.UserPoint
 import com.serg.arcab.ui.auth.CaptureFragment
 import com.serg.arcab.utils.ResultFragment
+import com.serg.arcab.utils.SMSMonitor
 import org.koin.android.architecture.ext.viewModel
 import timber.log.Timber
 
@@ -32,10 +34,10 @@ class MainActivity : BaseActivity() {
             replaceFragment(GetStartedFragment.newInstance(), GetStartedFragment.TAG)
         }
 
-        if (intent.extras != null){
-            viewModel.user.value = intent.getParcelableExtra(USER_KEY)
-            Timber.d("MYUSER name: ${viewModel.user.value?.first_name}, last name: ${viewModel.user.value?.last_name}, phone: ${viewModel.user.value?.phone_number}, email: ${viewModel.user.value?.email}, password: ${viewModel.user.value?.password}")
-        }
+//        if (intent.extras != null){
+//            viewModel.user.value = intent.getParcelableExtra(USER_KEY)
+//            Timber.d("MYUSER name: ${viewModel.user.value?.first_name}, last name: ${viewModel.user.value?.last_name}, phone: ${viewModel.user.value?.phone_number}, email: ${viewModel.user.value?.email}, password: ${viewModel.user.value?.password}")
+//        }
 
         viewModel.backAction.observe(this, Observer {
             popFragment()
@@ -71,6 +73,10 @@ class MainActivity : BaseActivity() {
 
         viewModel.goToScan.observe(this, Observer {
             addFragment(CaptureFragment.newInstance(), CaptureFragment.TAG)
+        })
+
+        viewModel.goToLocationOnMap.observe(this, Observer {
+            addFragment(LocationOnMapFragment.newInstance(), LocationOnMapFragment.TAG)
         })
 
         viewModel.confirmOrder.observe(this, Observer {
@@ -123,11 +129,8 @@ class MainActivity : BaseActivity() {
     }
 
     companion object {
-        const val USER_KEY = "user key"
-
-        fun start(activity: Activity, user: User?) {
+        fun start(activity: Activity) {
             val intent = Intent(activity, MainActivity::class.java)
-            intent.putExtra(USER_KEY, user)
             activity.startActivity(intent)
         }
     }

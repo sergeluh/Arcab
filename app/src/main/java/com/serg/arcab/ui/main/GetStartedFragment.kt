@@ -53,33 +53,6 @@ class GetStartedFragment : BaseFragment(), OnMapReadyCallback {
         val mapFragment = childFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-//        FirebaseAuth.getInstance().currentUser?.uid?.also {
-//            FirebaseDatabase.getInstance().reference.child(USERS_FIREBASE_TABLE).child(it).addListenerForSingleValueEvent(object : ValueEventListener{
-//                override fun onCancelled(p0: DatabaseError) {
-//                    Timber.d("MYUSER on canceled")
-//                }
-//
-//                override fun onDataChange(p0: DataSnapshot) {
-//                    Timber.d("MYUSER onDataChange")
-//                    viewModel.user.value = p0.getValue(User::class.java)
-//                    if (viewModel.user.value != null) {
-//                        FirebaseAuth.getInstance().currentUser?.providers?.also {
-//                            if (!it.contains("password")) {
-//                                Timber.d("MYUSER adding auth provider")
-//                                FirebaseAuth.getInstance().currentUser?.linkWithCredential(
-//                                        EmailAuthProvider.getCredential(
-//                                                viewModel.user.value!!.email!!,
-//                                                viewModel.user.value!!.password!!))
-//                            }
-//                        }
-//                    }
-//                }
-//            })
-//        }
-
-        viewModel.user.observe(viewLifecycleOwner, android.arch.lifecycle.Observer {
-            Timber.d("MYUSER current name: ${it?.first_name}, last name: ${it?.last_name}, phone number: ${it?.phone_number}, email: ${it?.email}, password: ${it?.password}")
-        })
 
 
         FirebaseAuth.getInstance().currentUser?.providers?.forEach {
