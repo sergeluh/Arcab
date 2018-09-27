@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.provider.Telephony
+import timber.log.Timber
 
 class SMSMonitor : BroadcastReceiver() {
     companion object {
@@ -19,6 +20,7 @@ class SMSMonitor : BroadcastReceiver() {
                 val re = Regex("[^0-9]")
                 val code = re.replace(it.messageBody, "")
                 if (code.length == 6){
+                    Timber.d("RECEIVED CODE $code")
                     verificationCode.value = code
                     isRegistered = false
                     context?.unregisterReceiver(this)

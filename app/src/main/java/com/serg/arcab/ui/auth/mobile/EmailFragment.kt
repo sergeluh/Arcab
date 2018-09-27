@@ -67,7 +67,7 @@ class EmailFragment : BaseFragment() {
         viewModel.user.value?.also {
             if (viewModel.useEmailInstead) {
                 titleTextView.text = "Enter email"
-                textView9.text = "Enter your email"
+                textView9.text = "Enter the email address for phone number ${viewModel.user.value?.phone_number}"
             }
         }
 

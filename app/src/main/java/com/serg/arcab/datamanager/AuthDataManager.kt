@@ -1,6 +1,5 @@
 package com.serg.arcab.datamanager
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.os.Handler
 import android.os.Looper
@@ -15,7 +14,6 @@ import com.serg.arcab.*
 import com.serg.arcab.data.AppExecutors
 import com.serg.arcab.data.PrefsManager
 import com.serg.arcab.model.CheckUserModel
-import com.serg.arcab.ui.auth.FirebaseAuthModel
 import com.serg.arcab.utils.SingleLiveEvent
 import timber.log.Timber
 import java.util.concurrent.Executor
@@ -107,6 +105,7 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors, val prefsM
                         override fun onVerificationCompleted(credentials: PhoneAuthCredential) {
                             Timber.d("onVerificationCompleted $credentials")
                             verificationCompleted(credentials)
+                            codeVerificationProgress.value = Result.success(Unit)
                         }
 
                         override fun onVerificationFailed(exc: FirebaseException) {
@@ -155,7 +154,7 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors, val prefsM
                         Timber.d("signInWithPhoneAuthCredential user ${task.result.user}")
                         fetchProfileFromCPhoneVerification(task.result.user)
                     } else {
-                        Timber.e(task.exception)
+                        Timber.e("Error tsdk: ${task.exception}")
                         var message = task.exception?.message ?: "Error while sign in"
 
                         if (task.exception is FirebaseAuthInvalidCredentialsException) {
@@ -188,7 +187,7 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors, val prefsM
 
 
     override fun signInWithCode(code: String?) {
-        Timber.d("Sign in with code")
+        Timber.d("Sign in with code: $code")
         val vId = verificationId
         if (code == null || code.isBlank() || code.length != 6) {
             Timber.d("co null or blank or to short")
@@ -203,7 +202,7 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors, val prefsM
     }
 
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
-        Timber.d("signInWithPhoneAuthCredential")
+        Timber.d("signInWithPhoneAuthCredential: ${credential.smsCode}, ${credential.signInMethod}")
         codeVerificationProgress.value = Result.loading()
         FirebaseAuth.getInstance()
                 .signInWithCredential(credential)
@@ -218,6 +217,7 @@ class AuthDataManagerImpl constructor(val appExecutors: AppExecutors, val prefsM
                         var message = task.exception?.message ?: "Error while sign in"
 
                         if (task.exception is FirebaseAuthInvalidCredentialsException) {
+                            Timber.d("sign in with Phone auth credentials error: ${task.exception?.message}")
                             message = "Invalid credentials"
                         }
                         codeVerificationProgress.value = Result.error(message)

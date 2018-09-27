@@ -110,6 +110,7 @@ class VerifyNumberFragment : BaseFragment() {
                 .subscribe {
                     viewModel.onVerificationCodeInputChanged(it.toString())
                     navBar.nextBtn.isEnabled = it.length == 6
+                    Timber.d("CODE $it")
                 }
 
         navBar.backBtn.setOnClickListener {
